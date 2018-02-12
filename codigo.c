@@ -175,6 +175,22 @@ void intr_para(char *nombre,char *ini,char *obj)
 		}
 	
 	fprintf(salida,"for (%s=%s;%s %s %s;%s%s)",nombre,ini,nombre,signo,obj,nombre,op);
-	
 }
 
+//Función para traducir incrementos con comprobación de post o pre incremento
+void intr_inc(char *nombre,int post)
+{
+	if(post)
+		fprintf(salida,"%s++;\n",nombre);
+	else
+		fprintf(salida,"++%s;\n",nombre);
+}
+
+//Función para traducir decrementos con comprobación de post o pre decremento
+void intr_dec(char *nombre,int post)
+{
+	if(post)
+		fprintf(salida,"%s++;\n",nombre);
+	else
+		fprintf(salida,"++%s;\n",nombre);
+}

@@ -20,7 +20,7 @@ char  auxt[30];//variable auxiliar para las traducciones
 	struct NODO *indice; //puntero a la tabla de simbolos 
 	struct elemento {
 		int escons; //nos dice si es o no constante 1->si 0->no 
-		int tipo; //tipo entero
+		int tipo; //tipo de variable
 		int valbool; //tipo booleano
 		double valnum;	//valor numerico	     
 		int valint; //valor entero  
@@ -49,6 +49,8 @@ char  auxt[30];//variable auxiliar para las traducciones
 %token    TK_LEER
 %token	  TK_FIN
 %token	  TK_HACER
+%token	  TK_INC
+%token	  TK_DEC
 %token	  TK_CONT
 %token		TK_HASTA
 %token		TK_PARA
@@ -335,7 +337,51 @@ sentencia:
 			case 6: $$.valint = $1.valint;break;
 		}		
 	}
-
+	
+/*************************************************************************************************/
+//Preincremento 
+	|	TK_INC TK_VARIABLE
+	{
+		/*
+		if($2.tipo==6)
+			$$.valint =$2.valint+1;	
+		else if($2.tipo==1)
+			$$.valnum =$2.valnum+1;	
+		else
+			yyerror("Error: No se puede incrementar una variable no númerica");
+		*/
+		if($2->tipo==1 || $2->tipo==6)
+			intr_inc($2->nombre,0);
+		else
+			yyerror("Error: No se puede incrementar una variable no númerica");
+	}
+/*************************************************************************************************/
+//Postincremento 
+	|	TK_VARIABLE TK_INC
+	{
+		if($1->tipo==1 || $1->tipo==6)
+			intr_inc($1->nombre,1);
+		else
+			yyerror("Error: No se puede incrementar una variable no númerica");
+	}
+/*************************************************************************************************/
+//Predecremento
+	|	TK_DEC TK_VARIABLE
+	{
+		if($2->tipo==1 || $2->tipo==6)
+			intr_dec($2->nombre,0);
+		else
+			yyerror("Error: No se puede decrementar una variable no númerica");
+	}
+/*************************************************************************************************/
+//Postdecremento 
+	|	TK_VARIABLE TK_DEC
+	{
+		if($1->tipo==1 || $1->tipo==6)
+			intr_dec($1->nombre,1);
+		else
+			yyerror("Error: No se puede decrementar una variable no númerica");
+	}
 /*************************************************************************************************/
 	| control cont lista_sentencias final
 	{	if($1.valbool==1)

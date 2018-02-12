@@ -9,7 +9,7 @@ const
 
 var
 	aux entero
-	log entero
+	aux2 string
 
 inicio
 
@@ -17,7 +17,11 @@ aux:= 2
 
 escribir("El si funciona")
 
-log:= 0
+escribir(aux)
+
+aux ++
+
+escribir(aux)
 
 para aux:=4 hasta 8 hacer
 

@@ -70,6 +70,8 @@ salto \n
 "**"		return TK_POW;
 "<="		return TK_MEI;
 ">="		return TK_MAI;
+"++"		return TK_INC;
+"--"		return TK_DEC;
 "programa"	return TK_PROGRAM;
 "inicio"         return TK_INICIO;
 "fin"	        return TK_FIN;

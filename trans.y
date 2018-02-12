@@ -1108,7 +1108,7 @@ exp:
 
 
 /*************************************************************************************************/
-	|    exp TK_AND exp
+	| exp TK_AND exp
 	//operacion a nivel de booleanos, and true and true devuelve true otro false
 
 	{
@@ -1124,7 +1124,7 @@ exp:
 	}   
 
 /*************************************************************************************************/
-	|    exp TK_OR exp
+	| exp TK_OR exp
 	//operacion a nivel de booleanos, or false or false devuelve false otro true
 	{
 	strcat($$.trad," || ");//introducimos la cadena creada para la traduccion
@@ -1139,7 +1139,7 @@ exp:
 	}   
 
 /*************************************************************************************************/
-	|    TK_NOT exp
+	| TK_NOT exp
 	//operacion a nivel de booleanos, not notfalse=true  not true devuelve false otro true
 
 	{
@@ -1183,6 +1183,7 @@ exp:
 		strcpy($$.cad,$1->cad);//cadena, esto es por los identificadores de las constantes
 		$$.valnum=$1->valnum;	//variable numerica
 		$$.valbool=$1->valbool;//variable de tipo booleano
+		$$.valint=$1->valint;//variable de tipo entero
 		$$.tipo=$1->tipo;//tipo de la variable
 		$$.escons=$1->escons; //Nos dice si es una cosntante o no                    
 		$$.vis=$1->aux;//para traducir la visualizacion

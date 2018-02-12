@@ -19,7 +19,7 @@ escribir("El si funciona")
 
 log:= 0
 
-para aux:=10 hasta 8 hacer
+para aux:=4 hasta 8 hacer
 
 escribir("El si funciona")
 escribir("El si funciona mal",aux,"hola")

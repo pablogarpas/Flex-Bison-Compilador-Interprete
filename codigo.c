@@ -170,7 +170,7 @@ void intr_para(char *nombre,char *ini,char *obj)
 		strcpy(op,"++");
 		}
 	else{
-		strcpy(signo,"==");
+		strcpy(signo,"!=");
 		strcpy(op," ");//Por poner algo
 		}
 	

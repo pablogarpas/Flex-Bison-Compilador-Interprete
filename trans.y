@@ -429,7 +429,7 @@ exp
 visual:
 	TK_ESCRIBIR '('elemento_mostrar')'
 	{
-	vis_salida_rc($3.tipo,$3.trad,$3.vis);  //Traducción
+	vis_salida_sl($3.tipo,$3.trad,$3.vis);  //Traducción
 	switch ($3.tipo){
 		case 1: printf(" %f \n",$3.valnum);break;
 		case 2:	printf(" %s \n",$3.valstr);break;
@@ -445,7 +445,7 @@ visual:
 /*************************************************************************************************/
 	| TK_ESCRIBIR '(' visual2 ',' elemento_mostrar ')'
 	{
-	vis_salida_rc($5.tipo,$5.trad,$5.vis);  //hacemos la traduccion  para la salida por pantalla
+	vis_salida_sl($5.tipo,$5.trad,$5.vis);  //hacemos la traduccion  para la salida por pantalla
 	switch ($5.tipo){
 		case 1: printf(" %f \n",$5.valnum);break;
 		case 2:	printf(" %s \n",$5.valstr);break;

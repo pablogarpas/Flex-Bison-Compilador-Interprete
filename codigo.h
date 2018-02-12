@@ -60,7 +60,7 @@ void intr_sentencia(char *nombre,char *trad);
 void vis_salida(int tipo,char *cad, int vis);
 
 //Salida por pantalla
-void vis_salida_rc(int tipo,char *cad, int vis);
+void vis_salida_sl(int tipo,char *cad, int vis);
 
 //Entrada por pantalla
 void vis_entrada(int tipo,char *cad);

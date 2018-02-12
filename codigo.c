@@ -118,7 +118,7 @@ void vis_salida(int tipo,char *cad, int vis)
 
 
 //Salida por pantalla
-void vis_salida_rc(int tipo,char *cad, int vis)
+void vis_salida_sl(int tipo,char *cad, int vis)
 {
 	switch(tipo){
 		case 1:fprintf(salida,"printf(\" %%f \\n\",%s);\n",cad);break;

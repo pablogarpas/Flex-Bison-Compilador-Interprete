@@ -267,7 +267,7 @@ variable:
 	intr_variable($2.tipo, $1->nombre); //Traducción
 	if ($1->escons==0)		
 		$$.tipo=$1->tipo=$2.tipo;
-	else printf("Error: %s ---Variable ya declarada como constante\n",$1->nombre);
+	else yyerror("Error: %s ---Variable ya declarada como constante\n",$1->nombre);
 	}
 
 /*************************************************************************************************/
@@ -276,7 +276,7 @@ variable:
 		intr_variable($2.tipo, $1->nombre);  //Traducción
 		if ($1->escons==0)	
 		$$.tipo=$1->tipo=$2.tipo;
-		else printf("Error: %s ---Variable ya declarada como constante\n",$1->nombre);             
+		else yyerror("Error: %s ---Variable ya declarada como constante\n",$1->nombre);             
 	};
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -438,7 +438,7 @@ visual:
 		break;
 		case 4: printf(" %s \n",$3.cad);break;
 		case 6: printf(" %d \n",$3.valint);break;
-		default: printf("Error:Imposible visualizar la variable o expresion\n");
+		default: yyerror("Error:Imposible visualizar la variable o expresion\n");
 		}	
 	} 
 
@@ -453,7 +453,7 @@ visual:
 		else if($5.valbool==0) printf(" FALSE \n");	break;
 		case 4: printf(" %s \n",$5.cad);break;
 		case 6: printf(" %d \n",$5.valint);break;
-		default: printf("Error:Imposible visualizar la variable o expresion\n");
+		default: yyerror("Error:Imposible visualizar la variable o expresion\n");
 		}
 	} 
 
@@ -478,7 +478,7 @@ visual2:
 		break;
 		case 4: printf(" %s ",$1.cad);break;
 		case 6: printf(" %d ",$1.valint);break;
-		default: printf("Error:Imposible visualizar la variable o expresion\n");
+		default: yyerror("Error:Imposible visualizar la variable o expresion\n");
 		}
 	}
 
@@ -495,7 +495,7 @@ visual2:
 		break;
 		case 4: printf(" %s ",$3.cad);break;
 		case 6: printf(" %d ",$3.valint);break;
-		default: printf("Error:Imposible visualizar la variable o expresion\n");
+		default: yyerror("Error:Imposible visualizar la variable o expresion\n");
 		}
 	}
 	|{}
@@ -531,10 +531,10 @@ lectura:
 			$3->valint=auxint;
 			}
 		else 
-			printf("Error: No se puede leer, variable no declarada\n");
+			yyerror("Error: No se puede leer, variable no declarada\n");
 	}
 	else 
-		printf("Error: No podemos leer una constante\n");
+		yyerror("Error: No podemos leer una constante\n");
 	}
 
 /**************************************************************************************************************************************/
@@ -563,10 +563,10 @@ lectura:
 				$5->valbool=auxint;
 			}
 			else 
-				printf("Error: No se puede leer, variable no declarada\n");
+				yyerror("Error: No se puede leer, variable no declarada\n");
 		}
 		else 
-		printf("Error: No podemos leer una constante\n");
+		yyerror("Error: No podemos leer una constante\n");
 	}
 	;
 
@@ -598,10 +598,10 @@ lectura2:
 			strcpy($1->valstr,auxc);
 			}
 			else 
-			printf("Error: No se puede leer, variable no declarada\n");
+			yyerror("Error: No se puede leer, variable no declarada\n");
 		}
 		else 
-			printf("Error: No podemos leer una constante\n");
+			yyerror("Error: No podemos leer una constante\n");
 	}
 /*******************************************************************************************************/
 	|lectura2 ',' TK_VARIABLE //aqui lemos una variable
@@ -629,10 +629,10 @@ lectura2:
 		strcpy($3->valstr,auxc);
 		}
 		else 
-		printf("Error: No se puede leer, variable no declarada\n");
+		yyerror("Error: No se puede leer, variable no declarada\n");
 	}
 	else 
-	printf("Error: No podemos leer una constante\n");
+	yyerror("Error: No podemos leer una constante\n");
 	}
 	;
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -677,7 +677,7 @@ exp:
 		$$.valnum = $1.valint + $3.valnum;
 	}
 	else
-	printf("Error: Operaciones sobre tipos diferentes\n");
+	yyerror("Error: Operaciones sobre tipos diferentes\n");
 	}
 
 /*************************************************************************************************/
@@ -703,7 +703,7 @@ exp:
 			$$.valnum = $1.valint - $3.valnum;
 		}
 		else {                   
-		printf("Error: Operaciones sobre tipos diferentes\n");
+		yyerror("Error: Operaciones sobre tipos diferentes\n");
 		}
 	}
 /*************************************************************************************************/
@@ -730,7 +730,7 @@ exp:
 			$$.valnum = $1.valint * $3.valnum;
 		}		
 		else {		                   
-		printf("Error: Operaciones sobre tipos diferentes\n");
+		yyerror("Error: Operaciones sobre tipos diferentes\n");
 		}
 	}
 /*************************************************************************************************/
@@ -759,7 +759,7 @@ exp:
 			$$.valnum = $1.valint / $3.valnum;
 		}
 		else	{		                  
-			printf("Error: Operaciones sobre tipos diferentes\n");
+			yyerror("Error: Operaciones sobre tipos diferentes\n");
 		}
 	}
 /*************************************************************************************************/
@@ -778,7 +778,7 @@ exp:
 			$$.valint = -$2.valint;
 		}
 		else	{                               
-		printf("Error: Operaciones sobre tipos diferentes\n");
+		yyerror("Error: Operaciones sobre tipos diferentes\n");
 		}
 	}
 
@@ -812,7 +812,7 @@ exp:
 			$$.valnum = pow($1.valint,$3.valnum);
 		}
 		else {
-			printf("Error: Operaciones sobre tipos diferentes\n");
+			yyerror("Error: Operaciones sobre tipos diferentes\n");
 		}
 	}
 /*************************************************************************************************/
@@ -883,7 +883,7 @@ exp:
 		if ($1.valnum<$3.valint) $$.valbool =1; 
 		else $$.valbool=0;
 	}
-	else printf("Error: Operaciones sobre tipos diferentes\n"); 
+	else yyerror("Error: Operaciones sobre tipos diferentes\n"); 
 	}
 /*************************************************************************************************/
 //Esta es la coparacion mayor que que devuelve true o false
@@ -938,7 +938,7 @@ exp:
 			else $$.valbool=0;
 		}
 
-		else printf("Error: Operaciones sobre tipos diferentes\n"); 
+		else yyerror("Error: Operaciones sobre tipos diferentes\n"); 
 	}
 /*************************************************************************************************/
 //Esta es la coparacion mayor o igual que que devuelve true o false
@@ -993,7 +993,7 @@ exp:
 		else $$.valbool=0;
 	}
 
-	else printf("Error: Operaciones sobre tipos diferentes\n"); 
+	else yyerror("Error: Operaciones sobre tipos diferentes\n"); 
 	}
 /*********************************************************************************/		
 //Esta es la coparacion meyor o igual que que devuelve true o false
@@ -1048,7 +1048,7 @@ exp:
 		else $$.valbool=0;
 	}
 
-	else printf("Error: Operaciones sobre tipos diferentes\n");                                  
+	else yyerror("Error: Operaciones sobre tipos diferentes\n");                                  
 }
 /*************************************************************************************************/						
 //Esta es la coparacion de no igualdad, es decir de distinto que que devuelve true o false
@@ -1103,7 +1103,7 @@ exp:
 		else $$.valbool=0;
 	}
 
-	else printf("Error: Operaciones sobre tipos diferentes\n");                                  
+	else yyerror("Error: Operaciones sobre tipos diferentes\n");                                  
 	}
 
 
@@ -1120,7 +1120,7 @@ exp:
 	$$.tipo=3;
 	$$.valbool = $1.valbool && $3.valbool;
 	}
-	else printf("Error: Operaciones sobre tipos diferentes\n");
+	else yyerror("Error: Operaciones sobre tipos diferentes\n");
 	}   
 
 /*************************************************************************************************/
@@ -1135,7 +1135,7 @@ exp:
 		$$.tipo=3;
 		$$.valbool = $1.valbool || $3.valbool;
 	}
-	else printf("Error: Operaciones sobre tipos diferentes\n");
+	else yyerror("Error: Operaciones sobre tipos diferentes\n");
 	}   
 
 /*************************************************************************************************/
@@ -1151,7 +1151,7 @@ exp:
 		$$.tipo=3;
 		$$.valbool = !$2.valbool;
 	}
-	else printf("Error: Operaciones sobre tipos diferentes\n");	
+	else yyerror("Error: Operaciones sobre tipos diferentes\n");	
 	}   
 /*************************************************************************************************/
 //esto es un número real

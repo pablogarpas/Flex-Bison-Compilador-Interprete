@@ -34,38 +34,38 @@ char  auxt[30];//variable auxiliar para las traducciones
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 //Definicion de los tokens, terminales y no terminales
-%token    PROGRAM
-%token    CONST
-%token    VAR
-%token	  SI
-%token    INICIO
-%token    ENTERO
-%token    REAL
-%token    BOOL
-%token    STRING
-%token		MIENTRAS
-%token    ESCRIBIR
-%token    LIB
-%token    LEER
-%token	  FIN
-%token	  HACER
-%token	  CONT
-%token		HASTA
-%token		PARA
-%token  <nterminal> CADENA
-%token 	<nterminal> NBOOL
-%token 	<nterminal>	NUM
-%token 	<nterminal>	ENT
-%token 	<indice>	VARIABLE
+%token    TK_PROGRAM
+%token    TK_CONST
+%token    TK_VAR
+%token	  TK_SI
+%token    TK_INICIO
+%token    TK_ENTERO
+%token    TK_REAL
+%token    TK_BOOL
+%token    TK_STRING
+%token		TK_MIENTRAS
+%token    TK_ESCRIBIR
+%token    TK_LIB
+%token    TK_LEER
+%token	  TK_FIN
+%token	  TK_HACER
+%token	  TK_CONT
+%token		TK_HASTA
+%token		TK_PARA
+%token  <nterminal> TK_CADENA
+%token 	<nterminal> TK_NBOOL
+%token 	<nterminal>	TK_NUM
+%token 	<nterminal>	TK_ENT
+%token 	<indice>	TK_VARIABLE
 %type   <nterminal>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-%right '=' MEI MAI DIS '<' '>' ASIG
-%left '+' '-' OR
-%left '*' '/' AND NOT
+%right '=' TK_MEI TK_MAI TK_DIS '<' '>' TK_ASIG
+%left '+' '-' TK_OR
+%left '*' '/' TK_AND TK_NOT
 %nonassoc MENOSUNARIO
-%right POW
+%right TK_POW
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 %%
@@ -90,13 +90,13 @@ salto_lin_dec:
 
 //Estructura del programa
 cabecera: 			
-	PROGRAM VARIABLE salto_lin
+	TK_PROGRAM TK_VARIABLE salto_lin
 	{
 		$2->tipo=0;  	
 	};
 //////////////////////////////////////////////////////////////////////////////////////////////////
 librerias:
-	LIB salto_lin libreria
+	TK_LIB salto_lin libreria
 	{
 
 	}
@@ -104,7 +104,7 @@ librerias:
 	;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 libreria:
-	CADENA salto_lin
+	TK_CADENA salto_lin
 	{
 		intr_lib($1.cad); //Traducción
 	}
@@ -114,7 +114,7 @@ libreria:
 
 //Constantes
 dec_constantes:                 
-	CONST salto_lin constante 
+	TK_CONST salto_lin constante 
 	{
 		intr_cabecera();//Introducir el main después de las constantes
 	
@@ -134,7 +134,7 @@ dec_constantes:
 
 //Se le asigna valor y tipo a las constantes
 constante:
-	VARIABLE '=' NUM salto_lin 
+	TK_VARIABLE '=' TK_NUM salto_lin 
 	{ //Un número
 		intr_const_num($3.valnum,$1->nombre); //La traducción
 		$$.valnum=$1->valnum=$3.valnum;
@@ -146,7 +146,7 @@ constante:
 	
 /*************************************************************************************************/
  	
-	| VARIABLE '=' ENT salto_lin 
+	| TK_VARIABLE '=' TK_ENT salto_lin 
 	{ //Un número
 		intr_const_int($3.valint,$1->nombre); //La traducción
 		$$.valint=$1->valint=$3.valint;
@@ -157,7 +157,7 @@ constante:
 	} 
 /*************************************************************************************************/
  	
-	| VARIABLE '=' NBOOL salto_lin 
+	| TK_VARIABLE '=' TK_NBOOL salto_lin 
 	{ //Un número
 		intr_const_int($3.valbool,$1->nombre); //La traducción
 		$$.valbool=$1->valbool=$3.valbool;
@@ -167,7 +167,7 @@ constante:
 		$1->aux=3;//Cualquier número
 	} 
 /*************************************************************************************************/
-	| VARIABLE '=' CADENA salto_lin 
+	| TK_VARIABLE '=' TK_CADENA salto_lin 
 	{//Constante cadena
 		intr_const_cad($3.cad,$1->nombre); //Traducción
 		strcpy($$.cad,strcpy($1->cad,$3.cad));    
@@ -179,7 +179,7 @@ constante:
 
 /*************************************************************************************************/
 
-	| VARIABLE '=' NUM salto_lin constante //Varias
+	| TK_VARIABLE '=' TK_NUM salto_lin constante //Varias
 	{ 
 		intr_const_num($3.valnum,$1->nombre); //Traducción
 		$$.valnum=$1->valnum=$3.valnum;
@@ -191,7 +191,7 @@ constante:
 
 /*************************************************************************************************/
 	
-	| VARIABLE '=' ENT salto_lin constante
+	| TK_VARIABLE '=' TK_ENT salto_lin constante
 	{ //Un número
 		intr_const_int($3.valint,$1->nombre); //La traducción
 		$$.valint=$1->valint=$3.valint;
@@ -202,7 +202,7 @@ constante:
 	} 
 /*************************************************************************************************/
 	
-	| VARIABLE '=' NBOOL salto_lin constante
+	| TK_VARIABLE '=' TK_NBOOL salto_lin constante
 	{ //Un número
 		intr_const_int($3.valbool,$1->nombre); //La traducción
 		$$.valbool=$1->valbool=$3.valbool;
@@ -213,7 +213,7 @@ constante:
 	} 
 
 /************************************************************************************************/
-	| VARIABLE '=' CADENA salto_lin constante //Varios números
+	| TK_VARIABLE '=' TK_CADENA salto_lin constante //Varios números
 	{
 		intr_const_cad($3.cad,$1->nombre);  //Traducción
 		strcpy($$.cad,strcpy($1->cad,$3.cad));
@@ -228,21 +228,21 @@ constante:
 
 //Diferentes tipos y números correspondientes
 tipo:
-	ENTERO 
+	TK_ENTERO 
 	{
 	$$.tipo=6; 
 	}
 
-	|  REAL 
+	|  TK_REAL 
 	{
 	$$.tipo=1;} 
 
-	|  STRING	
+	|  TK_STRING	
 	{
 	$$.tipo=2;
 	}
 	
-	|  BOOL 
+	|  TK_BOOL 
 	{
 	$$.tipo=3;
 	};
@@ -251,7 +251,7 @@ tipo:
 
 //Se declaran variables
 dec_vbles: 			
-	VAR salto_lin variable 
+	TK_VAR salto_lin variable 
 	{
 		
 		$$.tipo=$3.tipo;
@@ -262,7 +262,7 @@ dec_vbles:
 /*************************************************************************************************/
 
 variable:			
-	VARIABLE tipo salto_lin  
+	TK_VARIABLE tipo salto_lin  
 	{
 	intr_variable($2.tipo, $1->nombre); //Traducción
 	if ($1->escons==0)		
@@ -271,7 +271,7 @@ variable:
 	}
 
 /*************************************************************************************************/
-	| VARIABLE tipo salto_lin variable	
+	| TK_VARIABLE tipo salto_lin variable	
 	{
 		intr_variable($2.tipo, $1->nombre);  //Traducción
 		if ($1->escons==0)	
@@ -283,7 +283,7 @@ variable:
 
 //Cuerpo del programa
 cuerpo:
-	INICIO salto_lin lista_sentencias final
+	TK_INICIO salto_lin lista_sentencias final
 	{}
 	;
 
@@ -348,17 +348,17 @@ sentencia:
 	
 /////////////////////////////////////////////////////////////////////////////////////////////////	
 control:
-	SI exp 
+	TK_SI exp 
 	{
 		fprintf(salida,"if ");
 			vis_exp($2.tipo,$2.trad);
 	}
-	| MIENTRAS exp
+	| TK_MIENTRAS exp
 	{
 		fprintf(salida,"while ");
 			vis_exp($2.tipo,$2.trad);
 	}
-	| PARA VARIABLE ASIG exp HASTA exp
+	| TK_PARA TK_VARIABLE TK_ASIG exp TK_HASTA exp
 	{
 		//fprintf(salida,"for (%s=%s;%s<%s;%s )",$2->nombre,$4.trad,$2->nombre,$6.trad,$2->nombre);
 			//fprintf(salida,"\n%s\n",$4.trad);
@@ -367,21 +367,21 @@ control:
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 cont:
-	HACER
+	TK_HACER
 	{
 		fprintf(salida,"{\n");
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 final:
-	FIN
+	TK_FIN
 	{
 		fprintf(salida,"}\n");
 	};
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //Asigna a una variable un número o cadena
 asignacion: 			
-VARIABLE ASIG exp 
+TK_VARIABLE TK_ASIG exp 
 {
 	intr_sentencia($1->nombre,$3.trad);   //Traducción
 	if (($1->tipo==$3.tipo)&&($1->escons==0)) {
@@ -427,7 +427,7 @@ exp
 ///////////////////////////////////////////////////////////////////////////////////////////////////						
 //Mostrar por pantalla
 visual:
-	ESCRIBIR '('elemento_mostrar')'
+	TK_ESCRIBIR '('elemento_mostrar')'
 	{
 	vis_salida_rc($3.tipo,$3.trad,$3.vis);  //Traducción
 	switch ($3.tipo){
@@ -443,7 +443,7 @@ visual:
 	} 
 
 /*************************************************************************************************/
-	| ESCRIBIR '(' visual2 ',' elemento_mostrar ')'
+	| TK_ESCRIBIR '(' visual2 ',' elemento_mostrar ')'
 	{
 	vis_salida_rc($5.tipo,$5.trad,$5.vis);  //hacemos la traduccion  para la salida por pantalla
 	switch ($5.tipo){
@@ -459,7 +459,7 @@ visual:
 
 /*************************************************************************************************/
 
-	|ESCRIBIR'('')'
+	|TK_ESCRIBIR'('')'
 	{
 	fprintf(salida,"printf(\"\\n\");");  //traducción
 	printf("\n");};//salto de línea
@@ -505,7 +505,7 @@ visual2:
 //Se lee una variable o una lista
 
 lectura:			
-	LEER '('VARIABLE')' //aqui leemos una variable
+	TK_LEER '('TK_VARIABLE')' //aqui leemos una variable
 	{
 	vis_entrada($3->tipo,$3->nombre);  //hacemos la traduccion  para la entrada por teclado
 
@@ -538,7 +538,7 @@ lectura:
 	}
 
 /**************************************************************************************************************************************/
-|LEER '('lectura2 ',' VARIABLE')' //aqui llemos varias variables
+|TK_LEER '('lectura2 ',' TK_VARIABLE')' //aqui llemos varias variables
 	{
 		vis_entrada($5->tipo,$5->nombre);    //hacemos la traduccion  para la entrada por teclado
 		if ($5->escons==0) //no es una constante y la podemos leer   
@@ -573,7 +573,7 @@ lectura:
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 lectura2:                       
-	VARIABLE //aqui lemos una variable
+	TK_VARIABLE //aqui lemos una variable
 	{
 		vis_entrada($1->tipo,$1->nombre); //hacemos la traduccion  para la entrada por teclado
 		if ($1->escons==0) //no es una constante y la podemos leer   
@@ -604,7 +604,7 @@ lectura2:
 			printf("Error: No podemos leer una constante\n");
 	}
 /*******************************************************************************************************/
-	|lectura2 ',' VARIABLE //aqui lemos una variable
+	|lectura2 ',' TK_VARIABLE //aqui lemos una variable
 	{
 		vis_entrada($3->tipo,$3->nombre); //hacemos la traduccion  para la entrada por teclado
 		if ($3->escons==0) //no es una constante y la podemos leer   
@@ -784,9 +784,9 @@ exp:
 
 /*************************************************************************************************/
 //Exponenciales
-	|	exp POW exp
+	|	exp TK_POW exp
 	{
-		strcpy($$.trad," POW");//Traducción
+		strcpy($$.trad," TK_POW");//Traducción
 		strcpy(auxt,"(");
 		strcat(auxt,$1.trad);
 		strcat(auxt,",");
@@ -942,7 +942,7 @@ exp:
 	}
 /*************************************************************************************************/
 //Esta es la coparacion mayor o igual que que devuelve true o false
-	|	exp MAI exp
+	|	exp TK_MAI exp
 	{
 	strcat($$.trad," >= ");//introducimos la cadena creada para la traduccion
 	strcat($$.trad,$3.trad);
@@ -997,7 +997,7 @@ exp:
 	}
 /*********************************************************************************/		
 //Esta es la coparacion meyor o igual que que devuelve true o false
-	|	exp MEI exp
+	|	exp TK_MEI exp
 	{
 	strcat($$.trad," <= ");//introducimos la cadena creada para la traduccion
 	strcat($$.trad,$3.trad);
@@ -1052,7 +1052,7 @@ exp:
 }
 /*************************************************************************************************/						
 //Esta es la coparacion de no igualdad, es decir de distinto que que devuelve true o false
-	|	exp DIS exp
+	|	exp TK_DIS exp
 	{
 	strcat($$.trad," != ");//introducimos la cadena creada para la traduccion
 	strcat($$.trad,$3.trad);
@@ -1108,7 +1108,7 @@ exp:
 
 
 /*************************************************************************************************/
-	|    exp AND exp
+	|    exp TK_AND exp
 	//operacion a nivel de booleanos, and true and true devuelve true otro false
 
 	{
@@ -1124,7 +1124,7 @@ exp:
 	}   
 
 /*************************************************************************************************/
-	|    exp OR exp
+	|    exp TK_OR exp
 	//operacion a nivel de booleanos, or false or false devuelve false otro true
 	{
 	strcat($$.trad," || ");//introducimos la cadena creada para la traduccion
@@ -1139,7 +1139,7 @@ exp:
 	}   
 
 /*************************************************************************************************/
-	|    NOT exp
+	|    TK_NOT exp
 	//operacion a nivel de booleanos, not notfalse=true  not true devuelve false otro true
 
 	{
@@ -1155,28 +1155,28 @@ exp:
 	}   
 /*************************************************************************************************/
 //esto es un número real
-	|	NUM
+	|	TK_NUM
 	{
 		$$.tipo=1;
 		$$.valnum =$1.valnum;	         
 	}
 /*************************************************************************************************/
 //esto es un número entero
-	|	ENT
+	|	TK_ENT
 	{
 		$$.tipo=6;
 		$$.valint =$1.valint;	
 	}
 /*************************************************************************************************/
 //esto es de tipo booleano aunque internamente la tratamos como un entero
-	|	NBOOL
+	|	TK_NBOOL
 	{
 		$$.tipo=3;
 		$$.valbool= $1.valbool;
 	}
 /*************************************************************************************************/
 //estas son las variables que hay de tantas clases como tipos
-	| VARIABLE //copiamos toda la informacion del nodo
+	| TK_VARIABLE //copiamos toda la informacion del nodo
 	{
 		strcpy($$.trad,$1->nombre);//copio el nombre de la variable para la traduccion
 		strcpy($$.valstr,$1->valstr);//strign
@@ -1189,7 +1189,7 @@ exp:
 	}
 /*************************************************************************************************/
 //Esto es una cosntante de tipo cadena
-	| CADENA
+	| TK_CADENA
 	{
 		$$.tipo=$1.tipo;
 		strcpy($$.cad,$1.cad);

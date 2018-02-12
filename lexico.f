@@ -40,63 +40,63 @@ salto \n
 {entero}       {yylval.nterminal.valint = atoi(yytext);
 		 yylval.nterminal.tipo=1;
 		 strcpy(yylval.nterminal.trad,yytext);
-	 	 return ENT;
+	 	 return TK_ENT;
 		}//devuelve un entero
 
 {real}       {yylval.nterminal.valnum = atof(yytext);
 	 	yylval.nterminal.tipo=1;	 
 		strcpy(yylval.nterminal.trad,yytext);
-		return NUM;
+		return TK_NUM;
 		}//devuelve un real
 
 {booleano}     {if (strcmp(yytext,"true")==0){
 		  yylval.nterminal.valbool = 1;
 		strcpy(yylval.nterminal.trad,yytext);
 	 	  yylval.nterminal.tipo=3;	
-		  return NBOOL;
+		  return TK_NBOOL;
     		}	
                 else
 		  yylval.nterminal.valbool = 0;
 	 	  yylval.nterminal.tipo=3;	
 		strcpy(yylval.nterminal.trad,yytext);
-		  return NBOOL;
+		  return TK_NBOOL;
                  }//devuelve un booleano
 
 {blancos}  ;//no hace nada
 {salto}		{n_lineas++;} // Incrementa una variable con el numero de linea
 
-":="		return ASIG;
-"<>"		return DIS;
-"**"		return POW;
-"<="		return MEI;
-">="		return MAI;
-"programa"	return PROGRAM;
-"inicio"         return INICIO;
-"fin"	        return FIN;
-"si"		return SI;
-"const"		return CONST;
-"var"		return VAR;
-"escribir"	return ESCRIBIR;
-"para" return PARA;
-"hasta" return HASTA;
-"leer"	return LEER;
-"mientras" return MIENTRAS;
-"hacer"		return HACER;
-"entero"	return ENTERO;
-"bool"		return BOOL;
-"real"		return REAL;
-"string"	return STRING;
-"librerias" return LIB;
-"and"		return AND;
-"or"		return OR;
-"not"		return NOT;
+":="		return TK_ASIG;
+"<>"		return TK_DIS;
+"**"		return TK_POW;
+"<="		return TK_MEI;
+">="		return TK_MAI;
+"programa"	return TK_PROGRAM;
+"inicio"         return TK_INICIO;
+"fin"	        return TK_FIN;
+"si"		return TK_SI;
+"const"		return TK_CONST;
+"var"		return TK_VAR;
+"escribir"	return TK_ESCRIBIR;
+"para" return TK_PARA;
+"hasta" return TK_HASTA;
+"leer"	return TK_LEER;
+"mientras" return TK_MIENTRAS;
+"hacer"		return TK_HACER;
+"entero"	return TK_ENTERO;
+"bool"		return TK_BOOL;
+"real"		return TK_REAL;
+"string"	return TK_STRING;
+"librerias" return TK_LIB;
+"and"		return TK_AND;
+"or"		return TK_OR;
+"not"		return TK_NOT;
 
 {variable}       {yylval.indice = buscar_simbolo(yytext,&com,&fin);
                  //buscamos es la TS la variable y si no esta la añadimos
                  //introducimos en trad lo que el lex encuentra y aunque variable sea un puntero
                  //la expresion del yacc (el NT) almacena el valor de traduccion
 		strcpy(yylval.nterminal.trad,yytext);
-	        return VARIABLE;
+	        return TK_VARIABLE;
 		}//devuelve una variable
 
 {cadena}  {cadaux=(char *)malloc(sizeof (char [yyleng]));
@@ -107,7 +107,7 @@ salto \n
 	   strcpy(yylval.nterminal.cad,cadaux);
 	   yylval.nterminal.tipo=4; 
 	   yylval.nterminal.escons=1;	   	
-           return CADENA;
+           return TK_CADENA;
 		}//devuelve una constante de tipo cadena
 
 \n|.	   return yytext[0];
@@ -119,7 +119,7 @@ int yywrap(){
 return 1;
 }
 
-//solo la usamos una vez, pero es para que se vea que se puede utilizar
+//Función para los errores con la línea en la que se encuentran
 yyerror(s)
 char *s;
 {

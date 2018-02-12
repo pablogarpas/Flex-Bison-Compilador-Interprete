@@ -8,10 +8,12 @@
 
 //Variables globales
 int   auxb;  //variable auxiliar para la lectura de booleanos 
+int   auxint;  //variable auxiliar para la lectura de enteros
 float auxn;  //variable auxiliar para la lectura de numeros
 char  auxc[30];//variable auxiliar para la lectura de strings
 char  auxt[30];//variable auxiliar para las traducciones
 %}
+
 
 //definimos los tipos de datos que vamos a utilizar
 %union 	{
@@ -42,16 +44,18 @@ char  auxt[30];//variable auxiliar para las traducciones
 %token    BOOL
 %token    STRING
 %token    ESCRIBIR
+%token    LIB
 %token    LEER
 %token	  FIN
 %token	  FINSI
 %token	  CONT
 %token	  ENTONCES
-%token  <nterminal>     CADENA
-%token 	<nterminal>     NBOOL
+%token  <nterminal> CADENA
+%token 	<nterminal> NBOOL
 %token 	<nterminal>	NUM
+%token 	<nterminal>	ENT
 %token 	<indice>	VARIABLE
-%type   <nterminal>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final
+%type   <nterminal>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -65,7 +69,7 @@ char  auxt[30];//variable auxiliar para las traducciones
 %%
 //Aquí comienza el programa
 programa:			
-	cabecera dec_constantes dec_vbles cuerpo{};
+	cabecera librerias dec_constantes dec_vbles cuerpo{};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -86,10 +90,23 @@ salto_lin_dec:
 cabecera: 			
 	PROGRAM VARIABLE salto_lin
 	{
-		intr_cabecera();//traducimos
 		$2->tipo=0;  	
 	};
+//////////////////////////////////////////////////////////////////////////////////////////////////
+librerias:
+	LIB salto_lin libreria
+	{
 
+	}
+	|{}
+	;
+//////////////////////////////////////////////////////////////////////////////////////////////////
+libreria:
+	CADENA salto_lin
+	{
+		intr_lib($1.cad); //Traducción
+	}
+	;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -97,13 +114,18 @@ cabecera:
 dec_constantes:                 
 	CONST salto_lin constante 
 	{
+		intr_cabecera();//Introducir el main después de las constantes
+	
 		$$.tipo=$3.tipo;
 		switch ($3.tipo){
 			case 1:$$.valnum=$3.valnum;break;
 			case 2:strcpy($$.cad,$3.cad);break;
+			case 3:$$.valbool=$3.valbool;break;
+			case 6:$$.valint=$3.valint;break;
 		}		
 	}
-	| {};//Puede o no haber constantes
+	| {		intr_cabecera();//Introducir el main después de las constantes
+	};//Puede o no haber constantes
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -112,14 +134,36 @@ dec_constantes:
 constante:
 	VARIABLE '=' NUM salto_lin 
 	{ //Un número
-	 intr_const_num($3.valnum,$1->nombre); //La traducción
-	 $$.valnum=$1->valnum=$3.valnum;
-	 $$.tipo=$1->tipo=$3.tipo;
-	 $$.escons=1;	
-   $1->escons=1;
-	 $1->aux=3;//Cualquier número
+		intr_const_num($3.valnum,$1->nombre); //La traducción
+		$$.valnum=$1->valnum=$3.valnum;
+		$$.tipo=$1->tipo=$3.tipo;
+		$$.escons=1;	
+		$1->escons=1;
+		$1->aux=3;//Cualquier número
+	}
+	
+/*************************************************************************************************/
+ 	
+	| VARIABLE '=' ENT salto_lin 
+	{ //Un número
+		intr_const_int($3.valint,$1->nombre); //La traducción
+		$$.valint=$1->valint=$3.valint;
+		$$.tipo=$1->tipo=$3.tipo;
+		$$.escons=1;	
+		$1->escons=1;
+		$1->aux=3;//Cualquier número
 	} 
-
+/*************************************************************************************************/
+ 	
+	| VARIABLE '=' NBOOL salto_lin 
+	{ //Un número
+		intr_const_int($3.valbool,$1->nombre); //La traducción
+		$$.valbool=$1->valbool=$3.valbool;
+		$$.tipo=$1->tipo=$3.tipo;
+		$$.escons=1;	
+		$1->escons=1;
+		$1->aux=3;//Cualquier número
+	} 
 /*************************************************************************************************/
 	| VARIABLE '=' CADENA salto_lin 
 	{//Constante cadena
@@ -133,7 +177,7 @@ constante:
 
 /*************************************************************************************************/
 
-	| VARIABLE '=' NUM ';' salto_lin constante //Varias
+	| VARIABLE '=' NUM salto_lin constante //Varias
 	{ 
 		intr_const_num($3.valnum,$1->nombre); //Traducción
 		$$.valnum=$1->valnum=$3.valnum;
@@ -142,6 +186,29 @@ constante:
 		$1->escons=1;
 		$1->aux=3;//Cualquier número
 	}
+
+/*************************************************************************************************/
+	
+	| VARIABLE '=' ENT salto_lin constante
+	{ //Un número
+		intr_const_int($3.valint,$1->nombre); //La traducción
+		$$.valint=$1->valint=$3.valint;
+		$$.tipo=$1->tipo=$3.tipo;
+		$$.escons=1;	
+		$1->escons=1;
+		$1->aux=3;//Cualquier número
+	} 
+/*************************************************************************************************/
+	
+	| VARIABLE '=' NBOOL salto_lin constante
+	{ //Un número
+		intr_const_int($3.valbool,$1->nombre); //La traducción
+		$$.valbool=$1->valbool=$3.valbool;
+		$$.tipo=$1->tipo=$3.tipo;
+		$$.escons=1;	
+		$1->escons=1;
+		$1->aux=3;//Cualquier número
+	} 
 
 /************************************************************************************************/
 	| VARIABLE '=' CADENA salto_lin constante //Varios números
@@ -184,6 +251,7 @@ tipo:
 dec_vbles: 			
 	VAR salto_lin variable 
 	{
+		
 		$$.tipo=$3.tipo;
 	}
 	| {}
@@ -308,6 +376,7 @@ VARIABLE ASIG exp
 		strcpy($$.valstr,$1->valstr);
 		$$.valbool = $1->valbool=$3.valbool;
 		$$.valnum = $1->valnum = $3.valnum;
+		$$.valint = $1->valint = $3.valint;
 		}
 	//Aquí se asigna a una variable de tipo string una constante cadena;
 	else if(($1->tipo==2)&&($3.tipo==4)&&($1->escons==0)) {
@@ -438,7 +507,12 @@ lectura:
 			{						
 			scanf("%s",auxc);
 			strcpy($3->valstr,auxc);
-		}
+			}
+		else if($3->tipo==6)
+			{						
+			scanf("%d",&auxint);
+			$3->valint=auxint;
+			}
 		else 
 			printf("Error: No se puede leer, variable no declarada\n");
 	}
@@ -465,6 +539,11 @@ lectura:
 			{						
 				scanf("%s",auxc);
 				strcpy($5->valstr,auxc);
+			}
+			else if($5->tipo==6)
+			{						
+				scanf("%d",&auxint);
+				$5->valbool=auxint;
 			}
 			else 
 				printf("Error: No se puede leer, variable no declarada\n");
@@ -493,8 +572,8 @@ lectura2:
 			}
 			else if($1->tipo==6)
 			{
-			scanf("%d",&auxb);
-			$1->valint=auxb;
+			scanf("%d",&auxint);
+			$1->valint=auxint;
 			}
 			else if($1->tipo==2)
 			{						
@@ -524,8 +603,8 @@ lectura2:
 		}
 		else if($3->tipo==6)
 		{
-		scanf("%d",&auxb);
-		$3->valint=auxb;
+		scanf("%d",&auxint);
+		$3->valint=auxint;
 		}
 		else if($3->tipo==2)
 		{						
@@ -1058,17 +1137,24 @@ exp:
 	else printf("Error: Operaciones sobre tipos diferentes\n");	
 	}   
 /*************************************************************************************************/
-//esto es un numero
+//esto es un número real
 	|	NUM
 	{
 		$$.tipo=1;
 		$$.valnum =$1.valnum;	         
 	}
 /*************************************************************************************************/
+//esto es un número entero
+	|	ENT
+	{
+		$$.tipo=6;
+		$$.valint =$1.valint;	
+	}
+/*************************************************************************************************/
 //esto es de tipo booleano aunque internamente la tratamos como un entero
 	|	NBOOL
 	{
-		$$.tipo=$1.tipo;
+		$$.tipo=3;
 		$$.valbool= $1.valbool;
 	}
 /*************************************************************************************************/

@@ -1,12 +1,18 @@
 programa prueba2
 
+librerias
+	"stdio.h"
+
 const
 	asd="comparando"
+	asd= 24
 
 var
-	aux:bool
+	aux:entero
 
 inicio
+
+aux:= 2
 
 si (7<5) entonces
 escribir("El si funciona")

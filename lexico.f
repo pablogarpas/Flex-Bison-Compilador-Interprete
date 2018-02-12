@@ -15,15 +15,16 @@ Analizador léxico para el pseudocódigo que aceptará el transpilador.
 //booleano->  reconoce valores booleanos, true o false                     --
 //cadena-> reconoce una constante de tipo cadena                           --
 //---------------------------------------------------------------------------
-  #include "anal.tab.h"
-  #include "codigo.h"
-  #include "codigo.c"
-  #include <string.h>
-  struct simbolo  *com; //Puntero al comienzo de la TS
-  struct simbolo  *fin; //Puntero al final de la TS
-  char *cadaux;//variable auxiliar para eliminar las comillas de yytext
-  char i;//variable auxiliar para eliminar las comillas de yytext
- 	int n_lineas;//contar el numero de lineas
+
+#include "trans.tab.h"
+#include "codigo.h"
+#include "codigo.c"
+#include <string.h>
+struct simbolo  *com; //Puntero al comienzo de la TS
+struct simbolo  *fin; //Puntero al final de la TS
+char *cadaux;//variable auxiliar para eliminar las comillas de yytext
+char i;//variable auxiliar para eliminar las comillas de yytext
+int n_lineas;//contar el numero de lineas
 
 %}
 delim [\' '\t] 
@@ -36,10 +37,10 @@ variable {letra}({letra}|[0-9]|_)*
 cadena   \"[^\"\n]*[\"] 
 salto \n
 %%
-{entero}       {yylval.nterminal.valnum = atof(yytext);
+{entero}       {yylval.nterminal.valint = atoi(yytext);
 		 yylval.nterminal.tipo=1;
 		 strcpy(yylval.nterminal.trad,yytext);
-	 	 return NUM;
+	 	 return ENT;
 		}//devuelve un entero
 
 {real}       {yylval.nterminal.valnum = atof(yytext);
@@ -83,6 +84,7 @@ salto \n
 "bool"		return BOOL;
 "real"		return REAL;
 "string"	return STRING;
+"librerias" return LIB;
 "and"		return AND;
 "or"		return OR;
 "not"		return NOT;

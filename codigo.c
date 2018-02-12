@@ -55,11 +55,22 @@ void intr_cabecera()
    fprintf(salida,"main() \n{\n");
 }
 
+//Librerias
+void intr_lib(char *nombre)
+{
+	fprintf(salida,"#include <%s> \n",nombre);
+}
 
 //Constantes
 void intr_const_num(double num,char *nombre)
 {
 	fprintf(salida,"#define %s %f\n",nombre,num);
+}
+
+//Constantes
+void intr_const_int(int num,char *nombre)
+{
+	fprintf(salida,"#define %s %d\n",nombre,num);
 }
 
 //Cadenas
@@ -98,11 +109,11 @@ void vis_salida(int tipo,char *cad, int vis)
 		case 3:fprintf(salida,"printf(\" %%d \",%s);\n",cad);break;
 		case 6:fprintf(salida,"printf(\" %%d \",%s);\n",cad);break;		
 		case 4:if (vis==3)
-			{
-		       	fprintf(salida,"printf(\" %%s \",%s);\n",cad);break;}
-                       else
-			{fprintf(salida,"printf(%s);\n",cad);break;}
-		}
+					{
+					fprintf(salida,"printf(\" %%s \",%s);\n",cad);break;}
+					else
+					{fprintf(salida,"printf(%s);\n",cad);break;}
+					}
 }
 
 

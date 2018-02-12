@@ -260,20 +260,20 @@ dec_vbles:
 /*************************************************************************************************/
 
 variable:			
-	VARIABLE ':' tipo salto_lin  
+	VARIABLE tipo salto_lin  
 	{
-	intr_variable($3.tipo, $1->nombre); //Traducción
+	intr_variable($2.tipo, $1->nombre); //Traducción
 	if ($1->escons==0)		
-		$$.tipo=$1->tipo=$3.tipo;
+		$$.tipo=$1->tipo=$2.tipo;
 	else printf("Error: %s ---Variable ya declarada como constante\n",$1->nombre);
 	}
 
 /*************************************************************************************************/
-	| VARIABLE ':' tipo';' salto_lin variable	
+	| VARIABLE tipo salto_lin variable	
 	{
-		intr_variable($3.tipo, $1->nombre);  //Traducción
+		intr_variable($2.tipo, $1->nombre);  //Traducción
 		if ($1->escons==0)	
-		$$.tipo=$1->tipo=$3.tipo;
+		$$.tipo=$1->tipo=$2.tipo;
 		else printf("Error: %s ---Variable ya declarada como constante\n",$1->nombre);             
 	};
 
@@ -338,7 +338,9 @@ sentencia:
 
 /*************************************************************************************************/
 	| control cont lista_sentencias final
-	{}
+	{	if($1.valbool==1)
+			$$=$3;
+	}
 /*************************************************************************************************/
 
 	| visual{}
@@ -349,7 +351,7 @@ control:
 	SI exp 
 	{
 		fprintf(salida,"if ");
-		vis_exp($2.tipo,$2.trad);
+			vis_exp($2.tipo,$2.trad);
 		$$.valbool=1;
 	};
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -386,6 +388,9 @@ VARIABLE ASIG exp
 		}	  
 	else if(($1->tipo==6)&&($1->escons==0)) {
 		$$.valint = $1->valint = $3.valint;
+		}
+	else if(($1->tipo==3)&&($1->escons==0)) {
+		$$.valbool = $1->valbool = $3.valbool;
 		}
 	else yyerror("Error en la asignacion: no concuerdan los tipos o %s es constante\n",$1->nombre);				   
 	};

@@ -8,13 +8,16 @@ const
 	asd= 24
 
 var
-	aux:entero
+	aux bool
+	log entero
 
 inicio
 
-aux:= 2
+aux:= 0
 
-si (7<5) entonces
+log:= 0
+
+si (aux) entonces
 escribir("El si funciona")
 escribir("El si funciona mal",aux,"hola")
 finsi

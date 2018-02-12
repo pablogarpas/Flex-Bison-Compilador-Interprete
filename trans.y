@@ -28,7 +28,7 @@ char  auxt[30];//variable auxiliar para las traducciones
 		char cad[255];//valor para las cadenas
 		char trad[255];//almaceno la cadena de composicion de exp
 		int vis; //variable para visualizar las constantes cadena correctamente	
-		} nterminal;
+		} ELEMENTO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,12 +52,12 @@ char  auxt[30];//variable auxiliar para las traducciones
 %token	  TK_CONT
 %token		TK_HASTA
 %token		TK_PARA
-%token  <nterminal> TK_CADENA
-%token 	<nterminal> TK_NBOOL
-%token 	<nterminal>	TK_NUM
-%token 	<nterminal>	TK_ENT
+%token  <ELEMENTO> TK_CADENA
+%token 	<ELEMENTO> TK_NBOOL
+%token 	<ELEMENTO>	TK_NUM
+%token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <nterminal>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 

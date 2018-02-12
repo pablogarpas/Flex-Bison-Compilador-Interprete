@@ -37,28 +37,28 @@ variable {letra}({letra}|[0-9]|_)*
 cadena   \"[^\"\n]*[\"] 
 salto \n
 %%
-{entero}       {yylval.nterminal.valint = atoi(yytext);
-		 yylval.nterminal.tipo=1;
-		 strcpy(yylval.nterminal.trad,yytext);
+{entero}       {yylval.ELEMENTO.valint = atoi(yytext);
+		 yylval.ELEMENTO.tipo=1;
+		 strcpy(yylval.ELEMENTO.trad,yytext);
 	 	 return TK_ENT;
 		}//devuelve un entero
 
-{real}       {yylval.nterminal.valnum = atof(yytext);
-	 	yylval.nterminal.tipo=1;	 
-		strcpy(yylval.nterminal.trad,yytext);
+{real}       {yylval.ELEMENTO.valnum = atof(yytext);
+	 	yylval.ELEMENTO.tipo=1;	 
+		strcpy(yylval.ELEMENTO.trad,yytext);
 		return TK_NUM;
 		}//devuelve un real
 
 {booleano}     {if (strcmp(yytext,"true")==0){
-		  yylval.nterminal.valbool = 1;
-		strcpy(yylval.nterminal.trad,yytext);
-	 	  yylval.nterminal.tipo=3;	
+		  yylval.ELEMENTO.valbool = 1;
+		strcpy(yylval.ELEMENTO.trad,yytext);
+	 	  yylval.ELEMENTO.tipo=3;	
 		  return TK_NBOOL;
     		}	
                 else
-		  yylval.nterminal.valbool = 0;
-	 	  yylval.nterminal.tipo=3;	
-		strcpy(yylval.nterminal.trad,yytext);
+		  yylval.ELEMENTO.valbool = 0;
+	 	  yylval.ELEMENTO.tipo=3;	
+		strcpy(yylval.ELEMENTO.trad,yytext);
 		  return TK_NBOOL;
                  }//devuelve un booleano
 
@@ -95,18 +95,18 @@ salto \n
                  //buscamos es la TS la variable y si no esta la añadimos
                  //introducimos en trad lo que el lex encuentra y aunque variable sea un puntero
                  //la expresion del yacc (el NT) almacena el valor de traduccion
-		strcpy(yylval.nterminal.trad,yytext);
+		strcpy(yylval.ELEMENTO.trad,yytext);
 	        return TK_VARIABLE;
 		}//devuelve una variable
 
 {cadena}  {cadaux=(char *)malloc(sizeof (char [yyleng]));
            // Quitamos las comillas de las cadenas y añadimos el valor para la trduccion
            //damos valor a los campos correspondientes
-           strcpy(yylval.nterminal.trad,yytext);
+           strcpy(yylval.ELEMENTO.trad,yytext);
 	   for (i=1;i<yyleng-1;i++)  cadaux[i-1]=yytext[i];
-	   strcpy(yylval.nterminal.cad,cadaux);
-	   yylval.nterminal.tipo=4; 
-	   yylval.nterminal.escons=1;	   	
+	   strcpy(yylval.ELEMENTO.cad,cadaux);
+	   yylval.ELEMENTO.tipo=4; 
+	   yylval.ELEMENTO.escons=1;	   	
            return TK_CADENA;
 		}//devuelve una constante de tipo cadena
 

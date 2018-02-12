@@ -52,7 +52,7 @@ NODO *buscar_simbolo(char nombre[20],NODO **com,NODO **fin)
 //Main del programa
 void intr_cabecera()
 {
-   fprintf(salida,"main() \n{\n");
+   fprintf(salida,"int main() \n{\n");
 }
 
 //Librerias

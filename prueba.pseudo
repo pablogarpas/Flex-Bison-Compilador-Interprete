@@ -1,0 +1,18 @@
+programa prueba2
+
+const
+	asd="comparando"
+
+var
+	aux:bool
+
+inicio
+
+si (7<5) entonces
+escribir("El si funciona")
+escribir("El si funciona mal",aux,"hola")
+finsi
+
+ escribir("El si funciona bien")
+ 
+fin

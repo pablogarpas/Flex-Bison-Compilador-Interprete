@@ -15,14 +15,15 @@ inicio
 
 aux:= 2
 
+escribir("El si funciona")
+
 log:= 0
 
-mientras (7<5) hacer
+para aux:=10 hasta 8 hacer
+
 escribir("El si funciona")
 escribir("El si funciona mal",aux,"hola")
-aux:= aux-1
-fin
 
-escribir("El si funciona bien")
+fin
  
 fin

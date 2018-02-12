@@ -67,3 +67,6 @@ void vis_entrada(int tipo,char *cad);
 
 //Salidas expresiones
 void vis_exp(int tipo,char *cad);
+
+//Traducir el para
+void intr_para(char *nombre,char *ini,char *obj);

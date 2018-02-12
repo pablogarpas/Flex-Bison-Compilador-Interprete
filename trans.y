@@ -50,6 +50,8 @@ char  auxt[30];//variable auxiliar para las traducciones
 %token	  FIN
 %token	  HACER
 %token	  CONT
+%token		HASTA
+%token		PARA
 %token  <nterminal> CADENA
 %token 	<nterminal> NBOOL
 %token 	<nterminal>	NUM
@@ -355,6 +357,12 @@ control:
 	{
 		fprintf(salida,"while ");
 			vis_exp($2.tipo,$2.trad);
+	}
+	| PARA VARIABLE ASIG exp HASTA exp
+	{
+		//fprintf(salida,"for (%s=%s;%s<%s;%s )",$2->nombre,$4.trad,$2->nombre,$6.trad,$2->nombre);
+			//fprintf(salida,"\n%s\n",$4.trad);
+		intr_para($2->nombre,$4.trad,$6.trad);
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////

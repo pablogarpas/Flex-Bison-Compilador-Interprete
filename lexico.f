@@ -77,6 +77,8 @@ salto \n
 "const"		return CONST;
 "var"		return VAR;
 "escribir"	return ESCRIBIR;
+"para" return PARA;
+"hasta" return HASTA;
 "leer"	return LEER;
 "mientras" return MIENTRAS;
 "hacer"		return HACER;

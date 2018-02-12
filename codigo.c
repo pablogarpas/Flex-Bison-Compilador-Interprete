@@ -150,3 +150,31 @@ void vis_exp(int tipo,char *cad)
 {
 	fprintf(salida,"%s",cad);
 }
+
+//Traducir para
+void intr_para(char *nombre,char *ini,char *obj)
+{
+
+	char signo[3]=">";
+	char op[3];
+	
+	//Se comprueba si el valor objetivo es mayor o menor que el inicial para 
+	//Hacer el for bien
+	
+	if(atoi(ini)>atoi(obj)) {
+		strcpy(signo,">");
+		strcpy(op,"--");
+		}
+	else if(atoi(ini)<atoi(obj)) {
+		strcpy(signo,"<");
+		strcpy(op,"++");
+		}
+	else{
+		strcpy(signo,"==");
+		strcpy(op," ");//Por poner algo
+		}
+	
+	fprintf(salida,"for (%s=%s;%s %s %s;%s%s)",nombre,ini,nombre,signo,obj,nombre,op);
+	
+}
+

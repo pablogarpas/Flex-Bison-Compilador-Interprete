@@ -74,12 +74,12 @@ salto \n
 "inicio"         return INICIO;
 "fin"	        return FIN;
 "si"		return SI;
-"finsi"		return FINSI;
-"entonces"		return ENTONCES;
 "const"		return CONST;
 "var"		return VAR;
 "escribir"	return ESCRIBIR;
 "leer"	return LEER;
+"mientras" return MIENTRAS;
+"hacer"		return HACER;
 "entero"	return ENTERO;
 "bool"		return BOOL;
 "real"		return REAL;

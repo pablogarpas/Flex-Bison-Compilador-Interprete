@@ -8,20 +8,21 @@ const
 	asd= 24
 
 var
-	aux bool
+	aux entero
 	log entero
 
 inicio
 
-aux:= 0
+aux:= 2
 
 log:= 0
 
-si (aux) entonces
+mientras (7<5) hacer
 escribir("El si funciona")
 escribir("El si funciona mal",aux,"hola")
-finsi
+aux:= aux-1
+fin
 
- escribir("El si funciona bien")
+escribir("El si funciona bien")
  
 fin

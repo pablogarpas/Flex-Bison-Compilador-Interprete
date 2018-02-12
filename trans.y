@@ -43,13 +43,13 @@ char  auxt[30];//variable auxiliar para las traducciones
 %token    REAL
 %token    BOOL
 %token    STRING
+%token		MIENTRAS
 %token    ESCRIBIR
 %token    LIB
 %token    LEER
 %token	  FIN
-%token	  FINSI
+%token	  HACER
 %token	  CONT
-%token	  ENTONCES
 %token  <nterminal> CADENA
 %token 	<nterminal> NBOOL
 %token 	<nterminal>	NUM
@@ -281,10 +281,8 @@ variable:
 
 //Cuerpo del programa
 cuerpo:
-	INICIO salto_lin lista_sentencias  FIN
-	{
-		fprintf(salida,"}");  //Traducción
-		return 0;}
+	INICIO salto_lin lista_sentencias final
+	{}
 	;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -352,17 +350,23 @@ control:
 	{
 		fprintf(salida,"if ");
 			vis_exp($2.tipo,$2.trad);
-		$$.valbool=1;
-	};
+	}
+	| MIENTRAS exp
+	{
+		fprintf(salida,"while ");
+			vis_exp($2.tipo,$2.trad);
+	}
+	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 cont:
-	ENTONCES 
+	HACER
 	{
 		fprintf(salida,"{\n");
-	};
+	}
+	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 final:
-	FINSI 
+	FIN
 	{
 		fprintf(salida,"}\n");
 	};

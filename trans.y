@@ -53,6 +53,7 @@ char  auxt[30];//variable auxiliar para las traducciones
 %token	  TK_INC
 %token	  TK_DEC
 %token	  TK_CONT
+%token		TK_DEFAULT
 %token		TK_HASTA
 %token		TK_PARA
 %token    TK_CASO
@@ -390,7 +391,7 @@ sentencia:
 			$$=$3;
 	}
 /*************************************************************************************************/
-	| control_switch salto_lin control_switch final
+	| switch cases final
 	{
 	}
 /*************************************************************************************************/
@@ -418,25 +419,45 @@ control:
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
-control_switch:
-	switch lista_sentencias switch
+switch:
+	TK_SWITCH TK_VARIABLE
 	{
-		fprintf(salida,"break;\n");
-	}
-	| switch lista_sentencias 
-	{
-		fprintf(salida,"break;\n");
-	}
-	| TK_SWITCH TK_VARIABLE
-	{
-		fprintf(salida,"switch (%s) {\n",$2->nombre);
+		fprintf(salida,"switch (%s){\n",$2->nombre);
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
-switch:
-	TK_CASO exp
+caso: TK_CASO exp
 	{
 		fprintf(salida,"case %s:\n",$2.trad);
+	}
+	;
+/////////////////////////////////////////////////////////////////////////////////////////////////
+case:
+	caso lista_sentencias break
+	{
+	}
+	|	default lista_sentencias break
+	{
+	}
+	;
+	;	
+/////////////////////////////////////////////////////////////////////////////////////////////////
+cases:
+	case
+	| default
+	| case cases
+	;
+/////////////////////////////////////////////////////////////////////////////////////////////////
+default:
+	TK_DEFAULT
+	{
+		fprintf(salida,"default:\n");
+	}
+	;
+/////////////////////////////////////////////////////////////////////////////////////////////////
+break:
+	{
+		fprintf(salida,"break;\n");
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////

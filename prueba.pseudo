@@ -23,6 +23,12 @@ caso "asd"
 
 caso 4
 
+		escribir("adios")
+
+default
+
+			escribir("er")
+			
 fin 
 
 fin

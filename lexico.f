@@ -72,6 +72,7 @@ salto \n
 ">="		return TK_MAI;
 "++"		return TK_INC;
 "--"		return TK_DEC;
+"default" return TK_DEFAULT;
 "caso" return TK_CASO;
 "switch" return TK_SWITCH;
 "programa"	return TK_PROGRAM;

@@ -46,6 +46,7 @@ char  auxt[30];//variable auxiliar para las traducciones
 %token		TK_MIENTRAS
 %token    TK_ESCRIBIR
 %token    TK_LIB
+%token    TK_SWITCH
 %token    TK_LEER
 %token	  TK_FIN
 %token	  TK_HACER
@@ -54,6 +55,7 @@ char  auxt[30];//variable auxiliar para las traducciones
 %token	  TK_CONT
 %token		TK_HASTA
 %token		TK_PARA
+%token    TK_CASO
 %token  <ELEMENTO> TK_CADENA
 %token 	<ELEMENTO> TK_NBOOL
 %token 	<ELEMENTO>	TK_NUM
@@ -388,6 +390,10 @@ sentencia:
 			$$=$3;
 	}
 /*************************************************************************************************/
+	| control_switch salto_lin control_switch final
+	{
+	}
+/*************************************************************************************************/
 
 	| visual{}
 	| lectura{};
@@ -399,7 +405,7 @@ control:
 		fprintf(salida,"if ");
 			vis_exp($2.tipo,$2.trad);
 	}
-	| TK_MIENTRAS exp
+	| TK_MIENTRAS exp 
 	{
 		fprintf(salida,"while ");
 			vis_exp($2.tipo,$2.trad);
@@ -412,8 +418,35 @@ control:
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
+control_switch:
+	switch lista_sentencias switch
+	{
+		fprintf(salida,"break;\n");
+	}
+	| switch lista_sentencias 
+	{
+		fprintf(salida,"break;\n");
+	}
+	| TK_SWITCH TK_VARIABLE
+	{
+		fprintf(salida,"switch (%s) {\n",$2->nombre);
+	}
+	;
+/////////////////////////////////////////////////////////////////////////////////////////////////
+switch:
+	TK_CASO exp
+	{
+		fprintf(salida,"case %s:\n",$2.trad);
+	}
+	;
+/////////////////////////////////////////////////////////////////////////////////////////////////
 cont:
 	TK_HACER
+	{
+		fprintf(salida,"{\n");
+	}
+	//No hace falta poner hacer en el pseudo
+	| 
 	{
 		fprintf(salida,"{\n");
 	}

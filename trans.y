@@ -62,7 +62,7 @@ char  auxt[30];//variable auxiliar para las traducciones
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria switch case cases default
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -289,7 +289,9 @@ variable:
 //Cuerpo del programa
 cuerpo:
 	TK_INICIO salto_lin lista_sentencias final
-	{}
+	{
+		fprintf(salida,"%s",$4.trad);
+	}
 	;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -389,10 +391,15 @@ sentencia:
 	| control cont lista_sentencias final
 	{	if($1.valbool==1)
 			$$=$3;
+			
+		fprintf(salida,"\ncasos:\n\n%s",$4.trad);
 	}
 /*************************************************************************************************/
-	| switch cases final
+	| switch final
 	{
+		//fprintf(salida,"%s",$2.trad);
+		fprintf(salida,$2.trad);
+		$2.tipo=$1.tipo;
 	}
 /*************************************************************************************************/
 
@@ -413,31 +420,41 @@ control:
 	}
 	| TK_PARA TK_VARIABLE TK_ASIG exp TK_HASTA exp
 	{
-		//fprintf(salida,"for (%s=%s;%s<%s;%s )",$2->nombre,$4.trad,$2->nombre,$6.trad,$2->nombre);
-			//fprintf(salida,"\n%s\n",$4.trad);
 		intr_para($2->nombre,$4.trad,$6.trad);
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 switch:
-	TK_SWITCH TK_VARIABLE
-	{
+	TK_SWITCH TK_VARIABLE cases
+	{				
 		fprintf(salida,"switch (%s){\n",$2->nombre);
-	}
-	;
-/////////////////////////////////////////////////////////////////////////////////////////////////
-caso: TK_CASO exp
-	{
-		fprintf(salida,"case %s:\n",$2.trad);
+		
+		fprintf(salida,"%s",$3.trad);
+		
+		fprintf(salida,"%d",$2->tipo);
+		fprintf(salida,"%d",$3.tipo);
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 case:
-	caso lista_sentencias break
+	TK_CASO exp lista_sentencias break
 	{
+				//"case %s:\n",$2.trad
+		$$.tipo=$2.tipo;
+		
+		strcpy($$.trad,"case ");
+		
+		strcat($$.trad,$2.trad);
+
+		strcat($$.trad,":\n");
+		
+		strcat($$.trad,$3.trad);		
 	}
 	|	default lista_sentencias break
 	{
+		strcpy($$.trad,$1.trad);
+		strcat($$.trad,$2.trad);
+		$$.tipo=0;
 	}
 	;
 	;	
@@ -445,13 +462,21 @@ case:
 cases:
 	case
 	| default
+	{
+		strcat($$.trad,$1.trad);
+		$$.tipo=$1.tipo;
+	}
 	| case cases
+	{
+		strcat($$.trad,$2.trad);
+		$$.tipo=$2.tipo;
+	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 default:
 	TK_DEFAULT
 	{
-		fprintf(salida,"default:\n");
+		strcpy($$.trad,"default:\n");
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -476,7 +501,8 @@ cont:
 final:
 	TK_FIN
 	{
-		fprintf(salida,"}\n");
+		//fprintf(salida,"}\n");
+		strcpy($$.trad,"}\n");
 	};
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //Asigna a una variable un número o cadena
@@ -529,7 +555,10 @@ exp
 visual:
 	TK_ESCRIBIR '('elemento_mostrar')'
 	{
-	vis_salida_sl($3.tipo,$3.trad,$3.vis);  //Traducción
+	//vis_salida_sl($3.tipo,$3.trad,$3.vis);  //Traducción
+	strcpy($$.trad,"printf(");
+	strcat($$.trad,$3.trad);
+	strcat($$.trad,");\n");
 	switch ($3.tipo){
 		case 1: printf(" %f \n",$3.valnum);break;
 		case 2:	printf(" %s \n",$3.valstr);break;
@@ -545,7 +574,10 @@ visual:
 /*************************************************************************************************/
 	| TK_ESCRIBIR '(' visual2 ',' elemento_mostrar ')'
 	{
-	vis_salida_sl($5.tipo,$5.trad,$5.vis);  //hacemos la traduccion  para la salida por pantalla
+	strcpy($$.trad,"printf(");
+	strcat($$.trad,$5.trad);
+	strcat($$.trad,"\n");
+	//vis_salida_sl($5.tipo,$5.trad,$5.vis);  //hacemos la traduccion  para la salida por pantalla
 	switch ($5.tipo){
 		case 1: printf(" %f \n",$5.valnum);break;
 		case 2:	printf(" %s \n",$5.valstr);break;
@@ -561,8 +593,12 @@ visual:
 
 	|TK_ESCRIBIR'('')'
 	{
-	fprintf(salida,"printf(\"\\n\");");  //traducción
-	printf("\n");};//salto de línea
+	strcpy($$.trad,"printf(\"\\n\");");
+	strcat($$.trad,"\n");
+	
+	//fprintf(salida,"printf(\"\\n\");");  //traducción
+	//printf("\n");
+	};//salto de línea
                                 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //Mosntrar varios elementos separándolos por comas

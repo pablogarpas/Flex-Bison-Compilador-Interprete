@@ -314,11 +314,13 @@ lista_sentencias:
 		case 1: $$.valnum = $1.valnum;break;
 		case 2:	strcpy($$.valstr,$1.valstr);break;
 		case 3: $$.valbool = $1.valbool;break;
-		case 4: //strcpy($$.valstr,$1.cad);
-			fprintf(salida,"%s",$1.trad);
+		case 4: strcat($$.valstr,$1.cad);
+			//fprintf(salida,"%s",$1.trad);
 			break;
 		case 6: $$.valint = $1.valint;break;
 		}
+				 
+		strcpy($$.trad,$1.trad);
 	}
 
 /*************************************************************************************************/
@@ -331,11 +333,13 @@ lista_sentencias:
 			case 1: $$.valnum = $1.valnum;break;
 			case 2:	strcpy($$.valstr,$1.valstr);break;
 			case 3: $$.valbool = $1.valbool;break;
-			case 4: //strcpy($$.valstr,$1.cad);
-				fprintf(salida,"%s",$1.trad);
+			case 4: strcat($$.valstr,$1.cad);
+				//fprintf(salida,"%s",$1.trad);
 				break;
 			case 6: $$.valint = $1.valint;break;
 		}	
+		
+		 strcat($$.trad,$3.trad);
 	};
 
 
@@ -353,6 +357,7 @@ sentencia:
 			case 4: strcpy($$.valstr,$1.cad);break; 
 			case 6: $$.valint = $1.valint;break;
 		}		
+		
 	}
 /*************************************************************************************************/
 	| control cont lista_sentencias final

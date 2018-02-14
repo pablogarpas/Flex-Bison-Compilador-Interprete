@@ -15,15 +15,12 @@ inicio
 
 aux:= 2
 
-si (aux==3) hacer
+si (aux == 2) hacer
+
 
 	escribir("hola")
-	escribir("hola que ase")
-	escribir("hola que ase")
-	escribir("hola que ase")
-
-
-	escribir("nope")
+		escribir("adios")
+		escribir("adios")
 
 fin 
 

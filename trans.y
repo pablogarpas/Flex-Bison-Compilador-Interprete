@@ -20,6 +20,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %union 	{
 	struct NODO *indice; //puntero a la tabla de simbolos 
 	struct elemento {
+		char nombre[255]; //amacenar el nombre
 		int escons; //nos dice si es o no constante 1->si 0->no 
 		int tipo; //tipo de variable
 		int valbool; //tipo booleano
@@ -63,7 +64,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria switch case cases default break
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria switch case cases default break incremento
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -271,8 +272,10 @@ variable:
 	TK_VARIABLE tipo salto_lin  
 	{
 	intr_variable($2.tipo, $1->nombre); //Traducción
-	if ($1->escons==0)		
-		$$.tipo=$1->tipo=$2.tipo;
+	if ($1->escons==0) {		
+		$$.tipo=$2.tipo;
+		strcpy($$.nombre,$1->nombre);
+		}
 	else yyerror("Error: %s ---Variable ya declarada como constante\n",$1->nombre);
 	}
 
@@ -280,8 +283,10 @@ variable:
 	| TK_VARIABLE tipo salto_lin variable	
 	{
 		intr_variable($2.tipo, $1->nombre);  //Traducción
-		if ($1->escons==0)	
-		$$.tipo=$1->tipo=$2.tipo;
+		if ($1->escons==0)	{
+			$$.tipo=$2.tipo;
+			strcpy($$.nombre,$1->nombre);
+			}
 		else yyerror("Error: %s ---Variable ya declarada como constante\n",$1->nombre);             
 	};
 
@@ -308,7 +313,9 @@ lista_sentencias:
 		case 1: $$.valnum = $1.valnum;break;
 		case 2:	strcpy($$.valstr,$1.valstr);break;
 		case 3: $$.valbool = $1.valbool;break;
-		case 4: strcpy($$.valstr,$1.cad);break;
+		case 4: //strcpy($$.valstr,$1.cad);
+			fprintf(salida,"%s",$1.trad);
+			break;
 		case 6: $$.valint = $1.valint;break;
 		}
 	}
@@ -318,13 +325,16 @@ lista_sentencias:
 	| sentencia salto_lin lista_sentencias 
 	{
 		$$.tipo=$1.tipo;
+		
 		switch ($1.tipo){
 			case 1: $$.valnum = $1.valnum;break;
 			case 2:	strcpy($$.valstr,$1.valstr);break;
 			case 3: $$.valbool = $1.valbool;break;
-			case 4: strcpy($$.cad,$1.cad);break;  	
+			case 4: //strcpy($$.valstr,$1.cad);
+				fprintf(salida,"%s",$1.trad);
+				break;
 			case 6: $$.valint = $1.valint;break;
-		}		
+		}	
 	};
 
 
@@ -343,57 +353,15 @@ sentencia:
 			case 6: $$.valint = $1.valint;break;
 		}		
 	}
-	
-/*************************************************************************************************/
-//Preincremento 
-	|	TK_INC TK_VARIABLE
-	{
-		/*
-		if($2.tipo==6)
-			$$.valint =$2.valint+1;	
-		else if($2.tipo==1)
-			$$.valnum =$2.valnum+1;	
-		else
-			yyerror("Error: No se puede incrementar una variable no númerica");
-		*/
-		if($2->tipo==1 || $2->tipo==6)
-			intr_inc($2->nombre,0);
-		else
-			yyerror("Error: No se puede incrementar una variable no númerica");
-	}
-/*************************************************************************************************/
-//Postincremento 
-	|	TK_VARIABLE TK_INC
-	{
-		if($1->tipo==1 || $1->tipo==6)
-			intr_inc($1->nombre,1);
-		else
-			yyerror("Error: No se puede incrementar una variable no númerica");
-	}
-/*************************************************************************************************/
-//Predecremento
-	|	TK_DEC TK_VARIABLE
-	{
-		if($2->tipo==1 || $2->tipo==6)
-			intr_dec($2->nombre,0);
-		else
-			yyerror("Error: No se puede decrementar una variable no númerica");
-	}
-/*************************************************************************************************/
-//Postdecremento 
-	|	TK_VARIABLE TK_DEC
-	{
-		if($1->tipo==1 || $1->tipo==6)
-			intr_dec($1->nombre,1);
-		else
-			yyerror("Error: No se puede decrementar una variable no númerica");
-	}
 /*************************************************************************************************/
 	| control cont lista_sentencias final
-	{	if($1.valbool==1)
+	{	
+	if($1.valbool==1)
 			$$=$3;
-			
-		fprintf(salida,"\ncasos:\n\n%s",$4.trad);
+		
+	
+		fprintf(salida,"%s",$3.trad);
+		fprintf(salida,"%s",$4.trad);
 	}
 /*************************************************************************************************/
 	| switch final
@@ -403,10 +371,9 @@ sentencia:
 		$2.tipo=$1.tipo;
 	}
 /*************************************************************************************************/
-
+	| incremento{}
 	| visual{}
 	| lectura{};
-	
 /////////////////////////////////////////////////////////////////////////////////////////////////	
 control:
 	TK_SI exp 
@@ -421,6 +388,18 @@ control:
 	}
 	| TK_PARA TK_VARIABLE TK_ASIG exp TK_HASTA exp
 	{
+		/*
+		printf("\n%d\t%d\n",$2->tipo,$4.tipo);
+	
+	
+		if($2->tipo==$4.tipo) { //no se hace nada, tipos compatibles
+		} else if ( ($2->tipo==1 && $4.tipo== 6) || ($2->tipo==6 && $4.tipo== 1) ) {
+		//Se puede comparar float con entero sin error
+		}
+	 	else 
+			yyerror("Error: en el para no concuerdan tipos");
+		*/
+		
 		intr_para($2->nombre,$4.trad,$6.trad);
 	}
 	;
@@ -429,10 +408,14 @@ switch:
 	TK_SWITCH TK_VARIABLE cases
 	{				
 		int aux=$3.tipo;
+		int compro;
 		
 		while(aux>0) {
-			if($2->tipo==aux%10) {//no se hace nada, tipos compatibles
-			}else if (aux==9) {//no se hace nada, default
+			compro= aux%10;
+			if($2->tipo==compro) {//no se hace nada, tipos compatibles
+			}else if (compro==9) {//no se hace nada, default
+			}else if ( ($2->tipo==1 && compro== 6) || ($2->tipo==6 && compro== 1) ) {
+			//Se puede comparar float con entero sin error
 			}
 		 	else {
 			yyerror("Error: al menos uno de los casos del switch no concuerda en tipo con la variable");
@@ -568,9 +551,12 @@ visual:
 	TK_ESCRIBIR '('elemento_mostrar')'
 	{
 	//vis_salida_sl($3.tipo,$3.trad,$3.vis);  //Traducción
+	
 	strcpy($$.trad,"printf(");
 	strcat($$.trad,$3.trad);
 	strcat($$.trad,");\n");
+	
+	/*
 	switch ($3.tipo){
 		case 1: printf(" %f \n",$3.valnum);break;
 		case 2:	printf(" %s \n",$3.valstr);break;
@@ -581,15 +567,36 @@ visual:
 		case 6: printf(" %d \n",$3.valint);break;
 		default: yyerror("Error:Imposible visualizar la variable o expresion\n");
 		}	
+		*/
+		
+		/*
+	switch ($3.tipo){
+		case 1: 
+			//snprintf($$.trad,"printf(\"",$3.valnum," \n\")");
+			break;
+		case 2:	
+			snprintf($$.trad,"printf(\"",$3.valstr," \n\")");
+			break;
+		case 3: if($3.valbool==1) sprintf($$.trad,"printf(\" TRUE \n \")");
+		else if($3.valbool==0)  sprintf($$.trad,"printf(\" FALSE \n \")");
+		break;
+		case 4: snprintf($$.trad,"printf(\" ",$3.cad," \n\")");break;
+		case 6: snprintf($$.trad,"printf(\"", $3.valint," \n\")");break;
+		default: yyerror("Error:Imposible visualizar la variable o expresion\n");
+		}
+		*/	
 	} 
 
 /*************************************************************************************************/
 	| TK_ESCRIBIR '(' visual2 ',' elemento_mostrar ')'
 	{
+	
 	strcpy($$.trad,"printf(");
 	strcat($$.trad,$5.trad);
 	strcat($$.trad,"\n");
 	//vis_salida_sl($5.tipo,$5.trad,$5.vis);  //hacemos la traduccion  para la salida por pantalla
+	
+	/*
 	switch ($5.tipo){
 		case 1: printf(" %f \n",$5.valnum);break;
 		case 2:	printf(" %s \n",$5.valstr);break;
@@ -599,6 +606,7 @@ visual:
 		case 6: printf(" %d \n",$5.valint);break;
 		default: yyerror("Error:Imposible visualizar la variable o expresion\n");
 		}
+		*/
 	} 
 
 /*************************************************************************************************/
@@ -617,7 +625,13 @@ visual:
 visual2:			 
 	elemento_mostrar
 	{	
-	vis_salida($1.tipo,$1.trad,$1.vis); //Traducción
+	//vis_salida($1.tipo,$1.trad,$1.vis); //Traducción
+	
+	strcpy($$.trad,"printf(");
+	strcat($$.trad,$1.trad);
+	strcat($$.trad,"\n");
+	
+	/*
 	switch ($1.tipo){
 		case 1: printf(" %f ",$1.valnum);;break;
 		case 2:	printf(" %s ",$1.valstr);break;
@@ -628,13 +642,22 @@ visual2:
 		case 6: printf(" %d ",$1.valint);break;
 		default: yyerror("Error:Imposible visualizar la variable o expresion\n");
 		}
+		
+		*/
 	}
 
 /*************************************************************************************************/
 
 	| visual2 ',' elemento_mostrar  
 	{	
-	vis_salida($3.tipo,$3.trad,$3.vis); //Traducción
+	//vis_salida($3.tipo,$3.trad,$3.vis); //Traducción
+	
+	
+	strcpy($$.trad,"printf(");
+	strcat($$.trad,$1.trad);
+	strcat($$.trad,"\n");
+	
+	/*
 		switch ($3.tipo){
 		case 1: printf(" %f ",$3.valnum);;break;
 		case 2:	printf(" %s ",$3.valstr);break;
@@ -645,6 +668,7 @@ visual2:
 		case 6: printf(" %d ",$3.valint);break;
 		default: yyerror("Error:Imposible visualizar la variable o expresion\n");
 		}
+		*/
 	}
 	|{}
 	;	
@@ -689,6 +713,7 @@ lectura:
 |TK_LEER '('lectura2 ',' TK_VARIABLE')' //aqui llemos varias variables
 	{
 		vis_entrada($5->tipo,$5->nombre);    //hacemos la traduccion  para la entrada por teclado
+		
 		if ($5->escons==0) //no es una constante y la podemos leer   
 		{
 			if($5->tipo==1){	
@@ -1344,7 +1369,57 @@ exp:
 		strcpy($$.cad,$1.cad);
 		$$.escons=$1.escons;
 	}
-	;	      				
+	;	      		
+/////////////////////////////////////////////////////////////////////////////////////////////////
+incremento:	
+//Preincremento 
+	|	TK_INC variable
+	{
+		if($2.tipo==6) {
+			intr_inc($2.nombre,0);
+			$$.valint=$2.valint;		
+			$$.tipo=$2.tipo;
+			}
+		else
+			yyerror("Error: No se puede incrementar una variable no númerica");
+	}
+/*************************************************************************************************/
+//Postincremento 
+	|	variable TK_INC
+	{
+		if($1.tipo==6) {
+			intr_inc($1.nombre,1);
+			$$.valint=$1.valint;
+			$$.tipo=$1.tipo;
+			}
+		else
+			yyerror("Error: No se puede incrementar una variable no númerica");
+	}
+/*************************************************************************************************/
+//Predecremento
+	|	TK_DEC variable
+	{
+		if($2.tipo==6) {
+			intr_dec($2.nombre,0);
+			$$.valint=$2.valint;		
+			$$.tipo=$2.tipo;
+			}
+		else
+			yyerror("Error: No se puede decrementar una variable no númerica");
+	}
+/*************************************************************************************************/
+//Postdecremento 
+	|	variable TK_DEC
+	{
+		if($1.tipo==6) {
+			intr_dec($1.nombre,1);
+			$$.valint=$1.valint;
+			$$.tipo=$1.tipo;
+			}
+		else
+			yyerror("Error: No se puede decrementar una variable no númerica");
+	}
+	;		
 %%
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Main, dónde se genera el fichero

@@ -24,7 +24,7 @@ NODO *buscar_simbolo(char nombre[20],NODO **com,NODO **fin)
 	}
     
 	strcpy(nuevo->nombre,nombre);//Nombre
-	nuevo->tipo=5;//Tipo génerico
+	nuevo->tipo=6;//Tipo génerico
 	if ((*com==NULL))
 	{
 		(nuevo->sig)=NULL;

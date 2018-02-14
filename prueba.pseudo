@@ -15,21 +15,13 @@ inicio
 
 aux:= 2
 
-switch aux 
-
-caso 32
+para aux:=0 hasta 9 hacer
 
 	escribir("hola")
+	escribir("hola que ase")
+	escribir("hola que ase")
+	escribir("hola que ase")
 
-caso 5
-
-		escribir("adios")
-
-caso 65
-	
-	escribir("pa casa")
-
-default 
 
 	escribir("nope")
 

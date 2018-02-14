@@ -452,7 +452,6 @@ case:
 	{
 		$$.tipo=$2.tipo;
 		
-		
 		strcpy($$.trad,"case ");
 		strcat($$.trad,$2.trad);
 		strcat($$.trad,":\n");		
@@ -463,6 +462,7 @@ case:
 	{
 		strcpy($$.trad,$1.trad);
 		strcat($$.trad,$2.trad);
+		strcat($$.trad,$3.trad);		
 		$$.tipo=9;
 	}
 	;

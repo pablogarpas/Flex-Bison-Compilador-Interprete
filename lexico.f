@@ -20,11 +20,13 @@ Analizador léxico para el pseudocódigo que aceptará el transpilador.
 #include "codigo.h"
 #include "codigo.c"
 #include <string.h>
+
 struct simbolo  *com; //Puntero al comienzo de la TS
 struct simbolo  *fin; //Puntero al final de la TS
 char *cadaux;//variable auxiliar para eliminar las comillas de yytext
 char i;//variable auxiliar para eliminar las comillas de yytext
 int n_lineas;//contar el numero de lineas
+int num_errores;// variable para contar el número de errores
 
 %}
 delim [\' '\t] 
@@ -125,8 +127,12 @@ return 1;
 }
 
 //Función para los errores con la línea en la que se encuentran
-yyerror(s)
-char *s;
+yyerror(char *s, int salir)
 {
   printf("%s. En la línea %d.\n",s,n_lineas+1);
+  num_errores++;
+  
+  if (num_errores>5||salir) {
+  exit(0);
+  }
 }

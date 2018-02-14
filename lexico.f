@@ -67,7 +67,8 @@ salto \n
 {blancos}  ;//no hace nada
 {salto}		{n_lineas++;} // Incrementa una variable con el numero de linea
 
-":="		return TK_ASIG;
+":="			return TK_ASIG;
+"=="		return TK_IGU;
 "<>"		return TK_DIS;
 "**"		return TK_POW;
 "<="		return TK_MEI;

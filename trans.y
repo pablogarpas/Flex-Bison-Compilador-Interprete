@@ -46,6 +46,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token    TK_BOOL
 %token    TK_STRING
 %token		TK_MIENTRAS
+%token		TK_IGU
 %token    TK_ESCRIBIR
 %token    TK_LIB
 %token    TK_SWITCH
@@ -1278,6 +1279,62 @@ exp:
 
 	else yyerror("Error: Operaciones sobre tipos diferentes\n");                                  
 	}
+/*************************************************************************************************/						
+//Esta es la coparacion de  igualdad, que devuelve true o false
+	|	exp TK_IGU exp
+	{
+	strcat($$.trad," == ");//introducimos la cadena creada para la traduccion
+	strcat($$.trad,$3.trad);
+
+	$$.tipo=3;//asigno tipo bool
+	if (($1.tipo)==($3.tipo))
+	{ 	
+		if ($1.tipo==1)//si es numero
+		{
+			if ($1.valnum!=$3.valnum) $$.valbool =0 ;
+			else $$.valbool=1;
+		} 
+		else if($1.tipo==2)//si es string
+		{
+			if (strcmp($1.valstr,$3.valstr)!=0) $$.valbool =0; 
+			else $$.valbool=1;
+		} 	
+		else if($1.tipo==4)//si es cte cadena
+		{
+			if (strcmp($1.cad,$3.cad)!=0) $$.valbool =0; 
+			else $$.valbool=1;
+		}
+		if ($1.tipo==6)//si es numero
+		{
+			if ($1.valint!=$3.valint) $$.valbool =0 ;
+			else $$.valbool=1;
+		} 
+	}	
+
+	else if (($1.tipo==2)&&($3.tipo==4))//cadena y constante
+	{
+	if (strcmp($1.valstr,$3.cad)!=0) $$.valbool =0; 
+	else $$.valbool=1;
+	}
+	else if (($1.tipo==4)&&($3.tipo==2))//constante y cadena
+	{
+	if (strcmp($1.cad,$3.valstr)!=0) $$.valbool =0; 
+	else $$.valbool=1;
+	}
+	else if (($1.tipo==6)&&($3.tipo==1))//constante y cadena
+	{
+		if ($1.valint!=$3.valnum) $$.valbool =0; 
+		else $$.valbool=1;
+	}
+	else if (($1.tipo==1)&&($3.tipo==6))//constante y cadena
+	{
+		if ($1.valnum!=$3.valint) $$.valbool =0; 
+		else $$.valbool=1;
+	}
+
+	else yyerror("Error: Operaciones sobre tipos diferentes\n");                                  
+	}
+
 
 
 /*************************************************************************************************/

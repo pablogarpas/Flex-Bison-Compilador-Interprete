@@ -15,7 +15,7 @@ inicio
 
 aux:= 2
 
-para aux:=0 hasta 9 hacer
+si (aux==3) hacer
 
 	escribir("hola")
 	escribir("hola que ase")

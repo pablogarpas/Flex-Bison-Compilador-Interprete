@@ -12,6 +12,7 @@ int   auxint;  //variable auxiliar para la lectura de enteros
 float auxn;  //variable auxiliar para la lectura de numeros
 char  auxc[30];//variable auxiliar para la lectura de strings
 char  auxt[30];//variable auxiliar para las traducciones
+int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %}
 
 
@@ -62,7 +63,7 @@ char  auxt[30];//variable auxiliar para las traducciones
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria switch case cases default
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria switch case cases default break
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -427,49 +428,59 @@ control:
 switch:
 	TK_SWITCH TK_VARIABLE cases
 	{				
+		int aux=$3.tipo;
+		
+		while(aux>0) {
+			if($2->tipo==aux%10) {//no se hace nada, tipos compatibles
+			}else if (aux==9) {//no se hace nada, default
+			}
+		 	else {
+			yyerror("Error: al menos uno de los casos del switch no concuerda en tipo con la variable");
+			}
+			aux=aux/10;
+		}
+		
+		//Si todo está bien se traduce y saca por pantalla
 		fprintf(salida,"switch (%s){\n",$2->nombre);
 		
 		fprintf(salida,"%s",$3.trad);
-		
-		fprintf(salida,"%d",$2->tipo);
-		fprintf(salida,"%d",$3.tipo);
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 case:
 	TK_CASO exp lista_sentencias break
 	{
-				//"case %s:\n",$2.trad
 		$$.tipo=$2.tipo;
 		
+		
 		strcpy($$.trad,"case ");
-		
 		strcat($$.trad,$2.trad);
-
-		strcat($$.trad,":\n");
-		
-		strcat($$.trad,$3.trad);		
+		strcat($$.trad,":\n");		
+		strcat($$.trad,$3.trad);
+		strcat($$.trad,$4.trad);		
 	}
 	|	default lista_sentencias break
 	{
 		strcpy($$.trad,$1.trad);
 		strcat($$.trad,$2.trad);
-		$$.tipo=0;
+		$$.tipo=9;
 	}
 	;
 	;	
 /////////////////////////////////////////////////////////////////////////////////////////////////
 cases:
-	case
-	| default
+	case 
 	{
-		strcat($$.trad,$1.trad);
-		$$.tipo=$1.tipo;
+		auxtip*=10;	//Se va aumentando esta variable para guardar los tipos en el mismo número
+		//De esta manera tenemos un número cuyas unidades, decenas ... representan un tipo
 	}
 	| case cases
 	{
-		strcat($$.trad,$2.trad);
-		$$.tipo=$2.tipo;
+	
+		$$.tipo+=$2.tipo*auxtip;
+	
+		strcpy($$.trad,$2.trad);
+		strcat($$.trad,$1.trad);
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -482,7 +493,8 @@ default:
 /////////////////////////////////////////////////////////////////////////////////////////////////
 break:
 	{
-		fprintf(salida,"break;\n");
+		//fprintf(salida,"break;\n");
+		strcpy($$.trad,"break;\n");
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////

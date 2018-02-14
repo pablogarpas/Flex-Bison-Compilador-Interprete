@@ -2,12 +2,12 @@
 //Estructura para la lista de símbolos
 
 //0->id
-//1->entero;
+//1->real;
 //2->string;
 //3->bool;
 //4->cadena;
 //5->tipo generico;
-//6->real;
+//6->entero;
 
 //tipo de los simbolos
 typedef struct NODO {

@@ -341,7 +341,6 @@ lista_sentencias:
 		}	
 		
 		 strcat($$.trad,$3.trad);
-		 
 	}
 	;
 
@@ -370,6 +369,10 @@ sentencia:
 		fprintf(salida,"%s",$4.trad);
 	}
 /*************************************************************************************************/
+	| control
+	{
+		fprintf(salida,"%s",$1.trad);
+	}
 /*************************************************************************************************/
 	| switch final
 	{
@@ -394,6 +397,14 @@ control:
 		strcpy($$.trad,"while (");
 		strcat($$.trad,$2.trad);
 		strcat($$.trad,")");
+	}
+	| TK_HAZ sentencia control
+	{
+		strcpy($$.trad,"do {\n");
+		strcat($$.trad,$2.trad);
+		strcat($$.trad,"}");		
+		strcat($$.trad,$3.trad);
+		strcat($$.trad,");\n");		
 	}
 	| TK_PARA TK_VARIABLE TK_ASIG exp TK_HASTA exp
 	{

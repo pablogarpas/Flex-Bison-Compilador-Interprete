@@ -16,7 +16,6 @@ inicio
 
 haz
 	escribir("hola")
-	escribir("asd")
 mientras aux
 
 fin

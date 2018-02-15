@@ -84,13 +84,13 @@ salto \n
 "si"		return TK_SI;
 "const"		return TK_CONST;
 "var"		return TK_VAR;
+"haz"		return TK_HAZ;
 "escribir"	return TK_ESCRIBIR;
 "para" return TK_PARA;
 "hasta" return TK_HASTA;
 "leer"	return TK_LEER;
 "mientras" return TK_MIENTRAS;
 "hacer"		return TK_HACER;
-"haz"		return TK_HAZ;
 "entero"	return TK_ENTERO;
 "bool"		return TK_BOOL;
 "real"		return TK_REAL;

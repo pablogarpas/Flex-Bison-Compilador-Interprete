@@ -298,6 +298,7 @@ variable:
 cuerpo:
 	TK_INICIO salto_lin lista_sentencias final
 	{
+		fprintf(salida,"%s",$3.trad);
 		fprintf(salida,"%s",$4.trad);
 	}
 	;
@@ -319,9 +320,8 @@ lista_sentencias:
 			//fprintf(salida,"%s",$1.trad);
 			break;
 		case 6: $$.valint = $1.valint;break;
-		}
-				 
-		strcpy($$.trad,$1.trad);
+		}		 
+		strcpy($$.trad,$1.trad);	
 	}
 
 /*************************************************************************************************/
@@ -338,9 +338,8 @@ lista_sentencias:
 				//fprintf(salida,"%s",$1.trad);
 				break;
 			case 6: $$.valint = $1.valint;break;
-		}	
-		
-		 strcat($$.trad,$3.trad);
+		}			
+		 strcat($$.trad,$3.trad);		 
 	}
 	;
 
@@ -358,26 +357,27 @@ sentencia:
 			case 3: $$.valbool = $1.valbool;break;
 			case 4: strcpy($$.valstr,$1.cad);break; 
 			case 6: $$.valint = $1.valint;break;
-		}		
+		}
 		
 	}
 	| control cont lista_sentencias final
 	{	
-		fprintf(salida,"%s",$1.trad);
-		fprintf(salida,"%s",$2.trad);
-		fprintf(salida,"%s",$3.trad);
-		fprintf(salida,"%s",$4.trad);
+		strcpy($$.trad,$1.trad);
+		strcat($$.trad,$2.trad);
+		strcat($$.trad,$3.trad);
+		strcat($$.trad,$4.trad);
 	}
 /*************************************************************************************************/
 	| control
 	{
-		fprintf(salida,"%s",$1.trad);
+		strcpy($$.trad,$1.trad);
 	}
 /*************************************************************************************************/
 	| switch final
 	{
 		//fprintf(salida,"%s",$2.trad);
-		fprintf(salida,$2.trad);
+		strcpy($$.trad,$1.trad);
+		strcat($$.trad,$2.trad);
 		$2.tipo=$1.tipo;
 	}
 /*************************************************************************************************/
@@ -467,9 +467,11 @@ switch:
 		}
 		
 		//Si todo está bien se traduce y saca por pantalla
-		fprintf(salida,"switch (%s){\n",$2->nombre);
 		
-		fprintf(salida,"%s",$3.trad);
+		strcpy($$.trad,"switch (");
+		strcat($$.trad,$2->nombre);
+		strcat($$.trad,"){\n");
+		strcat($$.trad,$3.trad);
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////

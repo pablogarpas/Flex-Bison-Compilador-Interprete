@@ -9,13 +9,19 @@ const
 
 var
 	aux entero
-	aux2 string
 
 inicio
 
-
-haz
 	escribir("hola")
-mientras aux
+	escribir("adios")
+
+switch aux
+caso 1
+	escribir("qwe")
+	escribir("asd")
+caso 2
+	escribir("zxc")
+	escribir("fgh")
+fin
 
 fin

@@ -47,6 +47,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token    TK_STRING
 %token		TK_MIENTRAS
 %token		TK_IGU
+%token		TK_HAZ
 %token    TK_ESCRIBIR
 %token    TK_LIB
 %token    TK_SWITCH
@@ -65,7 +66,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria switch case cases default break incremento
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria switch case cases default break incremento do_while
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -340,7 +341,9 @@ lista_sentencias:
 		}	
 		
 		 strcat($$.trad,$3.trad);
-	};
+		 
+	}
+	;
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -359,16 +362,14 @@ sentencia:
 		}		
 		
 	}
-/*************************************************************************************************/
 	| control cont lista_sentencias final
 	{	
-	if($1.valbool==1)
-			$$=$3;
-		
-	
+		fprintf(salida,"%s",$1.trad);
+		fprintf(salida,"%s",$2.trad);
 		fprintf(salida,"%s",$3.trad);
 		fprintf(salida,"%s",$4.trad);
 	}
+/*************************************************************************************************/
 /*************************************************************************************************/
 	| switch final
 	{
@@ -384,29 +385,54 @@ sentencia:
 control:
 	TK_SI exp 
 	{
-		fprintf(salida,"if ");
-			vis_exp($2.tipo,$2.trad);
+		strcpy($$.trad,"if (");
+		strcat($$.trad,$2.trad);
+		strcat($$.trad,")");
 	}
 	| TK_MIENTRAS exp 
 	{
-		fprintf(salida,"while ");
-			vis_exp($2.tipo,$2.trad);
+		strcpy($$.trad,"while (");
+		strcat($$.trad,$2.trad);
+		strcat($$.trad,")");
 	}
 	| TK_PARA TK_VARIABLE TK_ASIG exp TK_HASTA exp
 	{
-		/*
-		printf("\n%d\t%d\n",$2->tipo,$4.tipo);
-	
-	
-		if($2->tipo==$4.tipo) { //no se hace nada, tipos compatibles
-		} else if ( ($2->tipo==1 && $4.tipo== 6) || ($2->tipo==6 && $4.tipo== 1) ) {
-		//Se puede comparar float con entero sin error
-		}
-	 	else 
-			yyerror("Error: en el para no concuerdan tipos");
-		*/
+		//printf("%s",intr_para($2->nombre,$4.trad,$6.trad));
 		
-		intr_para($2->nombre,$4.trad,$6.trad);
+		char signo[3]=">";
+		char op[3];
+		
+		//Se comprueba si el valor objetivo es mayor o menor que el inicial para 
+		//Hacer el for bien
+		if(atoi($4.trad)>atoi($6.trad)) {
+			strcpy(signo,">");
+			strcpy(op,"--");
+			}
+		else if(atoi($4.trad)<atoi( $6.trad)) {
+			strcpy(signo,"<");
+			strcpy(op,"++");
+			}
+		else{
+			strcpy(signo,"!=");
+			strcpy(op," ");//Por poner algo
+			}
+		
+		//No funciona esta forma así que se hace de la formas más larga.
+		//snprintf($$.trad,"for (",$2->nombre,"=",$4.trad,";",$2->nombre,signo,$6.trad,";",$2->nombre,op,")");
+		
+		//Se escribe el for y se devuelve
+		strcpy($$.trad,"for (");
+		strcat($$.trad,$2->nombre);
+		strcat($$.trad,"=");
+		strcat($$.trad,$4.trad);
+		strcat($$.trad,";");		
+		strcat($$.trad,$2->nombre);
+		strcat($$.trad,signo);
+		strcat($$.trad,$6.trad);
+		strcat($$.trad,";");
+		strcat($$.trad,$2->nombre);
+		strcat($$.trad,op);
+		strcat($$.trad,")");
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -490,12 +516,12 @@ break:
 cont:
 	TK_HACER
 	{
-		fprintf(salida,"{\n");
+		strcpy($$.trad,"{\n");
 	}
 	//No hace falta poner hacer en el pseudo
 	| 
 	{
-		fprintf(salida,"{\n");
+		strcpy($$.trad,"{\n");
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -504,7 +530,8 @@ final:
 	{
 		//fprintf(salida,"}\n");
 		strcpy($$.trad,"}\n");
-	};
+	}
+	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //Asigna a una variable un número o cadena
 asignacion: 			

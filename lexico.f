@@ -90,6 +90,7 @@ salto \n
 "leer"	return TK_LEER;
 "mientras" return TK_MIENTRAS;
 "hacer"		return TK_HACER;
+"haz"		return TK_HAZ;
 "entero"	return TK_ENTERO;
 "bool"		return TK_BOOL;
 "real"		return TK_REAL;

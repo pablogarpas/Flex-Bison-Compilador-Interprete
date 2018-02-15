@@ -13,16 +13,10 @@ var
 
 inicio
 
-aux:= 2
 
-si (aux == 2) hacer
-
-
+haz
 	escribir("hola")
-		escribir("adios")
-		escribir("adios")
-
-fin 
+	escribir("asd")
+mientras aux
 
 fin
-

@@ -15,13 +15,11 @@ inicio
 	escribir("hola")
 	escribir("adios")
 
-switch aux
-caso 1
-	escribir("qwe")
-	escribir("asd")
-caso 2
-	escribir("zxc")
-	escribir("fgh")
+aux:=2
+
+si aux== 2 hacer
+	escribir("funciona")
+	escribir("el si")
 fin
 
 fin

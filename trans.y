@@ -339,7 +339,7 @@ lista_sentencias:
 				break;
 			case 6: $$.valint = $1.valint;break;
 		}			
-		 strcat($$.trad,$3.trad);		 
+		 strcat($$.trad,$3.trad);
 	}
 	;
 
@@ -358,7 +358,7 @@ sentencia:
 			case 4: strcpy($$.valstr,$1.cad);break; 
 			case 6: $$.valint = $1.valint;break;
 		}
-		
+		strcpy($$.trad,"");//Se limpia .trad
 	}
 	| control cont lista_sentencias final
 	{	

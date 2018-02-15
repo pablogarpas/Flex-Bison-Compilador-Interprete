@@ -17,7 +17,7 @@ inicio
 
 aux:=2
 
-si aux== 2 hacer
+mientras aux==2 hacer
 	escribir("funciona")
 	escribir("el si")
 fin

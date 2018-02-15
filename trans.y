@@ -28,8 +28,9 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 		int valint; //valor entero  
 		char valstr[255]; //valor de tipo string
 		char cad[255];//valor para las cadenas
-		char trad[255];//almaceno la cadena de composicion de exp
+		char trad[555];//almaceno la cadena de composicion de exp
 		int vis; //variable para visualizar las constantes cadena correctamente	
+		char res[255];//cadena para mostrar por pantalla
 		} ELEMENTO;
 }
 
@@ -66,7 +67,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria switch case cases default break incremento do_while
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria switch case cases default break 
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -322,6 +323,8 @@ lista_sentencias:
 		case 6: $$.valint = $1.valint;break;
 		}		 
 		strcpy($$.trad,$1.trad);	
+		
+		strcpy($$.res,$1.res);	
 	}
 
 /*************************************************************************************************/
@@ -340,6 +343,8 @@ lista_sentencias:
 			case 6: $$.valint = $1.valint;break;
 		}			
 		 strcat($$.trad,$3.trad);
+		 
+		 strcat($$.res,$3.res);
 	}
 	;
 
@@ -360,17 +365,12 @@ sentencia:
 		}
 		strcpy($$.trad,"");//Se limpia .trad
 	}
-	| control cont lista_sentencias final
-	{	
-		strcpy($$.trad,$1.trad);
-		strcat($$.trad,$2.trad);
-		strcat($$.trad,$3.trad);
-		strcat($$.trad,$4.trad);
-	}
 /*************************************************************************************************/
-	| control
+//if, while, para y dowhile
+	| control final
 	{
 		strcpy($$.trad,$1.trad);
+		strcat($$.trad,$2.trad);
 	}
 /*************************************************************************************************/
 	| switch final
@@ -381,37 +381,49 @@ sentencia:
 		$2.tipo=$1.tipo;
 	}
 /*************************************************************************************************/
-	| incremento{}
-	| visual{}
+	| visual{
+	strcpy($$.res,$1.res);
+	}
 	| lectura{};
 /////////////////////////////////////////////////////////////////////////////////////////////////	
 control:
-	TK_SI exp 
+	TK_SI exp cont lista_sentencias 
 	{
 		strcpy($$.trad,"if (");
 		strcat($$.trad,$2.trad);
-		strcat($$.trad,")");
+		strcat($$.trad,") {\n");
+		strcat($$.trad,$4.trad);
+		
+		if($2.valbool)
+			printf("%s",$4.res);
 	}
-	| TK_MIENTRAS exp 
+	| TK_MIENTRAS exp cont lista_sentencias 
 	{
 		strcpy($$.trad,"while (");
 		strcat($$.trad,$2.trad);
-		strcat($$.trad,")");
+		strcat($$.trad,") {\n");
+		strcat($$.trad,$4.trad);
+		
+		while($2.valbool)
+			printf("%s",$4.res);
 	}
-	| TK_HAZ sentencia control
+	| TK_HAZ sentencia TK_MIENTRAS exp
 	{
 		strcpy($$.trad,"do {\n");
 		strcat($$.trad,$2.trad);
-		strcat($$.trad,"}");		
-		strcat($$.trad,$3.trad);
+		strcat($$.trad,"} while(");		
+		strcat($$.trad,$4.trad);
 		strcat($$.trad,");\n");		
 	}
-	| TK_PARA TK_VARIABLE TK_ASIG exp TK_HASTA exp
+	| TK_PARA TK_VARIABLE TK_ASIG exp TK_HASTA exp cont lista_sentencias
 	{
 		//printf("%s",intr_para($2->nombre,$4.trad,$6.trad));
 		
 		char signo[3]=">";
 		char op[3];
+		int ini;
+		int obj;
+		int i;
 		
 		//Se comprueba si el valor objetivo es mayor o menor que el inicial para 
 		//Hacer el for bien
@@ -428,9 +440,11 @@ control:
 			strcpy(op," ");//Por poner algo
 			}
 		
+		
 		//No funciona esta forma así que se hace de la formas más larga.
 		//snprintf($$.trad,"for (",$2->nombre,"=",$4.trad,";",$2->nombre,signo,$6.trad,";",$2->nombre,op,")");
 		
+
 		//Se escribe el for y se devuelve
 		strcpy($$.trad,"for (");
 		strcat($$.trad,$2->nombre);
@@ -444,6 +458,14 @@ control:
 		strcat($$.trad,$2->nombre);
 		strcat($$.trad,op);
 		strcat($$.trad,")");
+		strcat($$.trad,$7.trad);
+		strcat($$.trad,$8.trad);
+		
+		ini=atoi($4.trad);
+		obj=atoi($6.trad);
+		
+		for(i=ini;i<obj;i++)
+			printf("%s",$8.res);
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -601,6 +623,10 @@ visual:
 	strcpy($$.trad,"printf(");
 	strcat($$.trad,$3.trad);
 	strcat($$.trad,");\n");
+	strcat($$.trad,"printf(\"\\n\");\n");	
+	
+	strcpy($$.res,$3.cad);
+	strcat($$.res,"\n");
 	
 	/*
 	switch ($3.tipo){
@@ -640,6 +666,9 @@ visual:
 	strcpy($$.trad,"printf(");
 	strcat($$.trad,$5.trad);
 	strcat($$.trad,"\n");
+	strcat($$.trad,"printf(\"\\n\");\n");	
+	
+	strcpy($$.res,$3.trad);
 	//vis_salida_sl($5.tipo,$5.trad,$5.vis);  //hacemos la traduccion  para la salida por pantalla
 	
 	/*
@@ -659,6 +688,8 @@ visual:
 
 	|TK_ESCRIBIR'('')'
 	{
+	strcpy($$.res,"\n");
+	
 	strcpy($$.trad,"printf(\"\\n\");");
 	strcat($$.trad,"\n");
 	
@@ -673,9 +704,7 @@ visual2:
 	{	
 	//vis_salida($1.tipo,$1.trad,$1.vis); //Traducción
 	
-	strcpy($$.trad,"printf(");
 	strcat($$.trad,$1.trad);
-	strcat($$.trad,"\n");
 	
 	/*
 	switch ($1.tipo){
@@ -699,9 +728,8 @@ visual2:
 	//vis_salida($3.tipo,$3.trad,$3.vis); //Traducción
 	
 	
-	strcpy($$.trad,"printf(");
+
 	strcat($$.trad,$1.trad);
-	strcat($$.trad,"\n");
 	
 	/*
 		switch ($3.tipo){
@@ -1470,10 +1498,9 @@ exp:
 		$$.tipo=$1.tipo;
 		strcpy($$.cad,$1.cad);
 		$$.escons=$1.escons;
-	}
-	;	      		
-/////////////////////////////////////////////////////////////////////////////////////////////////
-incremento:	
+	}  		
+/*************************************************************************************************/
+
 //Preincremento 
 	|	TK_INC variable
 	{

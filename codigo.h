@@ -13,6 +13,7 @@
 typedef struct NODO {
   int tipo; //tipo asociado
 	int escons; //nos dice si es o no constante 1->si 0->no
+	int espun; //nos dice si es o no puntero 1->si 0->no
 	char nombre[255]; //nombre de la variable o constante
 	int valbool; //valor que se toma si el tipo es booleano
 	union {
@@ -51,7 +52,7 @@ void intr_const_int(int num,char *nombre);
 void intr_const_cad(char *cad,char *nombre);
 
 //Variables
-void intr_variable(int tipo, char *nombre); 
+void intr_variable(int tipo, char *nombre, int espun); 
 
 //Sentencias
 void intr_sentencia(char *nombre,char *trad);

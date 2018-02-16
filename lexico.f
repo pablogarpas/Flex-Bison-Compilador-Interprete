@@ -21,13 +21,12 @@ Analizador léxico para el pseudocódigo que aceptará el transpilador.
 #include "codigo.c"
 #include <string.h>
 
-struct simbolo  *com; //Puntero al comienzo de la TS
-struct simbolo  *fin; //Puntero al final de la TS
+struct NODO  *com; //Puntero al comienzo de la TS (tabla de símbolos)
+struct NODO  *fin; //Puntero al final de la TS
 char *cadaux;//variable auxiliar para eliminar las comillas de yytext
 char i;//variable auxiliar para eliminar las comillas de yytext
 int n_lineas;//contar el numero de lineas
 int num_errores;// variable para contar el número de errores
-
 %}
 delim [\' '\t] 
 blancos {delim}+ 
@@ -67,7 +66,7 @@ salto \n
 {blancos}  ;//no hace nada
 {salto}		{n_lineas++;} // Incrementa una variable con el numero de linea
 
-":="			return TK_ASIG;
+"="			return TK_ASIG;
 "=="		return TK_IGU;
 "<>"		return TK_DIS;
 "**"		return TK_POW;
@@ -75,6 +74,8 @@ salto \n
 ">="		return TK_MAI;
 "++"		return TK_INC;
 "--"		return TK_DEC;
+"&"		return TK_DIR;
+"*"		return TK_VAL;
 "default" return TK_DEFAULT;
 "caso" return TK_CASO;
 "switch" return TK_SWITCH;
@@ -104,9 +105,9 @@ salto \n
                  //buscamos es la TS la variable y si no esta la añadimos
                  //introducimos en trad lo que el lex encuentra y aunque variable sea un puntero
                  //la expresion del yacc (el NT) almacena el valor de traduccion
-		strcpy(yylval.ELEMENTO.trad,yytext);
-	        return TK_VARIABLE;
-		}//devuelve una variable
+									strcpy(yylval.ELEMENTO.trad,yytext);
+									return TK_VARIABLE;
+									}//devuelve una variable
 
 {cadena}  {cadaux=(char *)malloc(sizeof (char [yyleng]));
            // Quitamos las comillas de las cadenas y añadimos el valor para la trduccion

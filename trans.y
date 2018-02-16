@@ -22,6 +22,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 	struct elemento {
 		char nombre[255]; //amacenar el nombre
 		int escons; //nos dice si es o no constante 1->si 0->no 
+		int espun; //nos dice si es o no puntero 1->si 0->no 
 		int tipo; //tipo de variable
 		int valbool; //tipo booleano
 		double valnum;	//valor numerico	     
@@ -49,6 +50,8 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token		TK_MIENTRAS
 %token		TK_IGU
 %token		TK_HAZ
+%token		TK_DIR
+%token		TK_VAL
 %token    TK_ESCRIBIR
 %token    TK_LIB
 %token    TK_SWITCH
@@ -67,7 +70,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria case cases default break 
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria case cases default break puntero
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -144,11 +147,11 @@ dec_constantes:
 
 //Se le asigna valor y tipo a las constantes
 constante:
-	TK_VARIABLE '=' TK_NUM salto_lin 
+	TK_VARIABLE TK_NUM salto_lin 
 	{ //Un número
-		intr_const_num($3.valnum,$1->nombre); //La traducción
-		$$.valnum=$1->valnum=$3.valnum;
-		$$.tipo=$1->tipo=$3.tipo;
+		intr_const_num($2.valnum,$1->nombre); //La traducción
+		$$.valnum=$1->valnum=$2.valnum;
+		$$.tipo=$1->tipo=$2.tipo;
 		$$.escons=1;	
 		$1->escons=1;
 		$1->aux=3;//Cualquier número
@@ -156,32 +159,32 @@ constante:
 	
 /*************************************************************************************************/
  	
-	| TK_VARIABLE '=' TK_ENT salto_lin 
+	| TK_VARIABLE TK_ENT salto_lin 
 	{ //Un número
-		intr_const_int($3.valint,$1->nombre); //La traducción
-		$$.valint=$1->valint=$3.valint;
-		$$.tipo=$1->tipo=$3.tipo;
+		intr_const_int($2.valint,$1->nombre); //La traducción
+		$$.valint=$1->valint=$2.valint;
+		$$.tipo=$1->tipo=$2.tipo;
 		$$.escons=1;	
 		$1->escons=1;
 		$1->aux=3;//Cualquier número
 	} 
 /*************************************************************************************************/
  	
-	| TK_VARIABLE '=' TK_NBOOL salto_lin 
+	| TK_VARIABLE TK_NBOOL salto_lin 
 	{ //Un número
-		intr_const_int($3.valbool,$1->nombre); //La traducción
-		$$.valbool=$1->valbool=$3.valbool;
-		$$.tipo=$1->tipo=$3.tipo;
+		intr_const_int($2.valbool,$1->nombre); //La traducción
+		$$.valbool=$1->valbool=$2.valbool;
+		$$.tipo=$1->tipo=$2.tipo;
 		$$.escons=1;	
 		$1->escons=1;
 		$1->aux=3;//Cualquier número
 	} 
 /*************************************************************************************************/
-	| TK_VARIABLE '=' TK_CADENA salto_lin 
+	| TK_VARIABLE TK_CADENA salto_lin 
 	{//Constante cadena
-		intr_const_cad($3.cad,$1->nombre); //Traducción
-		strcpy($$.cad,strcpy($1->cad,$3.cad));    
-		$$.tipo=$1->tipo=$3.tipo;
+		intr_const_cad($2.cad,$1->nombre); //Traducción
+		strcpy($$.cad,strcpy($1->cad,$2.cad));    
+		$$.tipo=$1->tipo=$2.tipo;
 		$$.escons=1;
 		$1->escons=1;
 		$1->aux=3;//Cualquier número
@@ -189,11 +192,11 @@ constante:
 
 /*************************************************************************************************/
 
-	| TK_VARIABLE '=' TK_NUM salto_lin constante //Varias
+	| TK_VARIABLE TK_NUM salto_lin constante //Varias
 	{ 
-		intr_const_num($3.valnum,$1->nombre); //Traducción
-		$$.valnum=$1->valnum=$3.valnum;
-		$$.tipo=$1->tipo=$3.tipo;
+		intr_const_num($2.valnum,$1->nombre); //Traducción
+		$$.valnum=$1->valnum=$2.valnum;
+		$$.tipo=$1->tipo=$2.tipo;
 		$$.escons=1;
 		$1->escons=1;
 		$1->aux=3;//Cualquier número
@@ -201,34 +204,34 @@ constante:
 
 /*************************************************************************************************/
 	
-	| TK_VARIABLE '=' TK_ENT salto_lin constante
+	| TK_VARIABLE TK_ENT salto_lin constante
 	{ //Un número
-		intr_const_int($3.valint,$1->nombre); //La traducción
-		$$.valint=$1->valint=$3.valint;
-		$$.tipo=$1->tipo=$3.tipo;
+		intr_const_int($2.valint,$1->nombre); //La traducción
+		$$.valint=$1->valint=$2.valint;
+		$$.tipo=$1->tipo=$2.tipo;
 		$$.escons=1;	
 		$1->escons=1;
 		$1->aux=3;//Cualquier número
 	} 
 /*************************************************************************************************/
 	
-	| TK_VARIABLE '=' TK_NBOOL salto_lin constante
+	| TK_VARIABLE TK_NBOOL salto_lin constante
 	{ //Un número
-		intr_const_int($3.valbool,$1->nombre); //La traducción
-		$$.valbool=$1->valbool=$3.valbool;
-		$$.tipo=$1->tipo=$3.tipo;
+		intr_const_int($2.valbool,$1->nombre); //La traducción
+		$$.valbool=$1->valbool=$2.valbool;
+		$$.tipo=$1->tipo=$2.tipo;
 		$$.escons=1;	
 		$1->escons=1;
 		$1->aux=3;//Cualquier número
 	} 
 
 /************************************************************************************************/
-	| TK_VARIABLE '=' TK_CADENA salto_lin constante //Varios números
+	| TK_VARIABLE TK_CADENA salto_lin constante //Varios números
 	{
-		intr_const_cad($3.cad,$1->nombre);  //Traducción
-		strcpy($$.cad,strcpy($1->cad,$3.cad));
+		intr_const_cad($2.cad,$1->nombre);  //Traducción
+		strcpy($$.cad,strcpy($1->cad,$2.cad));
 		$$.escons=1;
-		$$.tipo=$1->tipo=$3.tipo;
+		$$.tipo=$1->tipo=$2.tipo;
 		$1->escons=1;
 		$1->aux=3;//Cualquier número
 	};
@@ -272,41 +275,54 @@ dec_vbles:
 /*************************************************************************************************/
 
 variable:			
-	TK_VARIABLE tipo salto_lin  
+	TK_VARIABLE tipo puntero salto_lin  
 	{
-	intr_variable($2.tipo, $1->nombre); //Traducción
-	if ($1->escons==0) {		
+	intr_variable($2.tipo, $1->nombre,$3.espun); //Traducción
+	if ($1->escons==0) {
 		$$.tipo=$2.tipo;
 		strcpy($$.nombre,$1->nombre);
+		$$.espun=$3.espun;
 		}
 	else yyerror("Error: %s ---Variable ya declarada como constante\n",$1->nombre);
 	}
 
 /*************************************************************************************************/
-	| TK_VARIABLE tipo salto_lin variable	
+	| TK_VARIABLE tipo puntero salto_lin variable	
 	{
-		intr_variable($2.tipo, $1->nombre);  //Traducción
+		intr_variable($2.tipo, $1->nombre,$3.espun);  //Traducción
 		if ($1->escons==0)	{
 			$$.tipo=$2.tipo;
 			strcpy($$.nombre,$1->nombre);
+			$1->espun=$3.espun;
 			}
 		else yyerror("Error: %s ---Variable ya declarada como constante\n",$1->nombre);             
 	};
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-
+puntero:
+	TK_VAL
+	{
+		$$.espun=1;
+	}
+	| TK_DIR
+	| 
+	{
+		$$.espun=0;
+	}
+	;
+//////////////////////////////////////////////////////////////////////////////////////////////////
 //Cuerpo del programa
 cuerpo:
 	TK_INICIO salto_lin lista_sentencias final
 	{
+		printf($3.res);
+	
 		fprintf(salida,"%s",$3.trad);
 		fprintf(salida,"%s",$4.trad);
 	}
 	;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 //Sentencias de aplicación
 // El tipo de la asignacion depende del tipo de la variable
 lista_sentencias:		
@@ -387,7 +403,7 @@ control:
 		strcat($$.trad,$4.trad);
 		
 		if($2.valbool)
-			printf("%s",$4.res);
+			strcpy($$.res,$4.res);
 	}
 /*************************************************************************************************/
 	| TK_MIENTRAS exp cont lista_sentencias 
@@ -398,7 +414,7 @@ control:
 		strcat($$.trad,$4.trad);
 		
 		//while($2.valbool)
-			//printf("%s",$4.res);
+			//strcpy($$.res,$4.res);
 	}
 /*************************************************************************************************/
 	| TK_HAZ sentencia TK_MIENTRAS exp
@@ -587,7 +603,14 @@ TK_VARIABLE TK_ASIG exp
 		$$.valbool = $1->valbool = $3.valbool;
 		}
 	else yyerror("Error en la asignacion: no concuerdan los tipos o %s es constante\n",$1->nombre);				   
-	};
+	
+	printf("\npuntero:\t%d\n",$1->espun);
+	
+	//recorrer(&com);
+
+	}
+	;
+	
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 

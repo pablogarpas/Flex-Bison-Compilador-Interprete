@@ -3,21 +3,21 @@ NODO *buscar_simbolo(char nombre[20],NODO **com,NODO **fin)
 {
 	//variables
 	NODO *nuevo,*aux, *retorno;
-	int existe=0;
 	aux=*com;//comienzo
+	int encontrado=0;
 	
-	while ((aux!=NULL)&&(existe==0))
+	while ((aux!=NULL)&&(encontrado==0))
 	{
 		if (strcmp(aux->nombre,nombre)==0)//El símbolo existe
 		{
-		        (existe=1);
+      (encontrado=1);
 			retorno=aux;
 			return(retorno);//Devolver nodo
 		}
 	 aux=aux->sig;
 	}
 
-	if (!(nuevo=(NODO *)malloc(sizeof (NODO)))&&(existe!=1))
+	if (!(nuevo=(NODO *)malloc(sizeof (NODO)))&&(encontrado!=1))
 	{
 		printf("No se ha podido reservar memoria \n");
 		exit(0);
@@ -35,7 +35,7 @@ NODO *buscar_simbolo(char nombre[20],NODO **com,NODO **fin)
 	}
 	else
 	{
-		if (existe==0)
+		if (encontrado==0)
 		{
 			(nuevo->sig)=*com;			
 			*com=nuevo;
@@ -44,7 +44,6 @@ NODO *buscar_simbolo(char nombre[20],NODO **com,NODO **fin)
 		}
 	}
 }
-
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para pasar del pseudo a C*/
 //////////////////////////////////////////////////////////////////////////
@@ -81,13 +80,33 @@ void intr_const_cad(char *cad,char *nombre)
 
 
 //Variables
-void intr_variable(int tipo, char *nombre)
+void intr_variable(int tipo, char *nombre,int espun)
 {
 	switch(tipo){
-		case 1:fprintf(salida,"float %s;\n",nombre);break;
-		case 2:fprintf(salida,"char *%s;\n",nombre);break;
-		case 3:fprintf(salida,"int %s;\n",nombre);break;
-		case 6:fprintf(salida,"int %s;\n",nombre);break;	
+		case 1:
+			if(espun)
+				fprintf(salida,"float *%s;\n",nombre);
+			else
+				fprintf(salida,"float %s;\n",nombre);	
+			break;
+		case 2:
+			if(espun)
+				fprintf(salida,"char **%s;\n",nombre);
+			else
+				fprintf(salida,"char *%s;\n",nombre);
+			break;
+		case 3:
+			if(espun)
+				fprintf(salida,"int *%s;\n",nombre);
+			else
+				fprintf(salida,"int %s;\n",nombre);
+			break;
+		case 6:
+			if(espun)
+				fprintf(salida,"int *%s;\n",nombre);
+			else
+				fprintf(salida,"int %s;\n",nombre);
+			break;	
 		}
 }
 

@@ -4,18 +4,18 @@ librerias
 	"stdio.h"
 
 const
-	asd="comparando"
-	asd= 24
+	asd "comparando"
 
 var
-	aux entero
+	aux entero *
+	aux2 entero *
 
 inicio
 
 	escribir("hola")
 	escribir("adios")
 
-aux:=2
+aux2=2
 
 si aux==2 hacer
 	escribir("dsa")

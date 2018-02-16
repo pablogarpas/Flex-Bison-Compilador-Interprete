@@ -110,32 +110,6 @@ void intr_variable(int tipo, char *nombre,int espun)
 		}
 }
 
-
-//Asignaciones
-void intr_sentencia(char *nombre,char *trad,int aux1,int aux2)
-{
-	if (aux1==0 && aux2==0)
-		fprintf(salida,"%s=%s;\n",nombre,trad);
-	if (aux1==2 && aux2==0)
-		fprintf(salida,"*%s=%s;\n",nombre,trad);
-	if (aux1==0 && aux2==2)
-		fprintf(salida,"%s=*%s;\n",nombre,trad);
-	if (aux1==2 && aux2==2)
-		fprintf(salida,"*%s=*%s;\n",nombre,trad);
-	if (aux1==2 && aux2==3)
-		fprintf(salida,"*%s=&%s;\n",nombre,trad);
-	if (aux1==3 && aux2==2)
-		fprintf(salida,"&%s=*%s;\n",nombre,trad);
-	if (aux1==3 && aux2==3)
-		fprintf(salida,"&%s=&%s;\n",nombre,trad);
-	if (aux1==0 && aux2==3)
-		fprintf(salida,"%s=&%s;\n",nombre,trad);
-	if (aux1==3 && aux2==0)
-		fprintf(salida,"&%s=%s;\n",nombre,trad);
-}
-
-
-
 //Salida
 void vis_salida(int tipo,char *cad, int vis)
 {

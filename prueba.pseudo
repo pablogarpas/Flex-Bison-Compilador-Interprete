@@ -15,7 +15,7 @@ inicio
 	escribir("hola")
 	escribir("adios")
 
-aux2=&aux
+*aux2=&aux
 
 si aux==2 hacer
 	escribir("dsa")

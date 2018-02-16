@@ -304,7 +304,6 @@ puntero:
 	{
 		$$.espun=1;
 	}
-	| TK_DIR
 	| 
 	{
 		$$.espun=0;
@@ -379,7 +378,7 @@ sentencia:
 			case 4: strcpy($$.valstr,$1.cad);break; 
 			case 6: $$.valint = $1.valint;break;
 		}
-		strcpy($$.trad,"");//Se limpia .trad
+		strcpy($$.trad,$1.trad);//Se limpia .trad
 	}
 /*************************************************************************************************/
 //if, while, para y dowhile
@@ -581,7 +580,38 @@ final:
 asignacion: 			
 punteros_asignar TK_VARIABLE TK_ASIG punteros_asignar exp 
 {
-	intr_sentencia($2->nombre,$5.trad,$1.vis,$4.vis);   //Traducción
+	//strcpy($$.trad,intr_sentencia($2->nombre,$5.trad,$1.vis,$4.vis));   //Traducción
+	
+	char signo1[3],signo2[3];
+	char retorno[255];
+	
+	if ($1.vis==0)
+		strcpy(signo1,"");
+	if ($1.vis==2)
+		strcpy(signo1,"*");
+	if ($1.vis==3)
+		strcpy(signo1,"&");
+	
+	if ($4.vis==0)
+		strcpy(signo2,"");
+	if ($4.vis==2)
+		strcpy(signo2,"*");
+	if ($4.vis==3)
+		strcpy(signo2,"&");
+		
+	strcpy(retorno,signo1);
+	strcat(retorno,$2->nombre);
+	strcat(retorno,"=");
+	strcat(retorno,signo2);
+	strcat(retorno,$5.trad);
+	strcat(retorno,";");
+	strcat(retorno,"\n");
+
+	//printf("%s\n",retorno);
+	strcpy($$.trad,retorno);
+	
+	printf("%s\n",$$.trad);
+	
 	if (($2->tipo==$5.tipo)&&($2->escons==0)&&($2->espun==0)) {
 		$$.tipo=$2->tipo=$5.tipo;
 		strcpy($2->valstr,$5.valstr);
@@ -603,7 +633,7 @@ punteros_asignar TK_VARIABLE TK_ASIG punteros_asignar exp
 		$$.valbool = $2->valbool = $5.valbool;
 		}
 	else if ($2->espun && $5.espun) {
-			printf("\npuntero:\t%d\n",$5.espun);
+		//Comprobaciones cuando son punteros
 			
 	}
 	else yyerror("Error en la asignacion: no concuerdan los tipos o %s es constante\n",$2->nombre);				   
@@ -614,9 +644,11 @@ punteros_asignar TK_VARIABLE TK_ASIG punteros_asignar exp
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 punteros_asignar:	
-	TK_VAL{ $$.vis=2;//*
+	TK_VAL{ 
+		$$.vis=2;//*
 	}
-	| TK_DIR{ $$.vis=3;//&
+	| TK_DIR{ 
+		$$.vis=3;//&
 	}
 	| {
 	}

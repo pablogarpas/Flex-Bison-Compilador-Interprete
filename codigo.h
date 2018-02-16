@@ -55,7 +55,7 @@ void intr_const_cad(char *cad,char *nombre);
 void intr_variable(int tipo, char *nombre, int espun); 
 
 //Sentencias
-void intr_sentencia(char *nombre,char *trad);
+void intr_sentencia(char *nombre,char *trad,int aux1,int aux2);
 
 //Salida por pantalla
 void vis_salida(int tipo,char *cad, int vis);

@@ -70,7 +70,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria case cases default break puntero
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria case cases default break puntero punteros_asignar
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -281,7 +281,7 @@ variable:
 	if ($1->escons==0) {
 		$$.tipo=$2.tipo;
 		strcpy($$.nombre,$1->nombre);
-		$$.espun=$3.espun;
+		$1->espun=$3.espun;
 		}
 	else yyerror("Error: %s ---Variable ya declarada como constante\n",$1->nombre);
 	}
@@ -579,38 +579,47 @@ final:
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //Asigna a una variable un número o cadena
 asignacion: 			
-TK_VARIABLE TK_ASIG exp 
+punteros_asignar TK_VARIABLE TK_ASIG punteros_asignar exp 
 {
-	intr_sentencia($1->nombre,$3.trad);   //Traducción
-	if (($1->tipo==$3.tipo)&&($1->escons==0)) {
-		$$.tipo=$1->tipo=$3.tipo;
-		strcpy($1->valstr,$3.valstr);
-		strcpy($$.valstr,$1->valstr);
-		$$.valbool = $1->valbool=$3.valbool;
-		$$.valnum = $1->valnum = $3.valnum;
-		$$.valint = $1->valint = $3.valint;
+	intr_sentencia($2->nombre,$5.trad,$1.vis,$4.vis);   //Traducción
+	if (($2->tipo==$5.tipo)&&($2->escons==0)&&($2->espun==0)) {
+		$$.tipo=$2->tipo=$5.tipo;
+		strcpy($2->valstr,$5.valstr);
+		strcpy($$.valstr,$2->valstr);
+		$$.valbool = $2->valbool=$5.valbool;
+		$$.valnum = $2->valnum = $5.valnum;
+		$$.valint = $2->valint = $5.valint;
 		}
 	//Aquí se asigna a una variable de tipo string una constante cadena;
-	else if(($1->tipo==2)&&($3.tipo==4)&&($1->escons==0)) {
-		$$.tipo=$1->tipo=2;
-		strcpy($1->valstr,$3.cad);
-		strcpy($$.valstr,$1->valstr);	
+	else if(($2->tipo==2)&&($5.tipo==4)&&($2->escons==0)&&($2->espun==0)) {
+		$$.tipo=$2->tipo=2;
+		strcpy($2->valstr,$5.cad);
+		strcpy($$.valstr,$2->valstr);	
 		}	  
-	else if(($1->tipo==6)&&($1->escons==0)) {
-		$$.valint = $1->valint = $3.valint;
+	else if(($2->tipo==6)&&($2->escons==0)&&($2->espun==0)) {
+		$$.valint = $2->valint = $5.valint;
 		}
-	else if(($1->tipo==3)&&($1->escons==0)) {
-		$$.valbool = $1->valbool = $3.valbool;
+	else if(($2->tipo==3)&&($2->escons==0)&&($2->espun==0)) {
+		$$.valbool = $2->valbool = $5.valbool;
 		}
-	else yyerror("Error en la asignacion: no concuerdan los tipos o %s es constante\n",$1->nombre);				   
-	
-	printf("\npuntero:\t%d\n",$1->espun);
+	else if ($2->espun && $5.espun) {
+			printf("\npuntero:\t%d\n",$5.espun);
+			
+	}
+	else yyerror("Error en la asignacion: no concuerdan los tipos o %s es constante\n",$2->nombre);				   
 	
 	//recorrer(&com);
 
 	}
 	;
-	
+/////////////////////////////////////////////////////////////////////////////////////////////////
+punteros_asignar:	
+	TK_VAL{ $$.vis=2;//*
+	}
+	| TK_DIR{ $$.vis=3;//&
+	}
+	| {
+	}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1118,6 +1127,7 @@ exp:
 	strcpy($$.cad,$2.cad);
 	$$.valbool = $2.valbool;
 	$$.valint= $2.valint;
+	$$.espun= $2.espun;
 	}
 
 /*************************************************************************************************/
@@ -1532,6 +1542,7 @@ exp:
 		$$.tipo=$1->tipo;//tipo de la variable
 		$$.escons=$1->escons; //Nos dice si es una cosntante o no                    
 		$$.vis=$1->aux;//para traducir la visualizacion
+		$$.espun= $1->espun;
 	}
 /*************************************************************************************************/
 //Esto es una cosntante de tipo cadena

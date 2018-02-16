@@ -580,8 +580,6 @@ final:
 asignacion: 			
 punteros_asignar TK_VARIABLE TK_ASIG punteros_asignar exp 
 {
-	//strcpy($$.trad,intr_sentencia($2->nombre,$5.trad,$1.vis,$4.vis));   //Traducción
-	
 	char signo1[3],signo2[3];
 	char retorno[255];
 	
@@ -606,11 +604,9 @@ punteros_asignar TK_VARIABLE TK_ASIG punteros_asignar exp
 	strcat(retorno,$5.trad);
 	strcat(retorno,";");
 	strcat(retorno,"\n");
-
-	//printf("%s\n",retorno);
-	strcpy($$.trad,retorno);
 	
-	printf("%s\n",$$.trad);
+	//printf("%s\n",retorno);
+	strcpy($$.trad,retorno);	
 	
 	if (($2->tipo==$5.tipo)&&($2->escons==0)&&($2->espun==0)) {
 		$$.tipo=$2->tipo=$5.tipo;

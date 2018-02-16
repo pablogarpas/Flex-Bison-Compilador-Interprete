@@ -15,11 +15,10 @@ inicio
 	escribir("hola")
 	escribir("adios")
 
-*aux2=&aux
-
 si aux==2 hacer
 	escribir("dsa")
 	escribir("asd")
+	aux2=aux
 fin
 
 fin

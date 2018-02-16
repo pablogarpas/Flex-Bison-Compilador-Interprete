@@ -17,9 +17,9 @@ inicio
 
 aux:=2
 
-mientras aux==2 hacer
-	escribir("funciona")
-	escribir("el si")
+si aux==2 hacer
+	escribir("dsa")
+	escribir("asd")
 fin
 
 fin

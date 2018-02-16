@@ -67,7 +67,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria switch case cases default break 
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria case cases default break 
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -373,14 +373,6 @@ sentencia:
 		strcat($$.trad,$2.trad);
 	}
 /*************************************************************************************************/
-	| switch final
-	{
-		//fprintf(salida,"%s",$2.trad);
-		strcpy($$.trad,$1.trad);
-		strcat($$.trad,$2.trad);
-		$2.tipo=$1.tipo;
-	}
-/*************************************************************************************************/
 	| visual{
 	strcpy($$.res,$1.res);
 	}
@@ -397,6 +389,7 @@ control:
 		if($2.valbool)
 			printf("%s",$4.res);
 	}
+/*************************************************************************************************/
 	| TK_MIENTRAS exp cont lista_sentencias 
 	{
 		strcpy($$.trad,"while (");
@@ -404,9 +397,10 @@ control:
 		strcat($$.trad,") {\n");
 		strcat($$.trad,$4.trad);
 		
-		while($2.valbool)
-			printf("%s",$4.res);
+		//while($2.valbool)
+			//printf("%s",$4.res);
 	}
+/*************************************************************************************************/
 	| TK_HAZ sentencia TK_MIENTRAS exp
 	{
 		strcpy($$.trad,"do {\n");
@@ -415,6 +409,7 @@ control:
 		strcat($$.trad,$4.trad);
 		strcat($$.trad,");\n");		
 	}
+/*************************************************************************************************/
 	| TK_PARA TK_VARIABLE TK_ASIG exp TK_HASTA exp cont lista_sentencias
 	{
 		//printf("%s",intr_para($2->nombre,$4.trad,$6.trad));
@@ -467,10 +462,8 @@ control:
 		for(i=ini;i<obj;i++)
 			printf("%s",$8.res);
 	}
-	;
-/////////////////////////////////////////////////////////////////////////////////////////////////
-switch:
-	TK_SWITCH TK_VARIABLE cases
+/*************************************************************************************************/
+	| TK_SWITCH TK_VARIABLE cases
 	{				
 		int aux=$3.tipo;
 		int compro;
@@ -619,44 +612,50 @@ visual:
 	TK_ESCRIBIR '('elemento_mostrar')'
 	{
 	//vis_salida_sl($3.tipo,$3.trad,$3.vis);  //Traducción
-	
+	/*
 	strcpy($$.trad,"printf(");
 	strcat($$.trad,$3.trad);
 	strcat($$.trad,");\n");
 	strcat($$.trad,"printf(\"\\n\");\n");	
-	
+	*/
 	strcpy($$.res,$3.cad);
 	strcat($$.res,"\n");
-	
-	/*
-	switch ($3.tipo){
-		case 1: printf(" %f \n",$3.valnum);break;
-		case 2:	printf(" %s \n",$3.valstr);break;
-		case 3: if($3.valbool==1) printf(" TRUE \n");
-		else if($3.valbool==0) printf(" FALSE \n");
-		break;
-		case 4: printf(" %s \n",$3.cad);break;
-		case 6: printf(" %d \n",$3.valint);break;
-		default: yyerror("Error:Imposible visualizar la variable o expresion\n");
-		}	
-		*/
-		
-		/*
+
 	switch ($3.tipo){
 		case 1: 
-			//snprintf($$.trad,"printf(\"",$3.valnum," \n\")");
+			strcpy($$.trad,"printf(\" %f \\n\",");
+			strcat($$.trad,$3.trad);
+			strcat($$.trad,");\n");
 			break;
-		case 2:	
-			snprintf($$.trad,"printf(\"",$3.valstr," \n\")");
+		case 2:					
+			strcpy($$.trad,"printf(\" %s \\n\",");
+			strcat($$.trad,$3.valstr);
+			strcat($$.trad,");\n");
 			break;
-		case 3: if($3.valbool==1) sprintf($$.trad,"printf(\" TRUE \n \")");
-		else if($3.valbool==0)  sprintf($$.trad,"printf(\" FALSE \n \")");
-		break;
-		case 4: snprintf($$.trad,"printf(\" ",$3.cad," \n\")");break;
-		case 6: snprintf($$.trad,"printf(\"", $3.valint," \n\")");break;
-		default: yyerror("Error:Imposible visualizar la variable o expresion\n");
-		}
-		*/	
+		case 3: 
+			if($3.valbool==1) {
+			 	strcpy($$.trad,"printf(\" TRUE \\n\");\n");
+				break;
+			 }
+			else if($3.valbool==0) {
+				strcpy($$.trad,"printf(\" TRUE \\n\");\n");
+				break;
+				}
+		case 4: 
+			strcpy($$.trad,"printf(\"");
+			strcat($$.trad,$3.cad);
+			strcat($$.trad,"\\n\");\n");
+			break;
+		case 6: 
+			strcpy($$.trad,"printf(\" %d \\n\",");
+			strcat($$.trad,$3.trad);
+			strcat($$.trad,");\n");
+			break;
+		default: 
+			yyerror("Error:Imposible visualizar la variable o expresion\n");
+			break;
+		}	
+
 	} 
 
 /*************************************************************************************************/
@@ -671,17 +670,40 @@ visual:
 	strcpy($$.res,$3.trad);
 	//vis_salida_sl($5.tipo,$5.trad,$5.vis);  //hacemos la traduccion  para la salida por pantalla
 	
-	/*
 	switch ($5.tipo){
-		case 1: printf(" %f \n",$5.valnum);break;
-		case 2:	printf(" %s \n",$5.valstr);break;
-		case 3: if($5.valbool==1) printf(" TRUE \n");
-		else if($5.valbool==0) printf(" FALSE \n");	break;
-		case 4: printf(" %s \n",$5.cad);break;
-		case 6: printf(" %d \n",$5.valint);break;
-		default: yyerror("Error:Imposible visualizar la variable o expresion\n");
-		}
-		*/
+		case 1: 
+			strcpy($$.trad,"printf(\" %f \\n\",");
+			strcat($$.trad,$5.trad);
+			strcat($$.trad,");\n");
+			break;
+		case 2:					
+			strcpy($$.trad,"printf(\" %s \\n\",");
+			strcat($$.trad,$5.valstr);
+			strcat($$.trad,");\n");
+			break;
+		case 3: 
+			if($5.valbool==1) {
+			 	strcpy($$.trad,"printf(\" TRUE \\n\");\n");
+				break;
+			 }
+			else if($5.valbool==0) {
+				strcpy($$.trad,"printf(\" TRUE \\n\");\n");
+				break;
+				}
+		case 4: 
+			strcpy($$.trad,"printf(\"");
+			strcat($$.trad,$5.cad);
+			strcat($$.trad,"\\n\");\n");
+			break;
+		case 6: 
+			strcpy($$.trad,"printf(\" %d \\n\",");
+			strcat($$.trad,$5.trad);
+			strcat($$.trad,");\n");
+			break;
+		default: 
+			yyerror("Error:Imposible visualizar la variable o expresion\n");
+			break;
+		}	
 	} 
 
 /*************************************************************************************************/
@@ -692,9 +714,6 @@ visual:
 	
 	strcpy($$.trad,"printf(\"\\n\");");
 	strcat($$.trad,"\n");
-	
-	//fprintf(salida,"printf(\"\\n\");");  //traducción
-	//printf("\n");
 	};//salto de línea
                                 
 ////////////////////////////////////////////////////////////////////////////////////////////////

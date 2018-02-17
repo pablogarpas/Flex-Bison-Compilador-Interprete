@@ -60,6 +60,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token	  TK_HACER
 %token	  TK_INC
 %token	  TK_DEC
+%token	  TK_FUNCION
 %token	  TK_CONT
 %token		TK_DEFAULT
 %token		TK_HASTA
@@ -70,7 +71,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria case cases default break puntero punteros_asignar
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria case cases default break puntero punteros_asignar funciones
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -84,7 +85,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %%
 //Aquí comienza el programa
 programa:			
-	cabecera librerias dec_constantes dec_vbles cuerpo{};
+	cabecera librerias dec_constantes dec_vbles cuerpo{} funciones;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -99,8 +100,6 @@ salto_lin_dec:
 	|'\n' salto_lin_dec{};
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 //Estructura del programa
 cabecera: 			
 	TK_PROGRAM TK_VARIABLE salto_lin
@@ -310,7 +309,7 @@ puntero:
 	}
 	;
 //////////////////////////////////////////////////////////////////////////////////////////////////
-//Cuerpo del programa
+//Main del programa
 cuerpo:
 	TK_INICIO salto_lin lista_sentencias final
 	{
@@ -320,7 +319,18 @@ cuerpo:
 		fprintf(salida,"%s",$4.trad);
 	}
 	;
-
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//Funciones
+funciones:
+	TK_FUNCION TK_VARIABLE salto_lin lista_sentencias final
+	{
+		printf("%s",$2->nombre);
+		fprintf(salida,"%s",$4.trad);
+	}
+	|
+	{//Puede no haber funciones
+	}
+	;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Sentencias de aplicación
 // El tipo de la asignacion depende del tipo de la variable
@@ -362,8 +372,6 @@ lista_sentencias:
 		 strcat($$.res,$3.res);
 	}
 	;
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Asignaciones
@@ -628,7 +636,7 @@ punteros_asignar TK_VARIABLE TK_ASIG punteros_asignar exp
 	else if(($2->tipo==3)&&($2->escons==0)&&($2->espun==0)) {
 		$$.valbool = $2->valbool = $5.valbool;
 		}
-	else if ($2->espun && $5.espun) {
+	else if ($2->espun || $5.espun) {
 		//Comprobaciones cuando son punteros
 			
 	}
@@ -1628,6 +1636,17 @@ exp:
 			}
 		else
 			yyerror("Error: No se puede decrementar una variable no númerica");
+	}
+/*************************************************************************************************/
+	| TK_VAL exp
+	{
+		strcpy($$.trad,"*");
+		strcat($$.trad,$2.trad);
+	}
+	| TK_DIR exp 
+	{
+		strcpy($$.trad,"&");
+		strcat($$.trad,$2.trad);
 	}
 	;		
 %%

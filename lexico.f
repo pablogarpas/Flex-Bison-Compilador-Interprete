@@ -81,6 +81,7 @@ salto \n
 "switch" return TK_SWITCH;
 "programa"	return TK_PROGRAM;
 "inicio"         return TK_INICIO;
+"funcion"         return TK_FUNCION;
 "fin"	        return TK_FIN;
 "si"		return TK_SI;
 "const"		return TK_CONST;

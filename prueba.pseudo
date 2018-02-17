@@ -14,11 +14,17 @@ inicio
 
 	escribir("hola")
 	escribir("adios")
+	
+	*aux=2
 
-si aux==2 hacer
+si *aux==2 hacer
 	escribir("dsa")
 	escribir("asd")
 	aux2=aux
 fin
 
+fin
+
+funcion hola
+escribir("asd")
 fin

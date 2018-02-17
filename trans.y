@@ -52,6 +52,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token		TK_HAZ
 %token		TK_DIR
 %token		TK_VAL
+%token		TK_RETORNO
 %token    TK_ESCRIBIR
 %token    TK_LIB
 %token    TK_SWITCH
@@ -322,10 +323,18 @@ cuerpo:
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Funciones
 funciones:
-	TK_FUNCION TK_VARIABLE salto_lin lista_sentencias final
+	TK_FUNCION TK_VARIABLE dec_vbles TK_RETORNO tipo salto_lin lista_sentencias final
 	{
-		printf("%s",$2->nombre);
-		fprintf(salida,"%s",$4.trad);
+		//printf("%s \n",$6.nombre);
+		
+		strcpy($$.trad,"int ");
+		strcat($$.trad,$2->nombre);
+		//dec_vbles
+		strcat($$.trad,"{\n");
+		strcat($$.trad,$7.trad);
+		strcat($$.trad,$8.trad);
+		
+		fprintf(salida,$$.trad);
 	}
 	|
 	{//Puede no haber funciones

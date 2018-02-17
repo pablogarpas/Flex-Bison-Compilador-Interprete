@@ -25,6 +25,9 @@ fin
 
 fin
 
-funcion hola
+funcion prueba
+var
+ i entero
+devolver real
 escribir("asd")
 fin

@@ -54,6 +54,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token		TK_VAL
 %token		TK_RETORNO
 %token    TK_ESCRIBIR
+%token		TK_ARG
 %token    TK_LIB
 %token    TK_SWITCH
 %token    TK_LEER
@@ -72,7 +73,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria case cases default break puntero punteros_asignar funciones
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria case cases default break puntero punteros_asignar funciones dec_arg_fun dec_vbles_fun
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -86,7 +87,12 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %%
 //Aquí comienza el programa
 programa:			
-	cabecera librerias dec_constantes dec_vbles cuerpo{} funciones;
+	cabecera librerias dec_constantes dec_vbles cuerpo funciones
+	{
+		fprintf(salida,$2.trad);
+		printf("%s",$2.trad);
+		fprintf(salida,$4.trad);
+	};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -111,7 +117,7 @@ cabecera:
 librerias:
 	TK_LIB salto_lin libreria
 	{
-
+		strcpy($$.trad,$3.trad);
 	}
 	|{}
 	;
@@ -119,7 +125,14 @@ librerias:
 libreria:
 	TK_CADENA salto_lin
 	{
-		intr_lib($1.cad); //Traducción
+		strcpy($$.trad,intr_lib($1.cad)); //Traducción
+	}
+	|
+	TK_CADENA salto_lin libreria
+	{
+		strcpy($$.trad,intr_lib($1.cad)); //Traducción
+		
+		strcat($$.trad,$3.trad); //Traducción
 	}
 	;
 
@@ -263,21 +276,22 @@ tipo:
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Se declaran variables
-dec_vbles: 			
+dec_vbles:
 	TK_VAR salto_lin variable 
 	{
+		strcpy($$.trad,$3.trad);
 		
 		$$.tipo=$3.tipo;
 	}
 	| {}
-	;
-				 
+	;			 
 /*************************************************************************************************/
-
 variable:			
 	TK_VARIABLE tipo puntero salto_lin  
 	{
-	intr_variable($2.tipo, $1->nombre,$3.espun); //Traducción
+	
+		strcpy($$.trad,intr_variable($2.tipo, $1->nombre,$3.espun)); //Traducción
+	
 	if ($1->escons==0) {
 		$$.tipo=$2.tipo;
 		strcpy($$.nombre,$1->nombre);
@@ -289,7 +303,11 @@ variable:
 /*************************************************************************************************/
 	| TK_VARIABLE tipo puntero salto_lin variable	
 	{
-		intr_variable($2.tipo, $1->nombre,$3.espun);  //Traducción
+	
+		strcpy($$.trad,intr_variable($2.tipo, $1->nombre,$3.espun)); //Traducción
+			
+		strcat($$.trad,$5.trad);
+			
 		if ($1->escons==0)	{
 			$$.tipo=$2.tipo;
 			strcpy($$.nombre,$1->nombre);
@@ -323,13 +341,13 @@ cuerpo:
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Funciones
 funciones:
-	TK_FUNCION TK_VARIABLE dec_vbles TK_RETORNO tipo salto_lin lista_sentencias final
+	TK_FUNCION TK_VARIABLE dec_arg_fun dec_vbles TK_RETORNO tipo salto_lin lista_sentencias final
 	{
 		//printf("%s \n",$6.nombre);
 		
 		strcpy($$.trad,"int ");
 		strcat($$.trad,$2->nombre);
-		//dec_vbles
+		//dec_arg_fun
 		strcat($$.trad,"{\n");
 		strcat($$.trad,$7.trad);
 		strcat($$.trad,$8.trad);
@@ -339,6 +357,13 @@ funciones:
 	|
 	{//Puede no haber funciones
 	}
+	;
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//Argumentos a pasarle a la función
+dec_arg_fun:
+		TK_ARG salto_lin variable 
+	{	}
+	| {}
 	;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Sentencias de aplicación

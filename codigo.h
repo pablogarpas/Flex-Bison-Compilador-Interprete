@@ -40,7 +40,7 @@ NODO *buscar_simbolo(char *nombre,NODO **com,NODO **fin);
 void intr_cabecera();
 
 //Librerias
-void intr_lib(char *nombre);
+char* intr_lib(char *nombre);
 
 //Constantes
 void intr_const_num(double num,char *nombre);
@@ -52,7 +52,7 @@ void intr_const_int(int num,char *nombre);
 void intr_const_cad(char *cad,char *nombre);
 
 //Variables
-void intr_variable(int tipo, char *nombre, int espun); 
+char *intr_variable(int tipo, char *nombre, int espun); 
 
 //Salida por pantalla
 void vis_salida(int tipo,char *cad, int vis);

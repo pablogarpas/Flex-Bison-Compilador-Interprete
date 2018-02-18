@@ -55,9 +55,15 @@ void intr_cabecera()
 }
 
 //Librerias
-void intr_lib(char *nombre)
+char *intr_lib(char *nombre)
 {
-	fprintf(salida,"#include <%s> \n",nombre);
+	char *aux = malloc(256);
+	
+	strcpy(aux,"#include <");
+	strcat(aux,nombre);
+	strcat(aux,"> \n");
+	
+	return aux;
 }
 
 //Constantes
@@ -80,34 +86,50 @@ void intr_const_cad(char *cad,char *nombre)
 
 
 //Variables
-void intr_variable(int tipo, char *nombre,int espun)
+char *intr_variable(int tipo, char *nombre,int espun)
 {
-	switch(tipo){
+	char *aux = malloc(256);
+
+	switch(tipo) {
 		case 1:
-			if(espun)
-				fprintf(salida,"float *%s;\n",nombre);
+			strcpy(aux,"float ");
+			if(espun) 
+				strcat(aux,"*");
 			else
-				fprintf(salida,"float %s;\n",nombre);	
+				strcat(aux,"");
+			strcat(aux,nombre);
+			strcat(aux,";\n");
 			break;
 		case 2:
-			if(espun)
-				fprintf(salida,"char **%s;\n",nombre);
+			strcpy(aux,"char ");
+			if(espun) 
+				strcat(aux,"**");
 			else
-				fprintf(salida,"char *%s;\n",nombre);
+				strcat(aux,"*");
+			strcat(aux,nombre);
+			strcat(aux,";\n");
 			break;
 		case 3:
+			strcpy(aux,"int ");
 			if(espun)
-				fprintf(salida,"int *%s;\n",nombre);
+				strcat(aux,"*");
 			else
-				fprintf(salida,"int %s;\n",nombre);
+				strcat(aux,"");
+			strcat(aux,nombre);
+			strcat(aux,";\n");
 			break;
 		case 6:
+			strcpy(aux,"int ");
 			if(espun)
-				fprintf(salida,"int *%s;\n",nombre);
+				strcat(aux,"*");
 			else
-				fprintf(salida,"int %s;\n",nombre);
-			break;	
+				strcat(aux,"");	
+			strcat(aux,nombre);
+			strcat(aux,";\n");
+			break;
 		}
+	
+	return aux;
 }
 
 //Salida

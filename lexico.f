@@ -79,6 +79,7 @@ salto \n
 "default" return TK_DEFAULT;
 "devolver" return TK_RETORNO;
 "caso" return TK_CASO;
+"arg" return TK_ARG;
 "switch" return TK_SWITCH;
 "programa"	return TK_PROGRAM;
 "inicio"         return TK_INICIO;

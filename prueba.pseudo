@@ -2,20 +2,21 @@ programa prueba2
 
 librerias
 	"stdio.h"
+	"math.h"
 
 const
 	asd "comparando"
 
 var
-	aux entero *
-	aux2 entero *
+	aux entero 
+	aux3 entero
 
 inicio
 
 	escribir("hola")
 	escribir("adios")
 	
-	*aux=2
+	aux=2
 
 si *aux==2 hacer
 	escribir("dsa")

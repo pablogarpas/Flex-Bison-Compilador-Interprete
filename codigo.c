@@ -49,15 +49,19 @@ NODO *buscar_simbolo(char nombre[20],NODO **com,NODO **fin)
 //////////////////////////////////////////////////////////////////////////
 
 //Main del programa
-void intr_cabecera()
+char *intr_cabecera()
 {
-   fprintf(salida,"int main() \n{\n");
+	char *aux = malloc(255);
+   
+  strcpy(aux,"int main() \n{\n");
+  
+  return aux;
 }
 
 //Librerias
 char *intr_lib(char *nombre)
 {
-	char *aux = malloc(256);
+	char *aux = malloc(255);
 	
 	strcpy(aux,"#include <");
 	strcat(aux,nombre);
@@ -67,21 +71,45 @@ char *intr_lib(char *nombre)
 }
 
 //Constantes
-void intr_const_num(double num,char *nombre)
+char *intr_const_num(double num,char *nombre)
 {
-	fprintf(salida,"#define %s %f\n",nombre,num);
+	char *aux = malloc(256);
+	
+	strcpy(aux,"#define ");
+	strcat(aux,nombre);
+	strcat(aux," ");
+	fprintf(aux,"%f",num);
+	strcat(aux,"\n");
+	
+	return aux;
 }
 
 //Constantes
-void intr_const_int(int num,char *nombre)
+char *intr_const_int(int num,char *nombre)
 {
-	fprintf(salida,"#define %s %d\n",nombre,num);
+	char *aux = malloc(256);
+	
+	strcpy(aux,"#define ");
+	strcat(aux,nombre);
+	strcat(aux," ");
+	fprintf(aux,"%f",num);
+	strcat(aux,"\n");
+	
+	return aux;
 }
 
 //Cadenas
-void intr_const_cad(char *cad,char *nombre)
+char *intr_const_cad(char *cad,char *nombre)
 {
-	fprintf(salida,"#define %s \"%s\"\n",nombre,cad);
+	char *aux = malloc(256);
+	
+	strcpy(aux,"#define ");
+	strcat(aux,nombre);
+	strcat(aux," \"");
+	strcat(aux,cad);
+	strcat(aux,"\"\n");
+	
+	return aux;
 }
 
 

@@ -13,10 +13,12 @@ var
 
 inicio
 
+	aux=2
+
 	escribir("hola")
 	escribir("adios")
 	
-	aux=2
+
 
 si *aux==2 hacer
 	escribir("dsa")
@@ -29,6 +31,7 @@ fin
 funcion prueba
 var
  i entero
-devolver real
+devolver entero
 escribir("asd")
+escribir("dsa")
 fin

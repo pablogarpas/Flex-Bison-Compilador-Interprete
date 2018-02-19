@@ -37,19 +37,19 @@ NODO *buscar_simbolo(char *nombre,NODO **com,NODO **fin);
 //////////////////////////////////////////////////////////////////////////
 
 //Main del programa
-void intr_cabecera();
+char *intr_cabecera();
 
 //Librerias
 char* intr_lib(char *nombre);
 
 //Constantes
-void intr_const_num(double num,char *nombre);
+char *intr_const_num(double num,char *nombre);
 
 //Constantes
-void intr_const_int(int num,char *nombre);
+char *intr_const_int(int num,char *nombre);
 
 //Candenas
-void intr_const_cad(char *cad,char *nombre);
+char *intr_const_cad(char *cad,char *nombre);
 
 //Variables
 char *intr_variable(int tipo, char *nombre, int espun); 

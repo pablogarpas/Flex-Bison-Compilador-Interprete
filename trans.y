@@ -73,7 +73,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria case cases default break puntero punteros_asignar funciones dec_arg_fun dec_vbles_fun
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria case cases default break puntero punteros_asignar funciones dec_arg_fun cuerpo
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -90,8 +90,11 @@ programa:
 	cabecera librerias dec_constantes dec_vbles cuerpo funciones
 	{
 		fprintf(salida,$2.trad);
-		printf("%s",$2.trad);
+		fprintf(salida,$3.trad);
+		//printf("\n%s\n",$3.trad);
 		fprintf(salida,$4.trad);
+		fprintf(salida,$5.trad);
+		fprintf(salida,$6.trad);
 	};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,8 +145,9 @@ libreria:
 dec_constantes:                 
 	TK_CONST salto_lin constante 
 	{
-		intr_cabecera();//Introducir el main después de las constantes
-	
+		strcpy($$.trad,$3.trad);
+		strcat($$.trad,intr_cabecera());//Introducir el main después de las constantes
+		
 		$$.tipo=$3.tipo;
 		switch ($3.tipo){
 			case 1:$$.valnum=$3.valnum;break;
@@ -152,7 +156,8 @@ dec_constantes:
 			case 6:$$.valint=$3.valint;break;
 		}		
 	}
-	| {		intr_cabecera();//Introducir el main después de las constantes
+	| {		
+	strcpy($$.trad,intr_cabecera());//Introducir el main después de las constantes
 	};//Puede o no haber constantes
 
 
@@ -162,7 +167,7 @@ dec_constantes:
 constante:
 	TK_VARIABLE TK_NUM salto_lin 
 	{ //Un número
-		intr_const_num($2.valnum,$1->nombre); //La traducción
+		strcpy($$.trad,intr_const_num($2.valnum,$1->nombre)); //La traducción
 		$$.valnum=$1->valnum=$2.valnum;
 		$$.tipo=$1->tipo=$2.tipo;
 		$$.escons=1;	
@@ -174,7 +179,7 @@ constante:
  	
 	| TK_VARIABLE TK_ENT salto_lin 
 	{ //Un número
-		intr_const_int($2.valint,$1->nombre); //La traducción
+		strcpy($$.trad,intr_const_int($2.valint,$1->nombre)); //La traducción
 		$$.valint=$1->valint=$2.valint;
 		$$.tipo=$1->tipo=$2.tipo;
 		$$.escons=1;	
@@ -185,7 +190,7 @@ constante:
  	
 	| TK_VARIABLE TK_NBOOL salto_lin 
 	{ //Un número
-		intr_const_int($2.valbool,$1->nombre); //La traducción
+		strcpy($$.trad,intr_const_int($2.valbool,$1->nombre)); //La traducción
 		$$.valbool=$1->valbool=$2.valbool;
 		$$.tipo=$1->tipo=$2.tipo;
 		$$.escons=1;	
@@ -195,7 +200,7 @@ constante:
 /*************************************************************************************************/
 	| TK_VARIABLE TK_CADENA salto_lin 
 	{//Constante cadena
-		intr_const_cad($2.cad,$1->nombre); //Traducción
+		strcpy($$.trad,intr_const_cad($2.cad,$1->nombre)); //Traducción
 		strcpy($$.cad,strcpy($1->cad,$2.cad));    
 		$$.tipo=$1->tipo=$2.tipo;
 		$$.escons=1;
@@ -207,7 +212,7 @@ constante:
 
 	| TK_VARIABLE TK_NUM salto_lin constante //Varias
 	{ 
-		intr_const_num($2.valnum,$1->nombre); //Traducción
+		strcpy($$.trad,intr_const_num($2.valnum,$1->nombre)); //Traducción
 		$$.valnum=$1->valnum=$2.valnum;
 		$$.tipo=$1->tipo=$2.tipo;
 		$$.escons=1;
@@ -219,7 +224,7 @@ constante:
 	
 	| TK_VARIABLE TK_ENT salto_lin constante
 	{ //Un número
-		intr_const_int($2.valint,$1->nombre); //La traducción
+		strcpy($$.trad,intr_const_int($2.valint,$1->nombre)); //La traducción
 		$$.valint=$1->valint=$2.valint;
 		$$.tipo=$1->tipo=$2.tipo;
 		$$.escons=1;	
@@ -230,7 +235,7 @@ constante:
 	
 	| TK_VARIABLE TK_NBOOL salto_lin constante
 	{ //Un número
-		intr_const_int($2.valbool,$1->nombre); //La traducción
+		strcpy($$.trad,intr_const_int($2.valbool,$1->nombre)); //La traducción
 		$$.valbool=$1->valbool=$2.valbool;
 		$$.tipo=$1->tipo=$2.tipo;
 		$$.escons=1;	
@@ -241,7 +246,7 @@ constante:
 /************************************************************************************************/
 	| TK_VARIABLE TK_CADENA salto_lin constante //Varios números
 	{
-		intr_const_cad($2.cad,$1->nombre);  //Traducción
+		strcpy($$.trad,intr_const_cad($2.cad,$1->nombre));  //Traducción
 		strcpy($$.cad,strcpy($1->cad,$2.cad));
 		$$.escons=1;
 		$$.tipo=$1->tipo=$2.tipo;
@@ -332,10 +337,10 @@ puntero:
 cuerpo:
 	TK_INICIO salto_lin lista_sentencias final
 	{
-		printf($3.res);
+		//printf($3.res);
 	
-		fprintf(salida,"%s",$3.trad);
-		fprintf(salida,"%s",$4.trad);
+		strcpy($$.trad,$3.trad);
+		strcat($$.trad,$4.trad);
 	}
 	;
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -344,15 +349,17 @@ funciones:
 	TK_FUNCION TK_VARIABLE dec_arg_fun dec_vbles TK_RETORNO tipo salto_lin lista_sentencias final
 	{
 		//printf("%s \n",$6.nombre);
-		
-		strcpy($$.trad,"int ");
+		if($6.tipo==1)
+			strcpy($$.trad,"float ");
+		if($6.tipo==6)
+			strcpy($$.trad,"int ");
+			
 		strcat($$.trad,$2->nombre);
-		//dec_arg_fun
+		strcat($$.trad,$3.trad);
 		strcat($$.trad,"{\n");
-		strcat($$.trad,$7.trad);
 		strcat($$.trad,$8.trad);
+		strcat($$.trad,$9.trad);
 		
-		fprintf(salida,$$.trad);
 	}
 	|
 	{//Puede no haber funciones
@@ -362,8 +369,13 @@ funciones:
 //Argumentos a pasarle a la función
 dec_arg_fun:
 		TK_ARG salto_lin variable 
-	{	}
-	| {}
+	{	
+	}
+	| 
+	{
+		strcpy($$.trad,"(");
+		strcat($$.trad,")");
+	}
 	;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Sentencias de aplicación

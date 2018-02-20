@@ -112,7 +112,6 @@ char *intr_const_cad(char *cad,char *nombre)
 	return aux;
 }
 
-
 //Variables
 char *intr_variable(int tipo, char *nombre,int espun)
 {
@@ -154,6 +153,49 @@ char *intr_variable(int tipo, char *nombre,int espun)
 				strcat(aux,"");	
 			strcat(aux,nombre);
 			strcat(aux,";\n");
+			break;
+		}
+	
+	return aux;
+}
+
+//Variables
+char *intr_argumento(int tipo, char *nombre,int espun)
+{
+	char *aux = malloc(256);
+
+	switch(tipo) {
+		case 1:
+			strcpy(aux,"float ");
+			if(espun) 
+				strcat(aux,"*");
+			else
+				strcat(aux,"");
+			strcat(aux,nombre);
+			break;
+		case 2:
+			strcpy(aux,"char ");
+			if(espun) 
+				strcat(aux,"**");
+			else
+				strcat(aux,"*");
+			strcat(aux,nombre);
+			break;
+		case 3:
+			strcpy(aux,"int ");
+			if(espun)
+				strcat(aux,"*");
+			else
+				strcat(aux,"");
+			strcat(aux,nombre);
+			break;
+		case 6:
+			strcpy(aux,"int ");
+			if(espun)
+				strcat(aux,"*");
+			else
+				strcat(aux,"");	
+			strcat(aux,nombre);
 			break;
 		}
 	

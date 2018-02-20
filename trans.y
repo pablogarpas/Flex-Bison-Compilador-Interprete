@@ -73,7 +73,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria case cases default break puntero punteros_asignar funciones dec_arg_fun cuerpo
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria case cases default break puntero punteros_asignar funciones dec_arg_fun cuerpo argumento
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -368,8 +368,11 @@ funciones:
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Argumentos a pasarle a la función
 dec_arg_fun:
-		TK_ARG salto_lin variable 
+		TK_ARG salto_lin argumento
 	{	
+		strcpy($$.trad,"(");
+		strcat($$.trad,$3.trad);
+		strcat($$.trad,")");
 	}
 	| 
 	{
@@ -377,6 +380,33 @@ dec_arg_fun:
 		strcat($$.trad,")");
 	}
 	;
+//////////////////////////////////////////////////////////////////////////////////////////////////
+argumento:
+	TK_VARIABLE tipo puntero salto_lin  
+	{
+	
+		strcpy($$.trad,intr_argumento($2.tipo, $1->nombre,$3.espun)); //Traducción
+	if ($1->escons==0) {
+		$$.tipo=$2.tipo;
+		strcpy($$.nombre,$1->nombre);
+		$1->espun=$3.espun;
+		}
+	else yyerror("Error: %s ---Variable ya declarada como constante\n",$1->nombre);
+	}
+/*************************************************************************************************/
+	| TK_VARIABLE tipo puntero salto_lin argumento
+	{
+		strcpy($$.trad,intr_argumento($2.tipo, $1->nombre,$3.espun)); //Traducción
+		strcat($$.trad,", ");
+		strcat($$.trad,$5.trad);
+			
+		if ($1->escons==0)	{
+			$$.tipo=$2.tipo;
+			strcpy($$.nombre,$1->nombre);
+			$1->espun=$3.espun;
+			}
+		else yyerror("Error: %s ---Variable ya declarada como constante\n",$1->nombre);             
+	};
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Sentencias de aplicación
 // El tipo de la asignacion depende del tipo de la variable

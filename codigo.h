@@ -54,6 +54,9 @@ char *intr_const_cad(char *cad,char *nombre);
 //Variables
 char *intr_variable(int tipo, char *nombre, int espun); 
 
+//Variables
+char *intr_argumento(int tipo, char *nombre, int espun); 
+
 //Salida por pantalla
 void vis_salida(int tipo,char *cad, int vis);
 

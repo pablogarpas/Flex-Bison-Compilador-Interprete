@@ -29,8 +29,12 @@ fin
 fin
 
 funcion prueba
+arg
+	aux2 entero
+	a real
+	aux string
 var
- i entero
+	i entero
 devolver entero
 escribir("asd")
 escribir("dsa")

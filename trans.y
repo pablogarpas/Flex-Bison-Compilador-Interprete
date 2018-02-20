@@ -91,10 +91,12 @@ programa:
 	{
 		fprintf(salida,$2.trad);
 		fprintf(salida,$3.trad);
+		fprintf(salida,$6.trad);
+		fprintf(salida,intr_cabecera());//Introducir el main después de las constantes
 		//printf("\n%s\n",$3.trad);
 		fprintf(salida,$4.trad);
 		fprintf(salida,$5.trad);
-		fprintf(salida,$6.trad);
+		
 	};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -146,7 +148,6 @@ dec_constantes:
 	TK_CONST salto_lin constante 
 	{
 		strcpy($$.trad,$3.trad);
-		strcat($$.trad,intr_cabecera());//Introducir el main después de las constantes
 		
 		$$.tipo=$3.tipo;
 		switch ($3.tipo){

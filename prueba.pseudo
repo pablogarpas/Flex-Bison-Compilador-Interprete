@@ -35,7 +35,8 @@ arg
 	aux string
 var
 	i entero
-devolver entero
+devolver bool
+
 escribir("asd")
 escribir("dsa")
 fin

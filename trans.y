@@ -352,8 +352,10 @@ funciones:
 		//printf("%s \n",$6.nombre);
 		if($6.tipo==1)
 			strcpy($$.trad,"float ");
-		if($6.tipo==6)
+		if($6.tipo==6||$6.tipo==3)
 			strcpy($$.trad,"int ");
+		if($6.tipo==2)
+			strcpy($$.trad,"char *");
 			
 		strcat($$.trad,$2->nombre);
 		strcat($$.trad,$3.trad);

@@ -68,6 +68,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token		TK_HASTA
 %token		TK_PARA
 %token    TK_CASO
+%token	<ELEMENTO>	TK_COM
 %token  <ELEMENTO> TK_CADENA
 %token 	<ELEMENTO> TK_NBOOL
 %token 	<ELEMENTO>	TK_NUM
@@ -478,7 +479,16 @@ sentencia:
 	| visual{
 	strcpy($$.res,$1.res);
 	}
-	| lectura{};
+/*************************************************************************************************/	
+	| lectura{}
+/*************************************************************************************************/
+//Comentarios
+	| TK_COM
+	{
+		
+		//printf("%s",$1.cad);
+	}
+	;
 /////////////////////////////////////////////////////////////////////////////////////////////////	
 control:
 	TK_SI exp cont lista_sentencias 
@@ -1731,8 +1741,6 @@ exp:
 %%
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Main, dónde se genera el fichero
-
-
 int main(int argc, char **argv)
 {     	
 	if(argc==1) {

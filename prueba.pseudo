@@ -12,6 +12,7 @@ var
 	aux3 entero
 
 inicio
+$$ asd $$
 
 	aux=2
 
@@ -31,7 +32,7 @@ fin
 funcion prueba
 arg
 	aux2 entero
-	a real
+	a real 
 	aux string
 var
 	i entero

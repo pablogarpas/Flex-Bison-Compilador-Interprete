@@ -37,6 +37,7 @@ booleano (true|false)
 variable {letra}({letra}|[0-9]|_)* 
 cadena   \"[^\"\n]*[\"] 
 salto \n
+comentario [^$$\n]*[$$] 
 %%
 {entero}       {yylval.ELEMENTO.valint = atoi(yytext);
 		 yylval.ELEMENTO.tipo=1;
@@ -122,6 +123,13 @@ salto \n
 	   yylval.ELEMENTO.escons=1;	   	
            return TK_CADENA;
 		}//devuelve una constante de tipo cadena
+
+{comentario}  {cadaux=(char *)malloc(sizeof (char [yyleng]));
+           strcpy(yylval.ELEMENTO.trad,yytext);
+	   for (i=1;i<yyleng-1;i++)  cadaux[i-1]=yytext[i];
+	   strcpy(yylval.ELEMENTO.cad,cadaux);   	
+           return TK_COM;
+		}//devuelve un comentario
 
 \n|.	   return yytext[0];
 

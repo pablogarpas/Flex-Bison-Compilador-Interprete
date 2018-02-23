@@ -1,4 +1,4 @@
-# Flex-Bison-Transpilator
+# Flex-Bison-Transpilador
 
 codigo.c/.h -> Funciones relativas a la traducción y lista simplemente enlazada para la tabla de símbolos
 

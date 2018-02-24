@@ -58,6 +58,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token    TK_LIB
 %token    TK_SWITCH
 %token    TK_LEER
+%token    TK_LLAMAR
 %token	  TK_FIN
 %token	  TK_HACER
 %token	  TK_INC
@@ -74,7 +75,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria case cases default break puntero punteros_asignar funciones dec_arg_fun cuerpo argumento
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria case cases default break puntero punteros_asignar funciones dec_arg_fun cuerpo argumento llamar
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -485,8 +486,28 @@ sentencia:
 //Comentarios
 	| TK_COM
 	{
-		
 		//printf("%s",$1.cad);
+	}
+/*************************************************************************************************/
+//Llamadas a funciones
+	| TK_LLAMAR TK_VARIABLE llamar
+	{
+		strcpy($$.trad,$2->nombre);
+		strcat($$.trad,"(");
+		strcat($$.trad,$3.trad);
+		strcat($$.trad,");\n");
+	}
+	;
+/////////////////////////////////////////////////////////////////////////////////////////////////	
+llamar:
+	TK_VARIABLE
+	{
+		strcpy($$.trad,$1->nombre);
+	}
+	| TK_VARIABLE llamar
+	{
+		strcat($$.trad,", ");
+		strcat($$.trad,$1->nombre);
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////	

@@ -90,6 +90,7 @@ comentario [^$$\n]*[$$]
 "const"		return TK_CONST;
 "var"		return TK_VAR;
 "haz"		return TK_HAZ;
+"llamar"		return TK_LLAMAR;
 "escribir"	return TK_ESCRIBIR;
 "para" return TK_PARA;
 "hasta" return TK_HASTA;

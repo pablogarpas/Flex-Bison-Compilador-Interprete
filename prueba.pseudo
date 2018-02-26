@@ -19,7 +19,7 @@ $$ asd $$
 	escribir("hola")
 	escribir("adios")
 	
-	llamar prueba qwe
+	llamar prueba arg1 *arg2 aux+5 arg4 arg5 &arg6 arg7
 
 
 si *aux==2 hacer

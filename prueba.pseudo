@@ -16,7 +16,7 @@ $$ asd $$
 
 	aux=2
 
-	escribir("hola")
+	escribir("asd",aux,"qwe")
 	escribir("adios")
 	
 	llamar prueba arg1 *arg2 aux+5 arg4 arg5 &arg6 arg7

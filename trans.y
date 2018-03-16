@@ -487,6 +487,7 @@ sentencia:
 	| TK_COM
 	{
 		//printf("%s",$1.cad);
+		strcpy($$.trad,"");
 	}
 /*************************************************************************************************/
 //Llamadas a funciones
@@ -766,7 +767,7 @@ punteros_asignar:
 	}
 	| {
 	}
-
+	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Ver expresiones
@@ -775,13 +776,41 @@ exp
 {
 	$$.vis=$1.vis;	
 	$$.tipo=$1.tipo;
-	switch ($1.tipo){
-		case 1: $$.valnum = $1.valnum;break;
-		case 2:	strcpy($$.valstr,$1.valstr);break;
-		case 3: $$.valbool = $1.valbool;break;
-		case 4: strcpy($$.cad,$1.cad);break;	
-		case 6: $$.valint = $1.valint;break;
-		}
+
+		switch ($1.tipo){
+		case 1: 
+			strcpy($$.trad,"printf(\" %f \\n\",");
+			strcat($$.trad,$1.trad);
+			strcat($$.trad,");\n");
+			break;
+		case 2:					
+			strcpy($$.trad,"printf(\" %s \\n\",");
+			strcat($$.trad,$1.valstr);
+			strcat($$.trad,");\n");
+			break;
+		case 3: 
+			if($1.valbool==1) {
+			 	strcpy($$.trad,"printf(\" TRUE \\n\");\n");
+				break;
+			 }
+			else if($1.valbool==0) {
+				strcpy($$.trad,"printf(\" TRUE \\n\");\n");
+				break;
+				}
+		case 4: 
+			strcpy($$.trad,"printf(\"");
+			strcat($$.trad,$1.cad);
+			strcat($$.trad,"\\n\");\n");
+			break;
+		case 6: 
+			strcpy($$.trad,"printf(\" %%s \\n\",");
+			strcat($$.trad,$1.trad);
+			strcat($$.trad,");\n");
+			break;
+		default: 
+			yyerror("Error:Imposible visualizar la variable o expresion\n");
+			break;
+		}	
 	};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////						
@@ -789,99 +818,14 @@ exp
 visual:
 	TK_ESCRIBIR '('elemento_mostrar')'
 	{
-	//vis_salida_sl($3.tipo,$3.trad,$3.vis);  //Traducción
-	/*
-	strcpy($$.trad,"printf(");
-	strcat($$.trad,$3.trad);
-	strcat($$.trad,");\n");
-	strcat($$.trad,"printf(\"\\n\");\n");	
-	*/
-	strcpy($$.res,$3.cad);
-	strcat($$.res,"\n");
-
-	switch ($3.tipo){
-		case 1: 
-			strcpy($$.trad,"printf(\" %f \\n\",");
-			strcat($$.trad,$3.trad);
-			strcat($$.trad,");\n");
-			break;
-		case 2:					
-			strcpy($$.trad,"printf(\" %s \\n\",");
-			strcat($$.trad,$3.valstr);
-			strcat($$.trad,");\n");
-			break;
-		case 3: 
-			if($3.valbool==1) {
-			 	strcpy($$.trad,"printf(\" TRUE \\n\");\n");
-				break;
-			 }
-			else if($3.valbool==0) {
-				strcpy($$.trad,"printf(\" TRUE \\n\");\n");
-				break;
-				}
-		case 4: 
-			strcpy($$.trad,"printf(\"");
-			strcat($$.trad,$3.cad);
-			strcat($$.trad,"\\n\");\n");
-			break;
-		case 6: 
-			strcpy($$.trad,"printf(\" %d \\n\",");
-			strcat($$.trad,$3.trad);
-			strcat($$.trad,");\n");
-			break;
-		default: 
-			yyerror("Error:Imposible visualizar la variable o expresion\n");
-			break;
-		}	
-
+	strcpy($$.trad,$3.trad);
 	} 
 
 /*************************************************************************************************/
 	| TK_ESCRIBIR '(' visual2 ',' elemento_mostrar ')'
 	{
-	
-	strcpy($$.trad,"printf(");
+	strcpy($$.trad,$3.trad);
 	strcat($$.trad,$5.trad);
-	strcat($$.trad,"\n");
-	strcat($$.trad,"printf(\"\\n\");\n");	
-	
-	strcpy($$.res,$3.trad);
-	//vis_salida_sl($5.tipo,$5.trad,$5.vis);  //hacemos la traduccion  para la salida por pantalla
-	
-	switch ($5.tipo){
-		case 1: 
-			strcpy($$.trad,"printf(\" %f \\n\",");
-			strcat($$.trad,$5.trad);
-			strcat($$.trad,");\n");
-			break;
-		case 2:					
-			strcpy($$.trad,"printf(\" %s \\n\",");
-			strcat($$.trad,$5.valstr);
-			strcat($$.trad,");\n");
-			break;
-		case 3: 
-			if($5.valbool==1) {
-			 	strcpy($$.trad,"printf(\" TRUE \\n\");\n");
-				break;
-			 }
-			else if($5.valbool==0) {
-				strcpy($$.trad,"printf(\" TRUE \\n\");\n");
-				break;
-				}
-		case 4: 
-			strcpy($$.trad,"printf(\"");
-			strcat($$.trad,$5.cad);
-			strcat($$.trad,"\\n\");\n");
-			break;
-		case 6: 
-			strcpy($$.trad,"printf(\" %d \\n\",");
-			strcat($$.trad,$5.trad);
-			strcat($$.trad,");\n");
-			break;
-		default: 
-			yyerror("Error:Imposible visualizar la variable o expresion\n");
-			break;
-		}	
 	} 
 
 /*************************************************************************************************/
@@ -899,47 +843,15 @@ visual:
 visual2:			 
 	elemento_mostrar
 	{	
-	//vis_salida($1.tipo,$1.trad,$1.vis); //Traducción
-	
-	strcat($$.trad,$1.trad);
-	
-	/*
-	switch ($1.tipo){
-		case 1: printf(" %f ",$1.valnum);;break;
-		case 2:	printf(" %s ",$1.valstr);break;
-		case 3: if($1.valbool==1) printf("TRUE");
-		else if($1.valbool==0) printf("FALSE");
-		break;
-		case 4: printf(" %s ",$1.cad);break;
-		case 6: printf(" %d ",$1.valint);break;
-		default: yyerror("Error:Imposible visualizar la variable o expresion\n");
-		}
-		
-		*/
+	strcpy($$.trad,$1.trad);
 	}
 
 /*************************************************************************************************/
 
 	| visual2 ',' elemento_mostrar  
 	{	
-	//vis_salida($3.tipo,$3.trad,$3.vis); //Traducción
-	
-	
-
-	strcat($$.trad,$1.trad);
-	
-	/*
-		switch ($3.tipo){
-		case 1: printf(" %f ",$3.valnum);;break;
-		case 2:	printf(" %s ",$3.valstr);break;
-		case 3: if($3.valbool==1) printf("TRUE");
-		else if($3.valbool==0) printf("FALSE");
-		break;
-		case 4: printf(" %s ",$3.cad);break;
-		case 6: printf(" %d ",$3.valint);break;
-		default: yyerror("Error:Imposible visualizar la variable o expresion\n");
-		}
-		*/
+	strcpy($$.trad,$1.trad);
+	strcat($$.trad,$3.trad);
 	}
 	|{}
 	;	

@@ -8,7 +8,8 @@ printf("dsa\n");
 int main() 
 {
 int aux;
-int aux3;
+int *aux3;
+scanf("%f ",&aux);
 aux=2;
 printf("asd\n");
 printf(" %s \n",aux);

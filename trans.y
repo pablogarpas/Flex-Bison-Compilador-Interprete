@@ -75,7 +75,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura lectura2 control cont final librerias libreria case cases default break puntero punteros_asignar funciones dec_arg_fun cuerpo argumento llamar
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias libreria case cases default break puntero punteros_asignar funciones dec_arg_fun cuerpo argumento llamar
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -447,7 +447,8 @@ lista_sentencias:
 				//fprintf(salida,"%s",$1.trad);
 				break;
 			case 6: $$.valint = $1.valint;break;
-		}			
+		}	
+				
 		 strcat($$.trad,$3.trad);
 		 
 		 strcat($$.res,$3.res);
@@ -478,10 +479,12 @@ sentencia:
 	}
 /*************************************************************************************************/
 	| visual{
-	strcpy($$.res,$1.res);
+	strcpy($$.trad,$1.trad);
 	}
 /*************************************************************************************************/	
-	| lectura{}
+	| lectura{
+	strcpy($$.trad,$1.trad);
+	}
 /*************************************************************************************************/
 //Comentarios
 	| TK_COM
@@ -491,11 +494,11 @@ sentencia:
 	}
 /*************************************************************************************************/
 //Llamadas a funciones
-	| TK_LLAMAR TK_VARIABLE llamar
+	| TK_LLAMAR '(' TK_VARIABLE ',' llamar ')'
 	{
-		strcpy($$.trad,$2->nombre);
+		strcpy($$.trad,$3->nombre);
 		strcat($$.trad,"(");
-		strcat($$.trad,$3.trad);
+		strcat($$.trad,$5.trad);
 		strcat($$.trad,");\n");
 	}
 	;
@@ -505,10 +508,10 @@ llamar:
 	{
 		strcpy($$.trad,$1.trad);
 	}
-	| llamar exp
+	| llamar ',' exp
 	{
 		strcat($$.trad,", ");
-		strcat($$.trad,$2.trad);
+		strcat($$.trad,$3.trad);
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////	
@@ -832,7 +835,7 @@ visual:
 
 	|TK_ESCRIBIR'('')'
 	{
-	strcpy($$.res,"\n");
+	//strcpy($$.res,"\n");
 	
 	strcpy($$.trad,"printf(\"\\n\");");
 	strcat($$.trad,"\n");
@@ -862,137 +865,9 @@ visual2:
 lectura:			
 	TK_LEER '('TK_VARIABLE')' //aqui leemos una variable
 	{
-	vis_entrada($3->tipo,$3->nombre);  //hacemos la traduccion  para la entrada por teclado
-
-	if ($3->escons==0) //no es una constante y la podemos leer   
-		{
-		if($3->tipo==1){	
-			scanf("%f",&auxn);
-			$3->valnum=auxn;
-			}
-		else if($3->tipo==3)
-			{
-			scanf("%d",&auxb);
-			$3->valbool=auxb;
-			}
-		else if($3->tipo==2)
-			{						
-			scanf("%s",auxc);
-			strcpy($3->valstr,auxc);
-			}
-		else if($3->tipo==6)
-			{						
-			scanf("%d",&auxint);
-			$3->valint=auxint;
-			}
-		else 
-			yyerror("Error: No se puede leer, variable no declarada\n");
-	}
-	else 
-		yyerror("Error: No podemos leer una constante\n");
-	}
-
-/**************************************************************************************************************************************/
-|TK_LEER '('lectura2 ',' TK_VARIABLE')' //aqui llemos varias variables
-	{
-		vis_entrada($5->tipo,$5->nombre);    //hacemos la traduccion  para la entrada por teclado
-		
-		if ($5->escons==0) //no es una constante y la podemos leer   
-		{
-			if($5->tipo==1){	
-				scanf("%f",&auxn);
-				$5->valnum=auxn;
-			}
-			else if($5->tipo==3)
-			{
-				scanf("%d",&auxb);
-				$5->valbool=auxb;
-			}
-			else if($5->tipo==2)
-			{						
-				scanf("%s",auxc);
-				strcpy($5->valstr,auxc);
-			}
-			else if($5->tipo==6)
-			{						
-				scanf("%d",&auxint);
-				$5->valbool=auxint;
-			}
-			else 
-				yyerror("Error: No se puede leer, variable no declarada\n");
-		}
-		else 
-		yyerror("Error: No podemos leer una constante\n");
+		strcpy($$.trad,vis_entrada($3->tipo,$3->nombre,$3->espun));//Traducción
 	}
 	;
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-lectura2:                       
-	TK_VARIABLE //aqui lemos una variable
-	{
-		vis_entrada($1->tipo,$1->nombre); //hacemos la traduccion  para la entrada por teclado
-		if ($1->escons==0) //no es una constante y la podemos leer   
-		{
-			if($1->tipo==1){	
-			scanf("%f",&auxn);
-			$1->valnum=auxn;
-			}
-			else if($1->tipo==3)
-			{
-			scanf("%d",&auxb);
-			$1->valbool=auxb;
-			}
-			else if($1->tipo==6)
-			{
-			scanf("%d",&auxint);
-			$1->valint=auxint;
-			}
-			else if($1->tipo==2)
-			{						
-			scanf("%s",auxc);
-			strcpy($1->valstr,auxc);
-			}
-			else 
-			yyerror("Error: No se puede leer, variable no declarada\n");
-		}
-		else 
-			yyerror("Error: No podemos leer una constante\n");
-	}
-/*******************************************************************************************************/
-	|lectura2 ',' TK_VARIABLE //aqui lemos una variable
-	{
-		vis_entrada($3->tipo,$3->nombre); //hacemos la traduccion  para la entrada por teclado
-		if ($3->escons==0) //no es una constante y la podemos leer   
-		{
-		if($3->tipo==1){	
-		scanf("%f",&auxn);
-		$3->valnum=auxn;
-		}
-		else if($3->tipo==3)
-		{
-		scanf("%d",&auxb);
-		$3->valbool=auxb;
-		}
-		else if($3->tipo==6)
-		{
-		scanf("%d",&auxint);
-		$3->valint=auxint;
-		}
-		else if($3->tipo==2)
-		{						
-		scanf("%s",auxc);
-		strcpy($3->valstr,auxc);
-		}
-		else 
-		yyerror("Error: No se puede leer, variable no declarada\n");
-	}
-	else 
-	yyerror("Error: No podemos leer una constante\n");
-	}
-	;
-//////////////////////////////////////////////////////////////////////////////////////////////////
-
 //Operaciones que se pueden hacer
 exp:				
 	exp '+' exp

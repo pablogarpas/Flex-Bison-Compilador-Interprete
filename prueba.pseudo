@@ -8,18 +8,20 @@ const
 	asd "comparando"
 
 var
-	aux entero 
-	aux3 entero
+	aux entero
+	aux3 entero *
 
 inicio
 $$ asd $$
+
+	leer(aux)
 
 	aux=2
 
 	escribir("asd",aux,"qwe")
 	escribir("adios")
 	
-	llamar prueba arg1 *arg2 aux+5 arg4 arg5 &arg6 arg7
+	llamar(prueba,arg1,*arg2,aux+5,arg4,arg5,&arg6,arg7)
 
 
 si *aux==2 hacer

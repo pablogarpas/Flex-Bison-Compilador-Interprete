@@ -64,7 +64,7 @@ void vis_salida(int tipo,char *cad, int vis);
 void vis_salida_sl(int tipo,char *cad, int vis);
 
 //Entrada por pantalla
-void vis_entrada(int tipo,char *cad);
+char *vis_entrada(int tipo,char *cad,int espun);
 
 //Salidas expresiones
 void vis_exp(int tipo,char *cad);

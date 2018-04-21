@@ -237,14 +237,44 @@ void vis_salida_sl(int tipo,char *cad, int vis)
 
 
 //Entrada por teclado
-void vis_entrada(int tipo,char *cad)
+char *vis_entrada(int tipo,char *cad,int espun)
 {
-	switch(tipo){
-		case 1:fprintf(salida,"scanf(\" %%f \",&%s);\n",cad);break;
-		case 2:fprintf(salida,"scanf(\" %%s \",&%s);\n",cad);break;
-		case 3:fprintf(salida,"scanf(\" %%d \",&%s);\n",cad);break;
-		case 6:fprintf(salida,"scanf(\" %%d \",&%s);\n",cad);break;		
+	
+	char *aux = malloc(256);
+	
+	strcpy(aux,"scanf(\"");	
+		
+	switch(tipo) {
+		case 1:
+			strcat(aux,"%%f \",");
+			if(!espun) 
+				strcat(aux,"&");
+			break;
+		case 2:
+			strcat(aux,"%%s \",");
+			if(!espun) 
+				strcat(aux,"&");
+			break;
+		case 3:
+			strcat(aux,"%%d \",");
+			if(!espun) 
+				strcat(aux,"&");
+			break;
+		case 6:
+			strcat(aux,"%%f \",");
+			if(!espun) 
+				strcat(aux,"&");
+			break;
+		default:
+			yyerror("variable a leer no declarada");
+			break;
 		}
+	
+	strcat(aux,cad);	
+	strcat(aux,");\n");	
+		
+	return aux;
+	
 }
 
 //Salida de expresiones

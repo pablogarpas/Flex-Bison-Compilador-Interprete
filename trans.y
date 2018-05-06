@@ -796,25 +796,25 @@ exp
 	if(ejecutar(poscontrol,eje)) {
 		switch ($1.tipo){
 		case 1: 
-
+			printf("%f\n",$1.valnum);
 			break;
 		case 2:					
-
+			printf("%s\n",$1.cad);
 			break;
 		case 3: 
 			if($1.valbool==1) {
-
+				printf("True\n");
 				break;
 			 }
 			else if($1.valbool==0) {
-
+				printf("False\n");
 				break;
 				}
 		case 4: 
-			printf("\n%s\n",$1.cad);
+			printf("%s\n",$1.cad);
 			break;
 		case 6: 
-
+			printf("%d\n",$1.valint);
 			break;
 		default: 
 			yyerror("Error:Imposible visualizar la variable o expresion\n");
@@ -912,6 +912,7 @@ lectura:
 		strcpy($$.trad,vis_entrada($3->tipo,$3->nombre,$3->espun));//Traducción
 	}
 	;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Operaciones que se pueden hacer
 exp:				
 	exp '+' exp

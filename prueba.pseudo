@@ -3,10 +3,10 @@ programa prueba2
 inicio
 	escribir("soy")
 	si 4>3 hacer
-	escribir("guay y")
+	escribir(524)
 		si 4<3
 		escribir("no")
 		fin
 	fin
-	escribir("funciono")
+	escribir(123.53)
 fin

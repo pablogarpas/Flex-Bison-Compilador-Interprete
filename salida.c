@@ -4,10 +4,10 @@ int main()
 {
 printf("soy\n");
 if (4 > 3) {
-printf("guay y\n");
-if (4 > 3) {
+printf(" %s \n",524);
+if (4 < 3) {
 printf("no\n");
 }
 }
-printf("funciono\n");
+printf(" 0.000000 \n",123.53);
 }

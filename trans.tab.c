@@ -2315,7 +2315,7 @@ yyreduce:
 	//TRADUCCIÓN	
 	switch ((yyvsp[0].ELEMENTO).tipo){
 	case 1: 
-		strcpy((yyval.ELEMENTO).trad,"printf(\" %f \\n\",");
+		strcpy((yyval.ELEMENTO).trad,"printf(\" %%f \\n\",");
 		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
 		strcat((yyval.ELEMENTO).trad,");\n");
 		break;

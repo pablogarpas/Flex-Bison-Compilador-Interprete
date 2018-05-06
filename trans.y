@@ -825,7 +825,7 @@ exp
 	//TRADUCCIÓN	
 	switch ($1.tipo){
 	case 1: 
-		strcpy($$.trad,"printf(\" %f \\n\",");
+		strcpy($$.trad,"printf(\" %%f \\n\",");
 		strcat($$.trad,$1.trad);
 		strcat($$.trad,");\n");
 		break;

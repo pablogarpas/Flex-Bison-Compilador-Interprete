@@ -300,3 +300,15 @@ void intr_dec(char *nombre,int post)
 	else
 		fprintf(salida,"++%s;\n",nombre);
 }
+
+//Comprobación para las estructuras de control
+int ejecutar(int pos,int array[]) {
+	int i;
+	int aux=1;
+	
+	for(i=0;i<=pos;i++) {
+		if(!array[i])
+			aux=0;
+	}
+	return aux;
+}

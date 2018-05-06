@@ -74,3 +74,6 @@ void intr_inc(char *nombre,int post);
 
 //Función para traducir decrementos con comprobación de post o pre decremento
 void intr_dec(char *nombre,int post);
+
+//Comprobación para las estructuras de control
+int ejecutar(int pos,int array[]);

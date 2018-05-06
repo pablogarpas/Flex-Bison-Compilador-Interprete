@@ -1,74 +1,12 @@
 programa prueba2
 
-librerias
-	"stdio.h"
-	"math.h"
-
-const
-	asd "comparando"
-
-var
-	aux entero
-	aux3 entero *
-
 inicio
-$$ asd $$
-
-	leer(aux)
-
-	aux=2
-
-	escribir("asd",aux,"qwe")
-	escribir("adios")
-	
-	llamar(prueba,arg1,*arg2,aux+5,arg4,arg5,&arg6,arg7)
-
-
-si *aux==2 hacer
-	escribir("dsa")
-	escribir("asd")
-	llamar(prueba,arg1,*arg2,aux+5,arg4,arg5,&arg6,arg7)
-	aux2=aux
-fin
-
-fin
-
-funcion prueba
-arg
-	aux2 entero
-	a real 
-	aux string
-var
-	i entero
-devolver bool
-
-escribir("asd")
-escribir("dsa")
-fin
-
-
-funcion qwer
-arg
-	aux2 entero
-	a real 
-	aux string
-var
-	i entero
-devolver bool
-
-escribir("asd")
-escribir("dsa")
-fin
-
-funcion qwe123
-arg
-	aux2 entero
-	a real 
-	aux string
-var
-	i entero
-devolver bool
-
-escribir("asd")
-escribir("dsa")
+	escribir("soy")
+	si 4>3 hacer
+	escribir("guay y")
+		si 4<3
+		escribir("no")
+		fin
+	fin
+	escribir("funciono")
 fin

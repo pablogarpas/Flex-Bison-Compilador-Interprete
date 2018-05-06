@@ -13,6 +13,8 @@ float auxn;  //variable auxiliar para la lectura de numeros
 char  auxc[30];//variable auxiliar para la lectura de strings
 char  auxt[30];//variable auxiliar para las traducciones
 int auxtip=1;//variable auxiliar para los tipos de varias sentencias
+int eje[10]={1,0,0,0,0,0,0,0,0,0};//Variable para controlar si se debe ejecutar ó no después de una estructura de control
+int poscontrol=0;//variable auxiliar para el control de las estructuras anidadas
 %}
 
 
@@ -75,7 +77,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias libreria case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar control2
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -122,24 +124,8 @@ cabecera:
 	};
 //////////////////////////////////////////////////////////////////////////////////////////////////
 librerias:
-	TK_LIB salto_lin libreria
 	{
-		strcpy($$.trad,$3.trad);
-	}
-	|{}
-	;
-//////////////////////////////////////////////////////////////////////////////////////////////////
-libreria:
-	TK_CADENA salto_lin
-	{
-		strcpy($$.trad,intr_lib($1.cad)); //Traducción
-	}
-	|
-	TK_CADENA salto_lin libreria
-	{
-		strcpy($$.trad,intr_lib($1.cad)); //Traducción
-		
-		strcat($$.trad,$3.trad); //Traducción
+		strcpy($$.trad,"#include <stdio.h>\n#include <math.h>\n");
 	}
 	;
 
@@ -160,7 +146,7 @@ dec_constantes:
 		}		
 	}
 	| {		
-	strcpy($$.trad,intr_cabecera());//Introducir el main después de las constantes
+	strcpy($$.trad,"");
 	};//Puede o no haber constantes
 
 
@@ -344,6 +330,8 @@ cuerpo:
 	
 		strcpy($$.trad,$3.trad);
 		strcat($$.trad,$4.trad);
+		
+		//printf("\n%s\n",$$.trad);
 	}
 	;
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -376,6 +364,7 @@ funcion:
 		strcat($$.trad,$8.trad);
 		strcat($$.trad,$9.trad);
 		
+		//printf("\n%s\n",$$.trad);
 	}
 	|
 	{//Puede no haber funciones
@@ -421,7 +410,7 @@ argumento:
 			strcpy($$.nombre,$1->nombre);
 			$1->espun=$3.espun;
 			}
-		else yyerror("Error: %s ---Variable ya declarada como constante\n",$1->nombre);             
+		else yyerror("Error: %s ---Variable ya declarada como constante\n",$1->nombre);
 	};
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Sentencias de aplicación
@@ -438,7 +427,8 @@ lista_sentencias:
 			//fprintf(salida,"%s",$1.trad);
 			break;
 		case 6: $$.valint = $1.valint;break;
-		}		 
+		}
+		
 		strcpy($$.trad,$1.trad);	
 		
 		strcpy($$.res,$1.res);	
@@ -525,17 +515,27 @@ llamar:
 		strcat($$.trad,$3.trad);
 	}
 	;
-/////////////////////////////////////////////////////////////////////////////////////////////////	
-control:
-	TK_SI exp cont lista_sentencias 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+control2:
+	TK_SI exp
 	{
-		strcpy($$.trad,"if (");
-		strcat($$.trad,$2.trad);
-		strcat($$.trad,") {\n");
-		strcat($$.trad,$4.trad);
+		strcpy($$.trad,$2.trad);
+		
+		poscontrol++;
 		
 		if($2.valbool)
-			strcpy($$.res,$4.res);
+			eje[poscontrol]=1;
+	}
+;
+/////////////////////////////////////////////////////////////////////////////////////////////////	
+control:
+	control2 cont lista_sentencias 
+	{
+		strcpy($$.trad,"if (");
+		strcat($$.trad,$1.trad);
+		strcat($$.trad,") {\n");
+		strcat($$.trad,$3.trad);
+		
 	}
 /*************************************************************************************************/
 	| TK_MIENTRAS exp cont lista_sentencias 
@@ -706,6 +706,7 @@ final:
 	{
 		//fprintf(salida,"}\n");
 		strcpy($$.trad,"}\n");
+		poscontrol--;
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -791,47 +792,79 @@ exp
 	$$.vis=$1.vis;	
 	$$.tipo=$1.tipo;
 
+		//EJECUCIÓN
+	if(ejecutar(poscontrol,eje)) {
 		switch ($1.tipo){
 		case 1: 
-			strcpy($$.trad,"printf(\" %f \\n\",");
-			strcat($$.trad,$1.trad);
-			strcat($$.trad,");\n");
+
 			break;
 		case 2:					
-			strcpy($$.trad,"printf(\" %s \\n\",");
-			strcat($$.trad,$1.valstr);
-			strcat($$.trad,");\n");
+
 			break;
 		case 3: 
 			if($1.valbool==1) {
-			 	strcpy($$.trad,"printf(\" TRUE \\n\");\n");
+
 				break;
 			 }
 			else if($1.valbool==0) {
-				strcpy($$.trad,"printf(\" TRUE \\n\");\n");
+
 				break;
 				}
 		case 4: 
-			strcpy($$.trad,"printf(\"");
-			strcat($$.trad,$1.cad);
-			strcat($$.trad,"\\n\");\n");
+			printf("\n%s\n",$1.cad);
 			break;
 		case 6: 
-			strcpy($$.trad,"printf(\" %%s \\n\",");
-			strcat($$.trad,$1.trad);
-			strcat($$.trad,");\n");
+
 			break;
 		default: 
 			yyerror("Error:Imposible visualizar la variable o expresion\n");
 			break;
-		}	
-	};
+		}//switch
+	}//if
+
+	//TRADUCCIÓN	
+	switch ($1.tipo){
+	case 1: 
+		strcpy($$.trad,"printf(\" %f \\n\",");
+		strcat($$.trad,$1.trad);
+		strcat($$.trad,");\n");
+		break;
+	case 2:					
+		strcpy($$.trad,"printf(\" %s \\n\",");
+		strcat($$.trad,$1.cad);
+		strcat($$.trad,");\n");
+		break;
+	case 3: 
+		if($1.valbool==1) {
+		 	strcpy($$.trad,"printf(\" TRUE \\n\");\n");
+			break;
+		 }
+		else if($1.valbool==0) {
+			strcpy($$.trad,"printf(\" TRUE \\n\");\n");
+			break;
+			}
+	case 4: 
+		strcpy($$.trad,"printf(\"");
+		strcat($$.trad,$1.cad);
+		strcat($$.trad,"\\n\");\n");
+		break;
+	case 6: 
+		strcpy($$.trad,"printf(\" %%s \\n\",");
+		strcat($$.trad,$1.trad);
+		strcat($$.trad,");\n");
+		break;
+	default: 
+		yyerror("Error:Imposible visualizar la variable o expresion\n");
+		break;
+	}//switch
+};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////						
 //Mostrar por pantalla
 visual:
 	TK_ESCRIBIR '('elemento_mostrar')'
 	{
+	
 	strcpy($$.trad,$3.trad);
 	} 
 
@@ -1563,7 +1596,7 @@ exp:
 int main(int argc, char **argv)
 {     	
 	if(argc==1) {
-		printf("Se debe introducir: anal [fichero a analizar]\n\n");
+		printf("Se debe introducir: el fichero a analizar\n\n");
 		exit(0);
 	}//no se han introducido los parametros correctos	
 	extern yyin;//se importa la variable yyin de lex        

@@ -32,6 +32,28 @@ FILE *salida;
 //Buscar y añadir
 NODO *buscar_simbolo(char *nombre,NODO **com,NODO **fin);
 
+//Estructura para las expresionesde la lista
+typedef struct{
+	int tipo;
+	union {
+    double valnum; //valor que se toma si el tipo es real
+    int    valint; //valor que se toma si el tipo es entero
+    char   cad[255]; //valor para las cadenas constantes
+    char   valstr[255]; //valor que se toma si el tipo es una cadena de tipo string
+  };//union
+}exp;
+
+typedef struct LISTA{
+	struct LISTA *sig;
+	
+	exp exp1;
+	exp exp2;
+	int op;
+}LISTA;
+
+LISTA *INICIO;
+LISTA *FINAL;
+
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para pasar del pseudo a C*/
 //////////////////////////////////////////////////////////////////////////
@@ -75,5 +97,9 @@ void intr_inc(char *nombre,int post);
 //Función para traducir decrementos con comprobación de post o pre decremento
 void intr_dec(char *nombre,int post);
 
-//Comprobación para las estructuras de control
-int ejecutar(int pos,int array[]);
+//////////////////////////////////////////////////////////////////////////
+/*Funciones para la compilación*/
+//////////////////////////////////////////////////////////////////////////
+
+//Crear la lista y añadir LISTAs
+int insertar(exp expre1,exp expre2, int ope);

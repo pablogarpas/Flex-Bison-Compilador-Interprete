@@ -301,14 +301,36 @@ void intr_dec(char *nombre,int post)
 		fprintf(salida,"++%s;\n",nombre);
 }
 
-//Comprobación para las estructuras de control
-int ejecutar(int pos,int array[]) {
-	int i;
-	int aux=1;
+//////////////////////////////////////////////////////////////////////////
+/*Funciones para la compilación*/
+//////////////////////////////////////////////////////////////////////////
+//Insertar o crear la lista
+int insertar(exp expre1,exp expre2, int ope)
+{
+	LISTA *aux;
 	
-	for(i=0;i<=pos;i++) {
-		if(!array[i])
-			aux=0;
+	aux= malloc(sizeof(LISTA));
+
+	if(aux==NULL)	{
+	 printf("Error. No hay memoria para otro LISTA.");
+	 return 0;
 	}
-	return aux;
+	else {
+		aux->exp1=expre1;
+		aux->exp2=expre2;
+		aux->op=ope;
+		
+		if(INICIO==NULL) {
+			INICIO==aux;
+			FINAL==aux;
+			aux->sig=NULL;
+		}
+		else {
+			FINAL->sig=aux;
+			FINAL=aux;
+			aux->sig=NULL;
+		}
+	}
+		
 }
+

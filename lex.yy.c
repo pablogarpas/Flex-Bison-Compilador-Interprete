@@ -636,8 +636,8 @@ Analizador léxico para el pseudocódigo que aceptará el transpilador.
 //---------------------------------------------------------------------------
 
 #include "trans.tab.h"
-#include "codigo.h"
-#include "codigo.c"
+#include "trad.h"
+#include "trad.c"
 #include <string.h>
 
 struct NODO  *com; //Puntero al comienzo de la TS (tabla de símbolos)

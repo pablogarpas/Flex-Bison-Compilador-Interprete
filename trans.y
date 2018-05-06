@@ -1,7 +1,7 @@
 %{
 /****************************************************************************
 ****************************************************************************/
-#include "codigo.h"
+#include "trad.h"
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -13,8 +13,6 @@ float auxn;  //variable auxiliar para la lectura de numeros
 char  auxc[30];//variable auxiliar para la lectura de strings
 char  auxt[30];//variable auxiliar para las traducciones
 int auxtip=1;//variable auxiliar para los tipos de varias sentencias
-int eje[10]={1,0,0,0,0,0,0,0,0,0};//Variable para controlar si se debe ejecutar ó no después de una estructura de control
-int poscontrol=0;//variable auxiliar para el control de las estructuras anidadas
 %}
 
 
@@ -77,7 +75,7 @@ int poscontrol=0;//variable auxiliar para el control de las estructuras anidadas
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar control2
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar 
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -515,24 +513,12 @@ llamar:
 		strcat($$.trad,$3.trad);
 	}
 	;
-/////////////////////////////////////////////////////////////////////////////////////////////////
-control2:
-	TK_SI exp
-	{
-		strcpy($$.trad,$2.trad);
-		
-		poscontrol++;
-		
-		if($2.valbool)
-			eje[poscontrol]=1;
-	}
-;
 /////////////////////////////////////////////////////////////////////////////////////////////////	
 control:
-	control2 cont lista_sentencias 
+	TK_SI exp cont lista_sentencias 
 	{
 		strcpy($$.trad,"if (");
-		strcat($$.trad,$1.trad);
+		strcat($$.trad,$2.trad);
 		strcat($$.trad,") {\n");
 		strcat($$.trad,$3.trad);
 		
@@ -706,7 +692,6 @@ final:
 	{
 		//fprintf(salida,"}\n");
 		strcpy($$.trad,"}\n");
-		poscontrol--;
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -791,36 +776,6 @@ exp
 {
 	$$.vis=$1.vis;	
 	$$.tipo=$1.tipo;
-
-		//EJECUCIÓN
-	if(ejecutar(poscontrol,eje)) {
-		switch ($1.tipo){
-		case 1: 
-			printf("%f\n",$1.valnum);
-			break;
-		case 2:					
-			printf("%s\n",$1.cad);
-			break;
-		case 3: 
-			if($1.valbool==1) {
-				printf("True\n");
-				break;
-			 }
-			else if($1.valbool==0) {
-				printf("False\n");
-				break;
-				}
-		case 4: 
-			printf("%s\n",$1.cad);
-			break;
-		case 6: 
-			printf("%d\n",$1.valint);
-			break;
-		default: 
-			yyerror("Error:Imposible visualizar la variable o expresion\n");
-			break;
-		}//switch
-	}//if
 
 	//TRADUCCIÓN	
 	switch ($1.tipo){

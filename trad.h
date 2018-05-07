@@ -11,6 +11,7 @@
 
 #define OP_ESCRIBIR 1
 #define OP_ASIGNAR 2
+#define OP_IGUALDAD 3
 
 //tipo de los simbolos
 typedef struct NODO {
@@ -101,5 +102,5 @@ void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool
 //Crear el árbol o añadir nodo
 int insertar(NODO expre1,NODO expre2, int ope, NODO *var);
 
-//Crear el árbol o añadir nodo
-int insertarexp(NODO expre1,NODO expre2, int ope, NODO *var1,NODO *var2);
+//Insertar expresión en el hijo izquierdo del arbol
+int insertarexp(NODO expre1,NODO expre2, int ope,ARBOL **end);

@@ -8,7 +8,5 @@ var
 
 inicio
 
-	aux=123
-
-	escribir(aux)
+	escribir(4==4)
 fin

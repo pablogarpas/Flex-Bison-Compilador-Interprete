@@ -335,12 +335,14 @@ int insertar(NODO expre1,NODO expre2, int ope, NODO *var)
 		
 }
 
-int insertarexp(NODO expre1,NODO expre2, int ope, NODO *var1,NODO *var2)
-{
+//Insertar expresión en el arbol
+int insertarexp(NODO expre1,NODO expre2, int ope,ARBOL **end) {
+
 	ARBOL *aux;
-	
 	aux= malloc(sizeof(ARBOL));
 
+	
+	
 	if(aux==NULL)	{
 	 printf("Error. No hay memoria para otro ARBOL.");
 	 return 0;
@@ -349,11 +351,17 @@ int insertarexp(NODO expre1,NODO expre2, int ope, NODO *var1,NODO *var2)
 		aux->exp1=expre1;
 		aux->exp2=expre2;
 		aux->op=ope;
-		aux->var=var1;
-		aux->var2=var2;
 		
-		FINAL->izq=aux;
+		printf("\nprueba\n");fflush(stdout);
+		
+		if((*end)->op==1)
+			printf("\nasdqwe\n");fflush(stdout);
+		
+		(*end)->izq=aux;
+		
+		printf("\nfunciona\n");fflush(stdout);
 		}
+	
 }
 
 //Función para copiar los datos de un elemento a un nodo

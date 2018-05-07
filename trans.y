@@ -8,7 +8,7 @@
 
 //Prototipos
 int ejecutar();
-
+NODO procesarexp(ARBOL *aux);
 //Variables globales
 int   auxb;  //variable auxiliar para la lectura de booleanos 
 int   auxint;  //variable auxiliar para la lectura de enteros
@@ -1357,56 +1357,15 @@ exp:
 //Esta es la coparacion de  igualdad, que devuelve true o false
 	|	exp TK_IGU exp
 	{
+		
+	
 		strcat($$.trad," == ");//introducimos la cadena creada para la traduccion
 		strcat($$.trad,$3.trad);
+		
 
-		$$.tipo=3;//asigno tipo bool
-		if (($1.tipo)==($3.tipo))
-		{ 	
-			if ($1.tipo==1)//si es numero
-			{
-				if ($1.valnum!=$3.valnum) $$.valbool =0 ;
-				else $$.valbool=1;
-			} 
-			else if($1.tipo==2)//si es string
-			{
-				if (strcmp($1.valstr,$3.valstr)!=0) $$.valbool =0; 
-				else $$.valbool=1;
-			} 	
-			else if($1.tipo==4)//si es cte cadena
-			{
-				if (strcmp($1.cad,$3.cad)!=0) $$.valbool =0; 
-				else $$.valbool=1;
-			}
-			if ($1.tipo==6)//si es numero
-			{
-				if ($1.valint!=$3.valint) $$.valbool =0 ;
-				else $$.valbool=1;
-			} 
-		}	
-
-		else if (($1.tipo==2)&&($3.tipo==4))//cadena y constante
-		{
-		if (strcmp($1.valstr,$3.cad)!=0) $$.valbool =0; 
-		else $$.valbool=1;
-		}
-		else if (($1.tipo==4)&&($3.tipo==2))//constante y cadena
-		{
-		if (strcmp($1.cad,$3.valstr)!=0) $$.valbool =0; 
-		else $$.valbool=1;
-		}
-		else if (($1.tipo==6)&&($3.tipo==1))//constante y cadena
-		{
-			if ($1.valint!=$3.valnum) $$.valbool =0; 
-			else $$.valbool=1;
-		}
-		else if (($1.tipo==1)&&($3.tipo==6))//constante y cadena
-		{
-			if ($1.valnum!=$3.valint) $$.valbool =0; 
-			else $$.valbool=1;
-		}
-
-		else yyerror("Error: Operaciones sobre tipos diferentes\n");                               
+		copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint);
+		copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint);
+		insertarexp(auxnodo1,auxnodo2,OP_IGUALDAD,&FINAL);
 	}
 
 
@@ -1596,6 +1555,8 @@ int ejecutar() {
 	do {
 		switch(aux->op){
 		case OP_ESCRIBIR:
+			if(aux->izq!=NULL)
+				aux->exp1=procesarexp(aux->izq);
 			switch (aux->exp1.tipo){
 				case 1:
 					if(aux->exp1.escons) {
@@ -1662,8 +1623,60 @@ int ejecutar() {
 	}while(aux!=NULL);
 }//función
 
+NODO procesarexp(ARBOL *aux){
+	NODO retorno;
+	do {
+		switch(aux->op){
+			case OP_IGUALDAD:
+				retorno.tipo=3;//asigno tipo bool
+				if ((aux->exp1.tipo)==(aux->exp2.tipo))
+				{ 	
+					if (aux->exp1.tipo==1)//si es numero
+					{
+						if (aux->exp1.valnum!=aux->exp2.valnum) retorno.valbool =0 ;
+						else retorno.valbool=1;
+					} 
+					else if(aux->exp1.tipo==2)//si es string
+					{
+						if (strcmp(aux->exp1.valstr,aux->exp2.valstr)!=0) retorno.valbool =0; 
+						else retorno.valbool=1;
+					} 	
+					else if(aux->exp1.tipo==4)//si es cte cadena
+					{
+						if (strcmp(aux->exp1.cad,aux->exp2.cad)!=0) retorno.valbool =0; 
+						else retorno.valbool=1;
+					}
+					if (aux->exp1.tipo==6)//si es numero
+					{
+						if (aux->exp1.valint!=aux->exp2.valint) retorno.valbool =0 ;
+						else retorno.valbool=1;
+					} 
+				}	
 
-
-
-
-
+				else if ((aux->exp1.tipo==2)&&(aux->exp2.tipo==4))//cadena y constante
+				{
+				if (strcmp(aux->exp1.valstr,aux->exp2.cad)!=0) retorno.valbool =0; 
+				else retorno.valbool=1;
+				}
+				else if ((aux->exp1.tipo==4)&&(aux->exp2.tipo==2))//constante y cadena
+				{
+				if (strcmp(aux->exp1.cad,aux->exp2.valstr)!=0) retorno.valbool =0; 
+				else retorno.valbool=1;
+				}
+				else if ((aux->exp1.tipo==6)&&(aux->exp2.tipo==1))//constante y cadena
+				{
+					if (aux->exp1.valint!=aux->exp2.valnum) retorno.valbool =0; 
+					else retorno.valbool=1;
+				}
+				else if ((aux->exp1.tipo==1)&&(aux->exp2.tipo==6))//constante y cadena
+				{
+					if (aux->exp1.valnum!=aux->exp2.valint) retorno.valbool =0; 
+					else retorno.valbool=1;
+				}
+				else yyerror("Error: Operaciones sobre tipos diferentes\n");                                                            
+				
+				return retorno;
+		}//switch
+		aux=aux->izq;
+	}while(aux!=NULL);
+}//función

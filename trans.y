@@ -73,6 +73,7 @@ NODO *auxvar;
 %token	  TK_CONT
 %token		TK_DEFAULT
 %token		TK_HASTA
+%token		TK_ELSE
 %token		TK_PARA
 %token    TK_CASO
 %token	<ELEMENTO>	TK_COM
@@ -525,6 +526,7 @@ llamar:
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////	
 control:
+//if sin else
 	TK_SI exp cont lista_sentencias 
 	{
 		strcpy($$.trad,"if (");
@@ -532,6 +534,17 @@ control:
 		strcat($$.trad,") {\n");
 		strcat($$.trad,$3.trad);
 		
+	}
+/*************************************************************************************************/
+//if con else
+	| TK_SI exp cont lista_sentencias TK_ELSE lista_sentencias
+	{
+		strcpy($$.trad,"if (");
+		strcat($$.trad,$2.trad);
+		strcat($$.trad,") {\n");
+		strcat($$.trad,$4.trad);
+		strcat($$.trad,"} else {\n");
+		strcat($$.trad,$6.trad);
 	}
 /*************************************************************************************************/
 	| TK_MIENTRAS exp cont lista_sentencias 
@@ -1580,7 +1593,7 @@ int main(int argc, char **argv)
 }
 
 int ejecutar() {
-	LISTA *aux;
+	ARBOL *aux;
 	extern com;
 	extern fin;
 	NODO *variable;
@@ -1650,7 +1663,7 @@ int ejecutar() {
 			else yyerror("Error en la asignacion: no concuerdan los tipos o %s es constante\n",aux->exp1.nombre);	
 			break;
 		}//switch
-		aux=aux->sig;
+		aux=aux->der;
 	}while(aux!=NULL);
 }//función
 

@@ -7,11 +7,11 @@ var
 	aux1 bool
 
 inicio
-	aux=123
-	aux2=234.12
-	aux3="qwe"
-	aux1=1
 
-	escribir(aux,aux1,aux2,aux3)
+	si 4>3
+		escribir("hola")
+	sino
+		escribir("adios")
+	fin
 	
 fin

@@ -307,12 +307,12 @@ void intr_dec(char *nombre,int post)
 //Insertar o crear la lista
 int insertar(NODO expre1,NODO expre2, int ope, NODO *var)
 {
-	LISTA *aux;
+	ARBOL *aux;
 	
-	aux= malloc(sizeof(LISTA));
+	aux= malloc(sizeof(ARBOL));
 
 	if(aux==NULL)	{
-	 printf("Error. No hay memoria para otro LISTA.");
+	 printf("Error. No hay memoria para otro ARBOL.");
 	 return 0;
 	}
 	else {
@@ -324,12 +324,12 @@ int insertar(NODO expre1,NODO expre2, int ope, NODO *var)
 		if(INICIO==NULL) {
 			INICIO=aux;
 			FINAL=aux;
-			aux->sig=NULL;
+			aux->der=NULL;
 		}
 		else {
-			FINAL->sig=aux;
+			FINAL->der=aux;
 			FINAL=aux;
-			aux->sig=NULL;
+			aux->der=NULL;
 		}
 	}
 		

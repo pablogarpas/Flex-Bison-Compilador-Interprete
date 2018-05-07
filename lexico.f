@@ -87,6 +87,7 @@ comentario [^$$\n]*[$$]
 "funcion"         return TK_FUNCION;
 "fin"	        return TK_FIN;
 "si"		return TK_SI;
+"sino"		return TK_ELSE;
 "const"		return TK_CONST;
 "var"		return TK_VAR;
 "haz"		return TK_HAZ;

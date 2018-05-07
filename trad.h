@@ -33,18 +33,20 @@ FILE *salida;
 //Buscar y añadir
 NODO *buscar_simbolo(char *nombre,NODO **com,NODO **fin);
 
-typedef struct LISTA{
-	struct LISTA *sig;
+typedef struct ARBOL{
+	struct ARBOL *der;
+	struct ARBOL *cen;
+	struct ARBOL *izq;
 	
 	NODO exp1;
 	NODO exp2;
 	int op;
 	
 	NODO *var;
-}LISTA;
+}ARBOL;
 
-LISTA *INICIO;
-LISTA *FINAL;
+ARBOL *INICIO;
+ARBOL *FINAL;
 
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para pasar del pseudo a C*/
@@ -93,5 +95,5 @@ void intr_dec(char *nombre,int post);
 /*Funciones para la compilación*/
 //////////////////////////////////////////////////////////////////////////
 
-//Crear la lista y añadir LISTAs
+//Crear la lista y añadir ARBOLs
 int insertar(NODO expre1,NODO expre2, int ope, NODO *var);

@@ -74,23 +74,24 @@ extern int yydebug;
     TK_CONT = 284,
     TK_DEFAULT = 285,
     TK_HASTA = 286,
-    TK_PARA = 287,
-    TK_CASO = 288,
-    TK_COM = 289,
-    TK_CADENA = 290,
-    TK_NBOOL = 291,
-    TK_NUM = 292,
-    TK_ENT = 293,
-    TK_VARIABLE = 294,
-    TK_MEI = 295,
-    TK_MAI = 296,
-    TK_DIS = 297,
-    TK_ASIG = 298,
-    TK_OR = 299,
-    TK_AND = 300,
-    TK_NOT = 301,
-    MENOSUNARIO = 302,
-    TK_POW = 303
+    TK_ELSE = 287,
+    TK_PARA = 288,
+    TK_CASO = 289,
+    TK_COM = 290,
+    TK_CADENA = 291,
+    TK_NBOOL = 292,
+    TK_NUM = 293,
+    TK_ENT = 294,
+    TK_VARIABLE = 295,
+    TK_MEI = 296,
+    TK_MAI = 297,
+    TK_DIS = 298,
+    TK_ASIG = 299,
+    TK_OR = 300,
+    TK_AND = 301,
+    TK_NOT = 302,
+    MENOSUNARIO = 303,
+    TK_POW = 304
   };
 #endif
 
@@ -117,7 +118,7 @@ union YYSTYPE
 		char res[255];//cadena para mostrar por pantalla
 		} ELEMENTO;
 
-#line 121 "trans.tab.h" /* yacc.c:1909  */
+#line 122 "trans.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

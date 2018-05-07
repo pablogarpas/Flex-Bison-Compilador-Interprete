@@ -7,6 +7,7 @@ var
 	aux1 bool
 
 inicio
+	escribir("holi")
 
-	escribir(4==4)
+	escribir(4==5)
 fin

@@ -9,9 +9,11 @@
 //5->tipo generico;
 //6->entero;
 
+#define PLACEHOLDER 0
 #define OP_ESCRIBIR 1
 #define OP_ASIGNAR 2
 #define OP_IGUALDAD 3
+
 
 //tipo de los simbolos
 typedef struct NODO {
@@ -49,6 +51,7 @@ typedef struct ARBOL{
 
 ARBOL *INICIO;
 ARBOL *FINAL;
+
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -103,4 +106,4 @@ void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool
 int insertar(NODO expre1,NODO expre2, int ope, NODO *var);
 
 //Insertar expresión en el hijo izquierdo del arbol
-int insertarexp(NODO expre1,NODO expre2, int ope,ARBOL **end);
+int insertarexp(NODO expre1,NODO expre2, int ope);

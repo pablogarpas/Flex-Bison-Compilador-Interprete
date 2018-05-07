@@ -320,11 +320,16 @@ int insertar(NODO expre1,NODO expre2, int ope, NODO *var)
 		aux->exp2=expre2;
 		aux->op=ope;
 		aux->var=var;
+		aux->izq=NULL;
 		
 		if(INICIO==NULL) {
 			INICIO=aux;
 			FINAL=aux;
 			aux->der=NULL;
+		}
+		else if(FINAL->op==PLACEHOLDER) {
+			aux->izq=FINAL->izq;
+			*FINAL=*aux;
 		}
 		else {
 			FINAL->der=aux;
@@ -332,18 +337,16 @@ int insertar(NODO expre1,NODO expre2, int ope, NODO *var)
 			aux->der=NULL;
 		}
 	}
-		
 }
 
 //Insertar expresión en el arbol
-int insertarexp(NODO expre1,NODO expre2, int ope,ARBOL **end) {
+int insertarexp(NODO expre1,NODO expre2, int ope) {
 
-	ARBOL *aux;
+	ARBOL *aux,*aux2;
 	aux= malloc(sizeof(ARBOL));
-
+	aux2= malloc(sizeof(ARBOL));
 	
-	
-	if(aux==NULL)	{
+	if(aux2==NULL|| aux==NULL)	{
 	 printf("Error. No hay memoria para otro ARBOL.");
 	 return 0;
 	}
@@ -352,14 +355,12 @@ int insertarexp(NODO expre1,NODO expre2, int ope,ARBOL **end) {
 		aux->exp2=expre2;
 		aux->op=ope;
 		
-		printf("\nprueba\n");fflush(stdout);
 		
-		if((*end)->op==1)
-			printf("\nasdqwe\n");fflush(stdout);
+		FINAL->der=aux2;
+		FINAL=FINAL->der;
+		FINAL->op=PLACEHOLDER;
+		FINAL->izq=aux;
 		
-		(*end)->izq=aux;
-		
-		printf("\nfunciona\n");fflush(stdout);
 		}
 	
 }

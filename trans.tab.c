@@ -2883,7 +2883,7 @@ yyreduce:
 
 		copiardatos(&auxnodo1,(yyvsp[-2].ELEMENTO).tipo,(yyvsp[-2].ELEMENTO).escons,(yyvsp[-2].ELEMENTO).espun,(yyvsp[-2].ELEMENTO).valstr,(yyvsp[-2].ELEMENTO).valbool,(yyvsp[-2].ELEMENTO).valnum,(yyvsp[-2].ELEMENTO).valint);
 		copiardatos(&auxnodo2,(yyvsp[0].ELEMENTO).tipo,(yyvsp[0].ELEMENTO).escons,(yyvsp[0].ELEMENTO).espun,(yyvsp[0].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).valbool,(yyvsp[0].ELEMENTO).valnum,(yyvsp[0].ELEMENTO).valint);
-		insertarexp(auxnodo1,auxnodo2,OP_IGUALDAD,&FINAL);
+		insertarexp(auxnodo1,auxnodo2,OP_IGUALDAD);
 	}
 #line 2889 "trans.tab.c" /* yacc.c:1646  */
     break;
@@ -3328,8 +3328,9 @@ int ejecutar() {
 	do {
 		switch(aux->op){
 		case OP_ESCRIBIR:
-			if(aux->izq!=NULL)
+			if(aux->izq!=NULL) 
 				aux->exp1=procesarexp(aux->izq);
+
 			switch (aux->exp1.tipo){
 				case 1:
 					if(aux->exp1.escons) {
@@ -3351,11 +3352,11 @@ int ejecutar() {
 					break;
 				case 3:
 					if(aux->exp1.escons) {
-						printf("%d\n",aux->exp1.valint);
+						printf("%d\n",aux->exp1.valbool);
 					}
 					else {
 						variable=buscar_simbolo(aux->exp1.cad,&com,&fin);
-						printf("%d\n",variable->valint);
+						printf("%d\n",variable->valbool);
 					}
 					break;
 				case 4:	
@@ -3377,8 +3378,8 @@ int ejecutar() {
 					}
 					break;
 			}//switch
-		case OP_ASIGNAR:
-		
+			break;
+		case OP_ASIGNAR:		
 			if ((aux->var->tipo==aux->exp1.tipo)&&(aux->var->escons==0)&&(aux->var->espun==0)) {
 				aux->var->tipo=aux->exp1.tipo;
 				strcpy(aux->var->valstr,aux->exp1.valstr);
@@ -3448,6 +3449,8 @@ NODO procesarexp(ARBOL *aux){
 				}
 				else yyerror("Error: Operaciones sobre tipos diferentes\n");                                                            
 				
+				retorno.escons=1;
+				retorno.espun=0;
 				return retorno;
 		}//switch
 		aux=aux->izq;

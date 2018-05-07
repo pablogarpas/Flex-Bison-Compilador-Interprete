@@ -1365,7 +1365,7 @@ exp:
 
 		copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint);
 		copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint);
-		insertarexp(auxnodo1,auxnodo2,OP_IGUALDAD,&FINAL);
+		insertarexp(auxnodo1,auxnodo2,OP_IGUALDAD);
 	}
 
 
@@ -1555,8 +1555,9 @@ int ejecutar() {
 	do {
 		switch(aux->op){
 		case OP_ESCRIBIR:
-			if(aux->izq!=NULL)
+			if(aux->izq!=NULL) 
 				aux->exp1=procesarexp(aux->izq);
+
 			switch (aux->exp1.tipo){
 				case 1:
 					if(aux->exp1.escons) {
@@ -1578,11 +1579,11 @@ int ejecutar() {
 					break;
 				case 3:
 					if(aux->exp1.escons) {
-						printf("%d\n",aux->exp1.valint);
+						printf("%d\n",aux->exp1.valbool);
 					}
 					else {
 						variable=buscar_simbolo(aux->exp1.cad,&com,&fin);
-						printf("%d\n",variable->valint);
+						printf("%d\n",variable->valbool);
 					}
 					break;
 				case 4:	
@@ -1604,8 +1605,8 @@ int ejecutar() {
 					}
 					break;
 			}//switch
-		case OP_ASIGNAR:
-		
+			break;
+		case OP_ASIGNAR:		
 			if ((aux->var->tipo==aux->exp1.tipo)&&(aux->var->escons==0)&&(aux->var->espun==0)) {
 				aux->var->tipo=aux->exp1.tipo;
 				strcpy(aux->var->valstr,aux->exp1.valstr);
@@ -1675,6 +1676,8 @@ NODO procesarexp(ARBOL *aux){
 				}
 				else yyerror("Error: Operaciones sobre tipos diferentes\n");                                                            
 				
+				retorno.escons=1;
+				retorno.espun=0;
 				return retorno;
 		}//switch
 		aux=aux->izq;

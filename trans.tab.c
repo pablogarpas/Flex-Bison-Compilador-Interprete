@@ -72,7 +72,7 @@
 #include <math.h>
 
 //Prototipos
-int compilar();
+int ejecutar();
 
 //Variables globales
 int   auxb;  //variable auxiliar para la lectura de booleanos 
@@ -3338,10 +3338,10 @@ int main(int argc, char **argv)
 	if(INICIO==NULL)
 		printf("\nError, programa vacio.\n");
 	else
-		compilar();
+		ejecutar();
 }
 
-int compilar() {
+int ejecutar() {
 	LISTA *aux;
 	extern com;
 	extern fin;

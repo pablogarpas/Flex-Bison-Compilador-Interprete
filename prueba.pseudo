@@ -12,10 +12,6 @@ inicio
 	aux3="qwe"
 	aux1=1
 
-	escribir(aux2)
-	
-	escribir(aux)
-	escribir(aux1)
-	escribir(aux3)
+	escribir(aux,aux1,aux2,aux3)
 	
 fin

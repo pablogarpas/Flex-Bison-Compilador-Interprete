@@ -14,8 +14,8 @@ aux=123;
 aux2=234.12;
 aux3="qwe";
 aux1=1;
-printf(" %f \n",aux2);
 printf(" %s \n",aux);
 printf(" TRUE \n");
+printf(" %f \n",aux2);
 printf(" %s \n",aux3);
 }

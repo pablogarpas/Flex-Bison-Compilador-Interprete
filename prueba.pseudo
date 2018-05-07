@@ -9,5 +9,7 @@ var
 inicio
 	escribir("holi")
 
-	escribir(4==5)
+	si 4==4
+		escribir("asd")
+	fin
 fin

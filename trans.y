@@ -10,6 +10,8 @@
 int ejecutar();
 NODO procesarexp(ARBOL *aux);
 //Variables globales
+int eje[10]={1,0,0,0,0,0,0,0,0,0};//variable para ver que añadir al AST
+int poscontrol;//variable guardando posición
 int   auxb;  //variable auxiliar para la lectura de booleanos 
 int   auxint;  //variable auxiliar para la lectura de enteros
 float auxn;  //variable auxiliar para la lectura de numeros
@@ -83,7 +85,7 @@ NODO *auxvar2;
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar 
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar control2
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -103,7 +105,6 @@ programa:
 		fprintf(salida,$3.trad);
 		fprintf(salida,$6.trad);
 		fprintf(salida,intr_cabecera());//Introducir el main después de las constantes
-		//printf("\n%s\n",$3.trad);
 		fprintf(salida,$4.trad);
 		fprintf(salida,$5.trad);
 		
@@ -283,7 +284,9 @@ dec_vbles:
 		
 		$$.tipo=$3.tipo;
 	}
-	| {}
+	| {
+		strcpy($$.trad,"");
+	}
 	;			 
 /*************************************************************************************************/
 variable:			
@@ -332,12 +335,12 @@ puntero:
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Main del programa
 cuerpo:
-	TK_INICIO salto_lin lista_sentencias final
+	TK_INICIO salto_lin lista_sentencias TK_FIN
 	{
 		//printf($3.res);
 	
 		strcpy($$.trad,$3.trad);
-		strcat($$.trad,$4.trad);
+		strcat($$.trad,"}\n");
 		
 		//printf("\n%s\n",$$.trad);
 	}
@@ -376,6 +379,7 @@ funcion:
 	}
 	|
 	{//Puede no haber funciones
+		strcpy($$.trad,"");
 	}
 	;
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -526,15 +530,24 @@ llamar:
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////	
+control2:	
+	TK_SI exp
+	{
+		strcpy($$.trad,$2.trad);
+			
+		copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint);
+	
+		insertar(auxnodo1,auxnodo2,OP_SI,auxvar);
+	};
+/////////////////////////////////////////////////////////////////////////////////////////////////	
 control:
 //if sin else
-	TK_SI exp cont lista_sentencias 
+	control2 cont lista_sentencias 
 	{
 		strcpy($$.trad,"if (");
+		strcat($$.trad,$1.trad);
+		strcat($$.trad,")\n");
 		strcat($$.trad,$2.trad);
-		strcat($$.trad,") {\n");
-		strcat($$.trad,$3.trad);
-		
 	}
 /*************************************************************************************************/
 //if con else
@@ -542,7 +555,7 @@ control:
 	{
 		strcpy($$.trad,"if (");
 		strcat($$.trad,$2.trad);
-		strcat($$.trad,") {\n");
+		strcat($$.trad,")\n");
 		strcat($$.trad,$4.trad);
 		strcat($$.trad,"} else {\n");
 		strcat($$.trad,$6.trad);
@@ -716,6 +729,8 @@ final:
 	{
 		//fprintf(salida,"}\n");
 		strcpy($$.trad,"}\n");
+		
+		insertar(auxnodo1,auxnodo2,OP_FIN,auxvar);
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1357,10 +1372,9 @@ exp:
 //Esta es la coparacion de  igualdad, que devuelve true o false
 	|	exp TK_IGU exp
 	{
-		
-	
 		strcat($$.trad," == ");//introducimos la cadena creada para la traduccion
 		strcat($$.trad,$3.trad);
+		$$.tipo=3;
 		
 
 		copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint);
@@ -1552,6 +1566,7 @@ int ejecutar() {
 	extern fin;
 	NODO *variable;
 	aux=INICIO;
+	
 	do {
 		switch(aux->op){
 		case OP_ESCRIBIR:
@@ -1618,6 +1633,22 @@ int ejecutar() {
 				strcpy(aux->var->valstr,aux->exp1.valstr);
 			}
 			else yyerror("Error en la asignación, no concuerdan los tipos o %s es constante\n",aux->exp1.nombre);	
+			break;
+		case OP_SI:		
+			if (aux->exp1.tipo != 3){
+				yyerror("Error en el si\n");
+				break;
+				}
+				
+			if(aux->izq!=NULL) 
+				aux->exp1=procesarexp(aux->izq);	
+			
+			if(aux->exp1.valbool==0) {
+				while(aux->der->op!=OP_FIN) {
+					aux=aux->der;
+				}
+			}
+				
 			break;
 		}//switch
 		aux=aux->der;

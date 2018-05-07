@@ -326,13 +326,16 @@ int insertar(NODO expre1,NODO expre2, int ope, NODO *var)
 			INICIO=aux;
 			FINAL=aux;
 			aux->der=NULL;
+			aux->raiz=NULL;
 		}
 		else if(FINAL->op==PLACEHOLDER) {
 			aux->izq=FINAL->izq;
+			aux->raiz=FINAL->raiz;
 			*FINAL=*aux;
 		}
 		else {
 			FINAL->der=aux;
+			aux->raiz=FINAL;
 			FINAL=aux;
 			aux->der=NULL;
 		}
@@ -355,12 +358,11 @@ int insertarexp(NODO expre1,NODO expre2, int ope) {
 		aux->exp2=expre2;
 		aux->op=ope;
 		
-		
+		aux2->raiz=FINAL;
 		FINAL->der=aux2;
 		FINAL=FINAL->der;
 		FINAL->op=PLACEHOLDER;
 		FINAL->izq=aux;
-		
 		}
 	
 }

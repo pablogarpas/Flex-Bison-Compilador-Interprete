@@ -13,6 +13,8 @@
 #define OP_ESCRIBIR 1
 #define OP_ASIGNAR 2
 #define OP_IGUALDAD 3
+#define OP_FIN 14
+#define OP_SI 15
 
 
 //tipo de los simbolos
@@ -40,6 +42,7 @@ typedef struct ARBOL{
 	struct ARBOL *der;
 	struct ARBOL *cen;
 	struct ARBOL *izq;
+	struct ARBOL *raiz;
 	
 	NODO exp1;
 	NODO exp2;

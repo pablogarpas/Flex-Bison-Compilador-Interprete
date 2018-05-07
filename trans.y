@@ -13,12 +13,12 @@ int compilar();
 int   auxb;  //variable auxiliar para la lectura de booleanos 
 int   auxint;  //variable auxiliar para la lectura de enteros
 float auxn;  //variable auxiliar para la lectura de numeros
-char  auxc[30];//variable auxiliar para la lectura de strings
-char  auxt[30];//variable auxiliar para las traducciones
+char  auxc[255];//variable auxiliar para la lectura de strings
+char  auxt[255];//variable auxiliar para las traducciones
 int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 NODO auxnodo1;//Variables para trabajar con la lista
 NODO auxnodo2;
-NODO auxvar;
+NODO *auxvar;
 %}
 
 
@@ -737,22 +737,18 @@ punteros_asignar TK_VARIABLE TK_ASIG punteros_asignar exp
 	//printf("%s\n",retorno);
 	strcpy($$.trad,retorno);	
 	
-	if (($2->tipo==$5.tipo)&&($2->escons==0)&&($2->espun==0)) {
-		$$.tipo=$2->tipo=$5.tipo;
-		strcpy($2->valstr,$5.valstr);
-		strcpy($$.valstr,$2->valstr);
-		$$.valbool = $2->valbool=$5.valbool;
-		$$.valnum = $2->valnum = $5.valnum;
-		$$.valint = $2->valint = $5.valint;
-		}
-	else if(($2->tipo=2)&&($5.tipo==4)&&($2->escons==0)&&($2->espun==0)) {
-		$$.tipo=$2->tipo;
-		strcpy($2->valstr,$5.valstr);
-		strcpy($$.valstr,$5.valstr);
-	}
-	else yyerror("Error en la asignacion: no concuerdan los tipos o %s es constante\n",$2->nombre);				   
 	
-
+	auxvar=$2;
+	
+	auxnodo2.tipo=$5.tipo;
+	auxnodo2.escons=$5.escons;
+	auxnodo2.espun=$5.espun;
+	strcpy(auxnodo2.valstr,$5.valstr);
+	auxnodo2.valbool=$5.valbool;
+	auxnodo2.valnum = $5.valnum;
+	auxnodo2.valint = $5.valint;
+	
+	insertar(auxnodo1,auxnodo2,OP_ASIGNAR,auxvar);
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -782,15 +778,18 @@ exp
 		strcat($$.trad,$1.trad);
 		strcat($$.trad,");\n");
 		auxnodo1.valnum=$1.valnum;
+		strcpy(auxnodo1.cad,$1.trad);
 		break;
 	case 2:					
 		strcpy($$.trad,"printf(\" %%s \\n\",");
 		strcat($$.trad,$1.trad);
 		strcat($$.trad,");\n");
 		strcpy(auxnodo1.valstr,$1.valstr);
+		strcpy(auxnodo1.cad,$1.trad);
 		break;
 	case 3: 
 		auxnodo1.valint=$1.valint;
+		strcpy(auxnodo1.cad,$1.trad);
 		if($1.valbool==1) {
 		 	strcpy($$.trad,"printf(\" TRUE \\n\");\n");
 			break;
@@ -804,17 +803,22 @@ exp
 		strcat($$.trad,$1.cad);
 		strcat($$.trad,"\\n\");\n");
 		strcpy(auxnodo1.valstr,$1.valstr);
+		strcpy(auxnodo1.cad,$1.trad);
 		break;
 	case 6: 
 		strcpy($$.trad,"printf(\" %%s \\n\",");
 		strcat($$.trad,$1.trad);
 		strcat($$.trad,");\n");
 		auxnodo1.valint=$1.valint;
+		strcpy(auxnodo1.cad,$1.trad);
 		break;
 	default: 
 		yyerror("Error:Imposible visualizar la variable o expresion\n");
 		break;
 	}//switch
+	
+	auxnodo1.escons=$1.escons;
+	auxnodo1.espun=$1.espun;
 	
 	insertar(auxnodo1,auxnodo2,OP_ESCRIBIR,auxvar);
 };
@@ -1577,17 +1581,73 @@ int main(int argc, char **argv)
 
 int compilar() {
 	LISTA *aux;
+	extern com;
+	extern fin;
+	NODO *variable;
 	aux=INICIO;
 	do {
 		switch(aux->op){
 		case OP_ESCRIBIR:
 			switch (aux->exp1.tipo){
-			case 1: printf("%f\n",aux->exp1.valnum);break;
-			case 2:	printf("%s\n",aux->exp1.valstr);break;
-			case 3: if(aux->exp1.valnum) printf("True\n");else printf("False\n");break;
-			case 4: printf("%s\n",aux->exp1.valstr);break;
-			case 6: printf("%d\n",aux->exp1.valint);break;
+				case 1:
+					if(aux->exp1.escons) {
+						printf("%f\n",aux->exp1.valnum);
+					}
+					else {
+						variable=buscar_simbolo(aux->exp1.cad,&com,&fin);
+						printf("%f\n",variable->valnum);
+					}
+					break;
+				case 2:	
+					if(aux->exp1.escons) {
+						printf("%s\n",aux->exp1.valstr);
+					}
+					else {
+						variable=buscar_simbolo(aux->exp1.cad,&com,&fin);
+						printf("%s\n",variable->valstr);
+					}
+					break;
+				case 3:
+					if(aux->exp1.escons) {
+						printf("%d\n",aux->exp1.valint);
+					}
+					else {
+						variable=buscar_simbolo(aux->exp1.cad,&com,&fin);
+						printf("%d\n",variable->valint);
+					}
+					break;
+				case 4:	
+					if(aux->exp1.escons) {
+						printf("%s\n",aux->exp1.valstr);
+					}
+					else {
+						variable=buscar_simbolo(aux->exp1.cad,&com,&fin);
+						printf("%s\n",variable->valstr);
+					}
+					break;
+				case 6: 
+					if(aux->exp1.escons) {
+						printf("%d\n",aux->exp1.valint);
+					}
+					else {
+						variable=buscar_simbolo(aux->exp1.cad,&com,&fin);
+						printf("%d\n",variable->valint);
+					}
+					break;
+			}//switch
+		case OP_ASIGNAR:
+			
+			if ((aux->var->tipo==aux->var->tipo)&&(aux->var->escons==0)&&(aux->var->espun==0)) {
+				aux->var->tipo=aux->exp2.tipo;
+				strcpy(aux->var->valstr,aux->exp2.valstr);
+				aux->var->valbool= aux->exp2.valbool;
+				aux->var->valnum = aux->exp2.valnum;
+				aux->var->valint = aux->exp2.valint;
 			}
+			else if((aux->var->tipo=2)&&(aux->exp2.tipo==4)&&(aux->var->escons==0)&&(aux->var->espun==0)) {	
+				strcpy(aux->var->valstr,aux->exp2.valstr);
+			}
+			else yyerror("Error en la asignacion: no concuerdan los tipos o %s es constante\n",aux->exp1.nombre);	
 			break;
 		}//switch
 		aux=aux->sig;

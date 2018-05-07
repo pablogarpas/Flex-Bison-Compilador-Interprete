@@ -10,6 +10,7 @@
 //6->entero;
 
 #define OP_ESCRIBIR 1
+#define OP_ASIGNAR 2
 
 //tipo de los simbolos
 typedef struct NODO {
@@ -18,12 +19,10 @@ typedef struct NODO {
 	int espun; //nos dice si es o no puntero 1->si 0->no
 	char nombre[255]; //nombre de la variable o constante
 	int valbool; //valor que se toma si el tipo es booleano
-	union {
-    double valnum; //valor que se toma si el tipo es numérico
-    int    valint; //valor que se toma si el tipo es entero
-    char   cad[255]; //valor para las cadenas constantes
-    char   valstr[255]; //valor que se toma si el tipo es una cadena de tipo string
-  };//union
+  double valnum; //valor que se toma si el tipo es numérico
+  int    valint; //valor que se toma si el tipo es entero
+  char   cad[255]; //valor para las cadenas constantes
+  char   valstr[255]; //valor que se toma si el tipo es una cadena de tipo string
 	int aux; //variable para visualizar las constantes cadena correctamente	
   struct NODO *sig; //puntero que a punta al siguiente nodo
 }NODO;
@@ -41,7 +40,7 @@ typedef struct LISTA{
 	NODO exp2;
 	int op;
 	
-	NODO var;
+	NODO *var;
 }LISTA;
 
 LISTA *INICIO;
@@ -95,4 +94,4 @@ void intr_dec(char *nombre,int post);
 //////////////////////////////////////////////////////////////////////////
 
 //Crear la lista y añadir LISTAs
-int insertar(NODO expre1,NODO expre2, int ope, NODO var);
+int insertar(NODO expre1,NODO expre2, int ope, NODO *var);

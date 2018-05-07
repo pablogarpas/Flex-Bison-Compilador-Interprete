@@ -305,7 +305,7 @@ void intr_dec(char *nombre,int post)
 /*Funciones para la compilación*/
 //////////////////////////////////////////////////////////////////////////
 //Insertar o crear la lista
-int insertar(NODO expre1,NODO expre2, int ope, NODO var)
+int insertar(NODO expre1,NODO expre2, int ope, NODO *var)
 {
 	LISTA *aux;
 	

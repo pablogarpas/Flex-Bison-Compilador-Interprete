@@ -78,12 +78,12 @@ int compilar();
 int   auxb;  //variable auxiliar para la lectura de booleanos 
 int   auxint;  //variable auxiliar para la lectura de enteros
 float auxn;  //variable auxiliar para la lectura de numeros
-char  auxc[30];//variable auxiliar para la lectura de strings
-char  auxt[30];//variable auxiliar para las traducciones
+char  auxc[255];//variable auxiliar para la lectura de strings
+char  auxt[255];//variable auxiliar para las traducciones
 int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 NODO auxnodo1;//Variables para trabajar con la lista
 NODO auxnodo2;
-NODO auxvar;
+NODO *auxvar;
 
 #line 89 "trans.tab.c" /* yacc.c:339  */
 
@@ -517,11 +517,11 @@ static const yytype_uint16 yyrline[] =
      346,   350,   357,   376,   382,   389,   396,   409,   427,   447,
      470,   484,   490,   494,   499,   506,   516,   520,   528,   537,
      548,   557,   610,   638,   648,   659,   664,   675,   682,   689,
-     695,   701,   710,   760,   763,   766,   773,   825,   832,   840,
-     851,   858,   863,   870,   878,   921,   947,   974,  1003,  1023,
-    1056,  1073,  1127,  1182,  1237,  1292,  1347,  1404,  1420,  1435,
-    1451,  1458,  1465,  1472,  1487,  1496,  1508,  1520,  1532,  1543,
-    1548
+     695,   701,   710,   756,   759,   762,   769,   829,   836,   844,
+     855,   862,   867,   874,   882,   925,   951,   978,  1007,  1027,
+    1060,  1077,  1131,  1186,  1241,  1296,  1351,  1408,  1424,  1439,
+    1455,  1462,  1469,  1476,  1491,  1500,  1512,  1524,  1536,  1547,
+    1552
 };
 #endif
 
@@ -2206,51 +2206,47 @@ yyreduce:
 	//printf("%s\n",retorno);
 	strcpy((yyval.ELEMENTO).trad,retorno);	
 	
-	if (((yyvsp[-3].indice)->tipo==(yyvsp[0].ELEMENTO).tipo)&&((yyvsp[-3].indice)->escons==0)&&((yyvsp[-3].indice)->espun==0)) {
-		(yyval.ELEMENTO).tipo=(yyvsp[-3].indice)->tipo=(yyvsp[0].ELEMENTO).tipo;
-		strcpy((yyvsp[-3].indice)->valstr,(yyvsp[0].ELEMENTO).valstr);
-		strcpy((yyval.ELEMENTO).valstr,(yyvsp[-3].indice)->valstr);
-		(yyval.ELEMENTO).valbool = (yyvsp[-3].indice)->valbool=(yyvsp[0].ELEMENTO).valbool;
-		(yyval.ELEMENTO).valnum = (yyvsp[-3].indice)->valnum = (yyvsp[0].ELEMENTO).valnum;
-		(yyval.ELEMENTO).valint = (yyvsp[-3].indice)->valint = (yyvsp[0].ELEMENTO).valint;
-		}
-	else if(((yyvsp[-3].indice)->tipo=2)&&((yyvsp[0].ELEMENTO).tipo==4)&&((yyvsp[-3].indice)->escons==0)&&((yyvsp[-3].indice)->espun==0)) {
-		(yyval.ELEMENTO).tipo=(yyvsp[-3].indice)->tipo;
-		strcpy((yyvsp[-3].indice)->valstr,(yyvsp[0].ELEMENTO).valstr);
-		strcpy((yyval.ELEMENTO).valstr,(yyvsp[0].ELEMENTO).valstr);
-	}
-	else yyerror("Error en la asignacion: no concuerdan los tipos o %s es constante\n",(yyvsp[-3].indice)->nombre);				   
 	
-
+	auxvar=(yyvsp[-3].indice);
+	
+	auxnodo2.tipo=(yyvsp[0].ELEMENTO).tipo;
+	auxnodo2.escons=(yyvsp[0].ELEMENTO).escons;
+	auxnodo2.espun=(yyvsp[0].ELEMENTO).espun;
+	strcpy(auxnodo2.valstr,(yyvsp[0].ELEMENTO).valstr);
+	auxnodo2.valbool=(yyvsp[0].ELEMENTO).valbool;
+	auxnodo2.valnum = (yyvsp[0].ELEMENTO).valnum;
+	auxnodo2.valint = (yyvsp[0].ELEMENTO).valint;
+	
+	insertar(auxnodo1,auxnodo2,OP_ASIGNAR,auxvar);
 	}
-#line 2227 "trans.tab.c" /* yacc.c:1646  */
+#line 2223 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 760 "trans.y" /* yacc.c:1646  */
+#line 756 "trans.y" /* yacc.c:1646  */
     { 
 		(yyval.ELEMENTO).vis=2;//*
 	}
-#line 2235 "trans.tab.c" /* yacc.c:1646  */
+#line 2231 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 763 "trans.y" /* yacc.c:1646  */
+#line 759 "trans.y" /* yacc.c:1646  */
     { 
 		(yyval.ELEMENTO).vis=3;//&
 	}
-#line 2243 "trans.tab.c" /* yacc.c:1646  */
+#line 2239 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 766 "trans.y" /* yacc.c:1646  */
+#line 762 "trans.y" /* yacc.c:1646  */
     {
 	}
-#line 2250 "trans.tab.c" /* yacc.c:1646  */
+#line 2246 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 774 "trans.y" /* yacc.c:1646  */
+#line 770 "trans.y" /* yacc.c:1646  */
     {
 	(yyval.ELEMENTO).vis=(yyvsp[0].ELEMENTO).vis;	
 	(yyval.ELEMENTO).tipo=(yyvsp[0].ELEMENTO).tipo;
@@ -2262,15 +2258,18 @@ yyreduce:
 		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
 		strcat((yyval.ELEMENTO).trad,");\n");
 		auxnodo1.valnum=(yyvsp[0].ELEMENTO).valnum;
+		strcpy(auxnodo1.cad,(yyvsp[0].ELEMENTO).trad);
 		break;
 	case 2:					
 		strcpy((yyval.ELEMENTO).trad,"printf(\" %%s \\n\",");
 		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
 		strcat((yyval.ELEMENTO).trad,");\n");
 		strcpy(auxnodo1.valstr,(yyvsp[0].ELEMENTO).valstr);
+		strcpy(auxnodo1.cad,(yyvsp[0].ELEMENTO).trad);
 		break;
 	case 3: 
 		auxnodo1.valint=(yyvsp[0].ELEMENTO).valint;
+		strcpy(auxnodo1.cad,(yyvsp[0].ELEMENTO).trad);
 		if((yyvsp[0].ELEMENTO).valbool==1) {
 		 	strcpy((yyval.ELEMENTO).trad,"printf(\" TRUE \\n\");\n");
 			break;
@@ -2284,85 +2283,90 @@ yyreduce:
 		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).cad);
 		strcat((yyval.ELEMENTO).trad,"\\n\");\n");
 		strcpy(auxnodo1.valstr,(yyvsp[0].ELEMENTO).valstr);
+		strcpy(auxnodo1.cad,(yyvsp[0].ELEMENTO).trad);
 		break;
 	case 6: 
 		strcpy((yyval.ELEMENTO).trad,"printf(\" %%s \\n\",");
 		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
 		strcat((yyval.ELEMENTO).trad,");\n");
 		auxnodo1.valint=(yyvsp[0].ELEMENTO).valint;
+		strcpy(auxnodo1.cad,(yyvsp[0].ELEMENTO).trad);
 		break;
 	default: 
 		yyerror("Error:Imposible visualizar la variable o expresion\n");
 		break;
 	}//switch
 	
+	auxnodo1.escons=(yyvsp[0].ELEMENTO).escons;
+	auxnodo1.espun=(yyvsp[0].ELEMENTO).espun;
+	
 	insertar(auxnodo1,auxnodo2,OP_ESCRIBIR,auxvar);
 }
-#line 2302 "trans.tab.c" /* yacc.c:1646  */
+#line 2306 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 826 "trans.y" /* yacc.c:1646  */
+#line 830 "trans.y" /* yacc.c:1646  */
     {
 	
 	strcpy((yyval.ELEMENTO).trad,(yyvsp[-1].ELEMENTO).trad);
 	}
-#line 2311 "trans.tab.c" /* yacc.c:1646  */
+#line 2315 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 833 "trans.y" /* yacc.c:1646  */
+#line 837 "trans.y" /* yacc.c:1646  */
     {
 	strcpy((yyval.ELEMENTO).trad,(yyvsp[-3].ELEMENTO).trad);
 	strcat((yyval.ELEMENTO).trad,(yyvsp[-1].ELEMENTO).trad);
 	}
-#line 2320 "trans.tab.c" /* yacc.c:1646  */
+#line 2324 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 841 "trans.y" /* yacc.c:1646  */
+#line 845 "trans.y" /* yacc.c:1646  */
     {
 	//strcpy($$.res,"\n");
 	
 	strcpy((yyval.ELEMENTO).trad,"printf(\"\\n\");");
 	strcat((yyval.ELEMENTO).trad,"\n");
 	}
-#line 2331 "trans.tab.c" /* yacc.c:1646  */
+#line 2335 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 852 "trans.y" /* yacc.c:1646  */
+#line 856 "trans.y" /* yacc.c:1646  */
     {	
 	strcpy((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
 	}
-#line 2339 "trans.tab.c" /* yacc.c:1646  */
+#line 2343 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 71:
-#line 859 "trans.y" /* yacc.c:1646  */
+#line 863 "trans.y" /* yacc.c:1646  */
     {	
 	strcpy((yyval.ELEMENTO).trad,(yyvsp[-2].ELEMENTO).trad);
 	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
 	}
-#line 2348 "trans.tab.c" /* yacc.c:1646  */
+#line 2352 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 863 "trans.y" /* yacc.c:1646  */
+#line 867 "trans.y" /* yacc.c:1646  */
     {}
-#line 2354 "trans.tab.c" /* yacc.c:1646  */
+#line 2358 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 871 "trans.y" /* yacc.c:1646  */
+#line 875 "trans.y" /* yacc.c:1646  */
     {
 		strcpy((yyval.ELEMENTO).trad,vis_entrada((yyvsp[-1].indice)->tipo,(yyvsp[-1].indice)->nombre,(yyvsp[-1].indice)->espun));//Traducción
 	}
-#line 2362 "trans.tab.c" /* yacc.c:1646  */
+#line 2366 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 880 "trans.y" /* yacc.c:1646  */
+#line 884 "trans.y" /* yacc.c:1646  */
     {
 	strcat((yyval.ELEMENTO).trad," + ");//Traducción
 	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
@@ -2401,11 +2405,11 @@ yyreduce:
 	else
 	yyerror("Error: Operaciones sobre tipos diferentes\n");
 	}
-#line 2405 "trans.tab.c" /* yacc.c:1646  */
+#line 2409 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 922 "trans.y" /* yacc.c:1646  */
+#line 926 "trans.y" /* yacc.c:1646  */
     {
 		strcat((yyval.ELEMENTO).trad," - ");//introducimos la cadena creada para la traduccion
 		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
@@ -2429,11 +2433,11 @@ yyreduce:
 		yyerror("Error: Operaciones sobre tipos diferentes\n");
 		}
 	}
-#line 2433 "trans.tab.c" /* yacc.c:1646  */
+#line 2437 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 948 "trans.y" /* yacc.c:1646  */
+#line 952 "trans.y" /* yacc.c:1646  */
     {
 		strcat((yyval.ELEMENTO).trad," * ");//Traducción
 		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
@@ -2458,11 +2462,11 @@ yyreduce:
 		yyerror("Error: Operaciones sobre tipos diferentes\n");
 		}
 	}
-#line 2462 "trans.tab.c" /* yacc.c:1646  */
+#line 2466 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 975 "trans.y" /* yacc.c:1646  */
+#line 979 "trans.y" /* yacc.c:1646  */
     {
 		strcat((yyval.ELEMENTO).trad," / ");//Traducción
 		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
@@ -2489,11 +2493,11 @@ yyreduce:
 			yyerror("Error: Operaciones sobre tipos diferentes\n");
 		}
 	}
-#line 2493 "trans.tab.c" /* yacc.c:1646  */
+#line 2497 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 1004 "trans.y" /* yacc.c:1646  */
+#line 1008 "trans.y" /* yacc.c:1646  */
     {
 		strcpy((yyval.ELEMENTO).trad," -");//introducimos la cadena creada para la traduccion
 		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
@@ -2510,11 +2514,11 @@ yyreduce:
 		yyerror("Error: Operaciones sobre tipos diferentes\n");
 		}
 	}
-#line 2514 "trans.tab.c" /* yacc.c:1646  */
+#line 2518 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 1024 "trans.y" /* yacc.c:1646  */
+#line 1028 "trans.y" /* yacc.c:1646  */
     {
 		strcpy((yyval.ELEMENTO).trad," TK_POW");//Traducción
 		strcpy(auxt,"(");
@@ -2545,11 +2549,11 @@ yyreduce:
 			yyerror("Error: Operaciones sobre tipos diferentes\n");
 		}
 	}
-#line 2549 "trans.tab.c" /* yacc.c:1646  */
+#line 2553 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 1057 "trans.y" /* yacc.c:1646  */
+#line 1061 "trans.y" /* yacc.c:1646  */
     {
 	strcpy((yyval.ELEMENTO).trad,"(");//Traducción
 	strcat((yyval.ELEMENTO).trad,(yyvsp[-1].ELEMENTO).trad);
@@ -2563,11 +2567,11 @@ yyreduce:
 	(yyval.ELEMENTO).valint= (yyvsp[-1].ELEMENTO).valint;
 	(yyval.ELEMENTO).espun= (yyvsp[-1].ELEMENTO).espun;
 	}
-#line 2567 "trans.tab.c" /* yacc.c:1646  */
+#line 2571 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 1074 "trans.y" /* yacc.c:1646  */
+#line 1078 "trans.y" /* yacc.c:1646  */
     {
 	strcat((yyval.ELEMENTO).trad," < ");//Traducción
 	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
@@ -2619,11 +2623,11 @@ yyreduce:
 	}
 	else yyerror("Error: Operaciones sobre tipos diferentes\n"); 
 	}
-#line 2623 "trans.tab.c" /* yacc.c:1646  */
+#line 2627 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 82:
-#line 1128 "trans.y" /* yacc.c:1646  */
+#line 1132 "trans.y" /* yacc.c:1646  */
     {
 		strcat((yyval.ELEMENTO).trad," > ");//introducimos la cadena creada para la traduccion
 		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
@@ -2676,11 +2680,11 @@ yyreduce:
 
 		else yyerror("Error: Operaciones sobre tipos diferentes\n"); 
 	}
-#line 2680 "trans.tab.c" /* yacc.c:1646  */
+#line 2684 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 83:
-#line 1183 "trans.y" /* yacc.c:1646  */
+#line 1187 "trans.y" /* yacc.c:1646  */
     {
 	strcat((yyval.ELEMENTO).trad," >= ");//introducimos la cadena creada para la traduccion
 	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
@@ -2733,11 +2737,11 @@ yyreduce:
 
 	else yyerror("Error: Operaciones sobre tipos diferentes\n"); 
 	}
-#line 2737 "trans.tab.c" /* yacc.c:1646  */
+#line 2741 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 84:
-#line 1238 "trans.y" /* yacc.c:1646  */
+#line 1242 "trans.y" /* yacc.c:1646  */
     {
 	strcat((yyval.ELEMENTO).trad," <= ");//introducimos la cadena creada para la traduccion
 	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
@@ -2790,11 +2794,11 @@ yyreduce:
 
 	else yyerror("Error: Operaciones sobre tipos diferentes\n");                                  
 }
-#line 2794 "trans.tab.c" /* yacc.c:1646  */
+#line 2798 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 85:
-#line 1293 "trans.y" /* yacc.c:1646  */
+#line 1297 "trans.y" /* yacc.c:1646  */
     {
 	strcat((yyval.ELEMENTO).trad," != ");//introducimos la cadena creada para la traduccion
 	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
@@ -2847,11 +2851,11 @@ yyreduce:
 
 	else yyerror("Error: Operaciones sobre tipos diferentes\n");                                  
 	}
-#line 2851 "trans.tab.c" /* yacc.c:1646  */
+#line 2855 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 86:
-#line 1348 "trans.y" /* yacc.c:1646  */
+#line 1352 "trans.y" /* yacc.c:1646  */
     {
 	strcat((yyval.ELEMENTO).trad," == ");//introducimos la cadena creada para la traduccion
 	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
@@ -2904,11 +2908,11 @@ yyreduce:
 
 	else yyerror("Error: Operaciones sobre tipos diferentes\n");                                  
 	}
-#line 2908 "trans.tab.c" /* yacc.c:1646  */
+#line 2912 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 87:
-#line 1407 "trans.y" /* yacc.c:1646  */
+#line 1411 "trans.y" /* yacc.c:1646  */
     {
 	strcat((yyval.ELEMENTO).trad," && ");//introducimos la cadena creada para la traduccion
 	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
@@ -2920,11 +2924,11 @@ yyreduce:
 	}
 	else yyerror("Error: Operaciones sobre tipos diferentes\n");
 	}
-#line 2924 "trans.tab.c" /* yacc.c:1646  */
+#line 2928 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 88:
-#line 1422 "trans.y" /* yacc.c:1646  */
+#line 1426 "trans.y" /* yacc.c:1646  */
     {
 	strcat((yyval.ELEMENTO).trad," || ");//introducimos la cadena creada para la traduccion
 	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
@@ -2936,11 +2940,11 @@ yyreduce:
 	}
 	else yyerror("Error: Operaciones sobre tipos diferentes\n");
 	}
-#line 2940 "trans.tab.c" /* yacc.c:1646  */
+#line 2944 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 89:
-#line 1438 "trans.y" /* yacc.c:1646  */
+#line 1442 "trans.y" /* yacc.c:1646  */
     {
 	strcpy((yyval.ELEMENTO).trad," !");//introducimos la cadena creada para la traduccion
 	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
@@ -2952,38 +2956,38 @@ yyreduce:
 	}
 	else yyerror("Error: Operaciones sobre tipos diferentes\n");	
 	}
-#line 2956 "trans.tab.c" /* yacc.c:1646  */
+#line 2960 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 90:
-#line 1452 "trans.y" /* yacc.c:1646  */
+#line 1456 "trans.y" /* yacc.c:1646  */
     {
 		(yyval.ELEMENTO).tipo=1;
 		(yyval.ELEMENTO).valnum =(yyvsp[0].ELEMENTO).valnum;	         
 	}
-#line 2965 "trans.tab.c" /* yacc.c:1646  */
+#line 2969 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 91:
-#line 1459 "trans.y" /* yacc.c:1646  */
+#line 1463 "trans.y" /* yacc.c:1646  */
     {
 		(yyval.ELEMENTO).tipo=6;
 		(yyval.ELEMENTO).valint =(yyvsp[0].ELEMENTO).valint;	
 	}
-#line 2974 "trans.tab.c" /* yacc.c:1646  */
+#line 2978 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 92:
-#line 1466 "trans.y" /* yacc.c:1646  */
+#line 1470 "trans.y" /* yacc.c:1646  */
     {
 		(yyval.ELEMENTO).tipo=3;
 		(yyval.ELEMENTO).valbool= (yyvsp[0].ELEMENTO).valbool;
 	}
-#line 2983 "trans.tab.c" /* yacc.c:1646  */
+#line 2987 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 93:
-#line 1473 "trans.y" /* yacc.c:1646  */
+#line 1477 "trans.y" /* yacc.c:1646  */
     {
 		strcpy((yyval.ELEMENTO).trad,(yyvsp[0].indice)->nombre);//copio el nombre de la variable para la traduccion
 		strcpy((yyval.ELEMENTO).valstr,(yyvsp[0].indice)->valstr);//strign
@@ -2996,21 +3000,21 @@ yyreduce:
 		(yyval.ELEMENTO).vis=(yyvsp[0].indice)->aux;//para traducir la visualizacion
 		(yyval.ELEMENTO).espun= (yyvsp[0].indice)->espun;
 	}
-#line 3000 "trans.tab.c" /* yacc.c:1646  */
+#line 3004 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 94:
-#line 1488 "trans.y" /* yacc.c:1646  */
+#line 1492 "trans.y" /* yacc.c:1646  */
     {
 		(yyval.ELEMENTO).tipo=(yyvsp[0].ELEMENTO).tipo;
 		strcpy((yyval.ELEMENTO).valstr,(yyvsp[0].ELEMENTO).cad);
 		(yyval.ELEMENTO).escons=(yyvsp[0].ELEMENTO).escons;
 	}
-#line 3010 "trans.tab.c" /* yacc.c:1646  */
+#line 3014 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 95:
-#line 1497 "trans.y" /* yacc.c:1646  */
+#line 1501 "trans.y" /* yacc.c:1646  */
     {
 		if((yyvsp[0].ELEMENTO).tipo==6) {
 			intr_inc((yyvsp[0].ELEMENTO).nombre,0);
@@ -3020,11 +3024,11 @@ yyreduce:
 		else
 			yyerror("Error: No se puede incrementar una variable no númerica");
 	}
-#line 3024 "trans.tab.c" /* yacc.c:1646  */
+#line 3028 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 96:
-#line 1509 "trans.y" /* yacc.c:1646  */
+#line 1513 "trans.y" /* yacc.c:1646  */
     {
 		if((yyvsp[-1].ELEMENTO).tipo==6) {
 			intr_inc((yyvsp[-1].ELEMENTO).nombre,1);
@@ -3034,11 +3038,11 @@ yyreduce:
 		else
 			yyerror("Error: No se puede incrementar una variable no númerica");
 	}
-#line 3038 "trans.tab.c" /* yacc.c:1646  */
+#line 3042 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 97:
-#line 1521 "trans.y" /* yacc.c:1646  */
+#line 1525 "trans.y" /* yacc.c:1646  */
     {
 		if((yyvsp[0].ELEMENTO).tipo==6) {
 			intr_dec((yyvsp[0].ELEMENTO).nombre,0);
@@ -3048,11 +3052,11 @@ yyreduce:
 		else
 			yyerror("Error: No se puede decrementar una variable no númerica");
 	}
-#line 3052 "trans.tab.c" /* yacc.c:1646  */
+#line 3056 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 98:
-#line 1533 "trans.y" /* yacc.c:1646  */
+#line 1537 "trans.y" /* yacc.c:1646  */
     {
 		if((yyvsp[-1].ELEMENTO).tipo==6) {
 			intr_dec((yyvsp[-1].ELEMENTO).nombre,1);
@@ -3062,29 +3066,29 @@ yyreduce:
 		else
 			yyerror("Error: No se puede decrementar una variable no númerica");
 	}
-#line 3066 "trans.tab.c" /* yacc.c:1646  */
+#line 3070 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 99:
-#line 1544 "trans.y" /* yacc.c:1646  */
+#line 1548 "trans.y" /* yacc.c:1646  */
     {
 		strcpy((yyval.ELEMENTO).trad,"*");
 		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
 	}
-#line 3075 "trans.tab.c" /* yacc.c:1646  */
+#line 3079 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 100:
-#line 1549 "trans.y" /* yacc.c:1646  */
+#line 1553 "trans.y" /* yacc.c:1646  */
     {
 		strcpy((yyval.ELEMENTO).trad,"&");
 		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
 	}
-#line 3084 "trans.tab.c" /* yacc.c:1646  */
+#line 3088 "trans.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 3088 "trans.tab.c" /* yacc.c:1646  */
+#line 3092 "trans.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -3312,7 +3316,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 1554 "trans.y" /* yacc.c:1906  */
+#line 1558 "trans.y" /* yacc.c:1906  */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Main, dónde se genera el fichero
@@ -3339,17 +3343,73 @@ int main(int argc, char **argv)
 
 int compilar() {
 	LISTA *aux;
+	extern com;
+	extern fin;
+	NODO *variable;
 	aux=INICIO;
 	do {
 		switch(aux->op){
 		case OP_ESCRIBIR:
 			switch (aux->exp1.tipo){
-			case 1: printf("%f\n",aux->exp1.valnum);break;
-			case 2:	printf("%s\n",aux->exp1.valstr);break;
-			case 3: if(aux->exp1.valnum) printf("True\n");else printf("False\n");break;
-			case 4: printf("%s\n",aux->exp1.valstr);break;
-			case 6: printf("%d\n",aux->exp1.valint);break;
+				case 1:
+					if(aux->exp1.escons) {
+						printf("%f\n",aux->exp1.valnum);
+					}
+					else {
+						variable=buscar_simbolo(aux->exp1.cad,&com,&fin);
+						printf("%f\n",variable->valnum);
+					}
+					break;
+				case 2:	
+					if(aux->exp1.escons) {
+						printf("%s\n",aux->exp1.valstr);
+					}
+					else {
+						variable=buscar_simbolo(aux->exp1.cad,&com,&fin);
+						printf("%s\n",variable->valstr);
+					}
+					break;
+				case 3:
+					if(aux->exp1.escons) {
+						printf("%d\n",aux->exp1.valint);
+					}
+					else {
+						variable=buscar_simbolo(aux->exp1.cad,&com,&fin);
+						printf("%d\n",variable->valint);
+					}
+					break;
+				case 4:	
+					if(aux->exp1.escons) {
+						printf("%s\n",aux->exp1.valstr);
+					}
+					else {
+						variable=buscar_simbolo(aux->exp1.cad,&com,&fin);
+						printf("%s\n",variable->valstr);
+					}
+					break;
+				case 6: 
+					if(aux->exp1.escons) {
+						printf("%d\n",aux->exp1.valint);
+					}
+					else {
+						variable=buscar_simbolo(aux->exp1.cad,&com,&fin);
+						printf("%d\n",variable->valint);
+					}
+					break;
+			}//switch
+		case OP_ASIGNAR:
+			
+			if ((aux->var->tipo==aux->var->tipo)&&(aux->var->escons==0)&&(aux->var->espun==0)) {
+				aux->var->tipo=aux->exp2.tipo;
+				strcpy(aux->var->valstr,aux->exp2.valstr);
+				aux->var->valbool= aux->exp2.valbool;
+				aux->var->valnum = aux->exp2.valnum;
+				aux->var->valint = aux->exp2.valint;
 			}
+			else if((aux->var->tipo=2)&&(aux->exp2.tipo==4)&&(aux->var->escons==0)&&(aux->var->espun==0)) {	
+				strcpy(aux->var->valstr,aux->exp2.valstr);
+			}
+			else yyerror("Error en la asignacion: no concuerdan los tipos o %s es constante\n",aux->exp1.nombre);	
 			break;
 		}//switch
 		aux=aux->sig;

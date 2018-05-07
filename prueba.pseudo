@@ -1,13 +1,21 @@
 programa prueba2
 
 var
-	aux string
+	aux entero
+	aux2 real
+	aux3 string
+	aux1 bool
 
 inicio
-	aux="adios"
+	aux=123
+	aux2=234.12
+	aux3="qwe"
+	aux1=1
 
-	escribir(aux)
+	escribir(aux2)
 	
-	escribir("qwe")
+	escribir(aux)
+	escribir(aux1)
+	escribir(aux3)
 	
 fin

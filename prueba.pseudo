@@ -1,12 +1,13 @@
 programa prueba2
 
+var
+	aux string
+
 inicio
-	escribir("soy")
-	si 4>3 hacer
-	escribir(524)
-		si 4<3
-		escribir("no")
-		fin
-	fin
-	escribir(123.53)
+	aux="adios"
+
+	escribir(aux)
+	
+	escribir("qwe")
+	
 fin

@@ -1,9 +1,5 @@
 programa prueba2
 
-librerias
-	"stdio.h"
-	"math.h"
-
 const
 	asd "comparando"
 

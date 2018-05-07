@@ -9,6 +9,8 @@
 //5->tipo generico;
 //6->entero;
 
+#define OP_ESCRIBIR 1
+
 //tipo de los simbolos
 typedef struct NODO {
   int tipo; //tipo asociado
@@ -32,23 +34,14 @@ FILE *salida;
 //Buscar y añadir
 NODO *buscar_simbolo(char *nombre,NODO **com,NODO **fin);
 
-//Estructura para las expresionesde la lista
-typedef struct{
-	int tipo;
-	union {
-    double valnum; //valor que se toma si el tipo es real
-    int    valint; //valor que se toma si el tipo es entero
-    char   cad[255]; //valor para las cadenas constantes
-    char   valstr[255]; //valor que se toma si el tipo es una cadena de tipo string
-  };//union
-}exp;
-
 typedef struct LISTA{
 	struct LISTA *sig;
 	
-	exp exp1;
-	exp exp2;
+	NODO exp1;
+	NODO exp2;
 	int op;
+	
+	NODO var;
 }LISTA;
 
 LISTA *INICIO;
@@ -102,4 +95,4 @@ void intr_dec(char *nombre,int post);
 //////////////////////////////////////////////////////////////////////////
 
 //Crear la lista y añadir LISTAs
-int insertar(exp expre1,exp expre2, int ope);
+int insertar(NODO expre1,NODO expre2, int ope, NODO var);

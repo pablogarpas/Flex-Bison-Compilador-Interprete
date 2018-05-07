@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <math.h>
+char *aux;
 int main() 
 {
-printf("soy\n");
-if (4 > 3) {
-{
-}
-printf(" %f \n",123.53);
+char *aux;
+aux="adios";
+printf(" %s \n",aux);
+printf("qwe\n");
 }

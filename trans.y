@@ -6,6 +6,9 @@
 #include <string.h>
 #include <math.h>
 
+//Prototipos
+int compilar();
+
 //Variables globales
 int   auxb;  //variable auxiliar para la lectura de booleanos 
 int   auxint;  //variable auxiliar para la lectura de enteros
@@ -13,6 +16,9 @@ float auxn;  //variable auxiliar para la lectura de numeros
 char  auxc[30];//variable auxiliar para la lectura de strings
 char  auxt[30];//variable auxiliar para las traducciones
 int auxtip=1;//variable auxiliar para los tipos de varias sentencias
+NODO auxnodo1;//Variables para trabajar con la lista
+NODO auxnodo2;
+NODO auxvar;
 %}
 
 
@@ -286,6 +292,7 @@ variable:
 	
 	if ($1->escons==0) {
 		$$.tipo=$2.tipo;
+		$1->tipo=$2.tipo;
 		strcpy($$.nombre,$1->nombre);
 		$1->espun=$3.espun;
 		}
@@ -302,6 +309,7 @@ variable:
 			
 		if ($1->escons==0)	{
 			$$.tipo=$2.tipo;
+			$1->tipo=$2.tipo;
 			strcpy($$.nombre,$1->nombre);
 			$1->espun=$3.espun;
 			}
@@ -387,10 +395,11 @@ dec_arg_fun:
 argumento:
 	TK_VARIABLE tipo puntero salto_lin  
 	{
-	
+
 		strcpy($$.trad,intr_argumento($2.tipo, $1->nombre,$3.espun)); //Traducción
 	if ($1->escons==0) {
 		$$.tipo=$2.tipo;
+		$1->tipo=$2.tipo;
 		strcpy($$.nombre,$1->nombre);
 		$1->espun=$3.espun;
 		}
@@ -405,6 +414,7 @@ argumento:
 			
 		if ($1->escons==0)	{
 			$$.tipo=$2.tipo;
+			$1->tipo=$2.tipo;
 			strcpy($$.nombre,$1->nombre);
 			$1->espun=$3.espun;
 			}
@@ -735,25 +745,13 @@ punteros_asignar TK_VARIABLE TK_ASIG punteros_asignar exp
 		$$.valnum = $2->valnum = $5.valnum;
 		$$.valint = $2->valint = $5.valint;
 		}
-	//Aquí se asigna a una variable de tipo string una constante cadena;
-	else if(($2->tipo==2)&&($5.tipo==4)&&($2->escons==0)&&($2->espun==0)) {
-		$$.tipo=$2->tipo=2;
-		strcpy($2->valstr,$5.cad);
-		strcpy($$.valstr,$2->valstr);	
-		}	  
-	else if(($2->tipo==6)&&($2->escons==0)&&($2->espun==0)) {
-		$$.valint = $2->valint = $5.valint;
-		}
-	else if(($2->tipo==3)&&($2->escons==0)&&($2->espun==0)) {
-		$$.valbool = $2->valbool = $5.valbool;
-		}
-	else if ($2->espun || $5.espun) {
-		//Comprobaciones cuando son punteros
-			
+	else if(($2->tipo=2)&&($5.tipo==4)&&($2->escons==0)&&($2->espun==0)) {
+		$$.tipo=$2->tipo;
+		strcpy($2->valstr,$5.valstr);
+		strcpy($$.valstr,$5.valstr);
 	}
 	else yyerror("Error en la asignacion: no concuerdan los tipos o %s es constante\n",$2->nombre);				   
 	
-	//recorrer(&com);
 
 	}
 	;
@@ -776,20 +774,23 @@ exp
 {
 	$$.vis=$1.vis;	
 	$$.tipo=$1.tipo;
-
-	//TRADUCCIÓN	
+	auxnodo1.tipo=$1.tipo;	
+	
 	switch ($1.tipo){
 	case 1: 
 		strcpy($$.trad,"printf(\" %%f \\n\",");
 		strcat($$.trad,$1.trad);
 		strcat($$.trad,");\n");
+		auxnodo1.valnum=$1.valnum;
 		break;
 	case 2:					
-		strcpy($$.trad,"printf(\" %s \\n\",");
-		strcat($$.trad,$1.cad);
+		strcpy($$.trad,"printf(\" %%s \\n\",");
+		strcat($$.trad,$1.trad);
 		strcat($$.trad,");\n");
+		strcpy(auxnodo1.valstr,$1.valstr);
 		break;
 	case 3: 
+		auxnodo1.valint=$1.valint;
 		if($1.valbool==1) {
 		 	strcpy($$.trad,"printf(\" TRUE \\n\");\n");
 			break;
@@ -802,16 +803,20 @@ exp
 		strcpy($$.trad,"printf(\"");
 		strcat($$.trad,$1.cad);
 		strcat($$.trad,"\\n\");\n");
+		strcpy(auxnodo1.valstr,$1.valstr);
 		break;
 	case 6: 
 		strcpy($$.trad,"printf(\" %%s \\n\",");
 		strcat($$.trad,$1.trad);
 		strcat($$.trad,");\n");
+		auxnodo1.valint=$1.valint;
 		break;
 	default: 
 		yyerror("Error:Imposible visualizar la variable o expresion\n");
 		break;
 	}//switch
+	
+	insertar(auxnodo1,auxnodo2,OP_ESCRIBIR,auxvar);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////						
@@ -1482,7 +1487,7 @@ exp:
 	| TK_CADENA
 	{
 		$$.tipo=$1.tipo;
-		strcpy($$.cad,$1.cad);
+		strcpy($$.valstr,$1.cad);
 		$$.escons=$1.escons;
 	}  		
 /*************************************************************************************************/
@@ -1561,6 +1566,36 @@ int main(int argc, char **argv)
 	salida=fopen("salida.c","w");//creamos el fichero de salida de la traduccion
 	salida=fopen("salida.c","a+"); //abrimos en modo para añadir
 	yyparse();
-	return 0;
+
 	fclose(salida);//se cierra el fichero de salida
+	
+	if(INICIO==NULL)
+		printf("\nError, programa vacio.\n");
+	else
+		compilar();
 }
+
+int compilar() {
+	LISTA *aux;
+	aux=INICIO;
+	do {
+		switch(aux->op){
+		case OP_ESCRIBIR:
+			switch (aux->exp1.tipo){
+			case 1: printf("%f\n",aux->exp1.valnum);break;
+			case 2:	printf("%s\n",aux->exp1.valstr);break;
+			case 3: if(aux->exp1.valnum) printf("True\n");else printf("False\n");break;
+			case 4: printf("%s\n",aux->exp1.valstr);break;
+			case 6: printf("%d\n",aux->exp1.valint);break;
+			}
+			break;
+		}//switch
+		aux=aux->sig;
+	}while(aux!=NULL);
+}//función
+
+
+
+
+
+

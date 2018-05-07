@@ -304,7 +304,7 @@ void intr_dec(char *nombre,int post)
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para la compilación*/
 //////////////////////////////////////////////////////////////////////////
-//Insertar o crear la lista
+//Insertar o crear el árbol
 int insertar(NODO expre1,NODO expre2, int ope, NODO *var)
 {
 	ARBOL *aux;
@@ -316,7 +316,7 @@ int insertar(NODO expre1,NODO expre2, int ope, NODO *var)
 	 return 0;
 	}
 	else {
-		aux->exp1=expre1;
+		aux->exp1=expre1;		
 		aux->exp2=expre2;
 		aux->op=ope;
 		aux->var=var;
@@ -335,3 +335,34 @@ int insertar(NODO expre1,NODO expre2, int ope, NODO *var)
 		
 }
 
+int insertarexp(NODO expre1,NODO expre2, int ope, NODO *var1,NODO *var2)
+{
+	ARBOL *aux;
+	
+	aux= malloc(sizeof(ARBOL));
+
+	if(aux==NULL)	{
+	 printf("Error. No hay memoria para otro ARBOL.");
+	 return 0;
+	}
+	else {
+		aux->exp1=expre1;
+		aux->exp2=expre2;
+		aux->op=ope;
+		aux->var=var1;
+		aux->var2=var2;
+		
+		FINAL->izq=aux;
+		}
+}
+
+//Función para copiar los datos de un elemento a un nodo
+void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool,float valnum,int valint) {
+	a->tipo=tipo;
+	a->escons=escons;
+	a->espun=espun;
+	strcpy(a->valstr,valstr);
+	a->valbool=valbool;
+	a->valnum = valnum;
+	a->valint = valint;
+}

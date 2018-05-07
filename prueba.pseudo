@@ -8,10 +8,7 @@ var
 
 inicio
 
-	si 4>3
-		escribir("hola")
-	sino
-		escribir("adios")
-	fin
-	
+	aux=123
+
+	escribir(aux)
 fin

@@ -19,6 +19,7 @@ int auxtip=1;//variable auxiliar para los tipos de varias sentencias
 NODO auxnodo1;//Variables para trabajar con la lista
 NODO auxnodo2;
 NODO *auxvar;
+NODO *auxvar2;
 %}
 
 
@@ -753,13 +754,7 @@ punteros_asignar TK_VARIABLE TK_ASIG punteros_asignar exp
 	
 	auxvar=$2;
 	
-	auxnodo2.tipo=$5.tipo;
-	auxnodo2.escons=$5.escons;
-	auxnodo2.espun=$5.espun;
-	strcpy(auxnodo2.valstr,$5.valstr);
-	auxnodo2.valbool=$5.valbool;
-	auxnodo2.valnum = $5.valnum;
-	auxnodo2.valint = $5.valint;
+	copiardatos(&auxnodo1,$5.tipo,$5.escons,$5.espun,$5.valstr,$5.valbool,$5.valnum,$5.valint);
 	
 	insertar(auxnodo1,auxnodo2,OP_ASIGNAR,auxvar);
 	}
@@ -783,7 +778,6 @@ exp
 {
 	$$.vis=$1.vis;	
 	$$.tipo=$1.tipo;
-	auxnodo1.tipo=$1.tipo;	
 	
 	switch ($1.tipo){
 	case 1: 
@@ -830,8 +824,8 @@ exp
 		break;
 	}//switch
 	
-	auxnodo1.escons=$1.escons;
-	auxnodo1.espun=$1.espun;
+
+	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint);
 	
 	insertar(auxnodo1,auxnodo2,OP_ESCRIBIR,auxvar);
 };
@@ -1363,56 +1357,56 @@ exp:
 //Esta es la coparacion de  igualdad, que devuelve true o false
 	|	exp TK_IGU exp
 	{
-	strcat($$.trad," == ");//introducimos la cadena creada para la traduccion
-	strcat($$.trad,$3.trad);
+		strcat($$.trad," == ");//introducimos la cadena creada para la traduccion
+		strcat($$.trad,$3.trad);
 
-	$$.tipo=3;//asigno tipo bool
-	if (($1.tipo)==($3.tipo))
-	{ 	
-		if ($1.tipo==1)//si es numero
+		$$.tipo=3;//asigno tipo bool
+		if (($1.tipo)==($3.tipo))
+		{ 	
+			if ($1.tipo==1)//si es numero
+			{
+				if ($1.valnum!=$3.valnum) $$.valbool =0 ;
+				else $$.valbool=1;
+			} 
+			else if($1.tipo==2)//si es string
+			{
+				if (strcmp($1.valstr,$3.valstr)!=0) $$.valbool =0; 
+				else $$.valbool=1;
+			} 	
+			else if($1.tipo==4)//si es cte cadena
+			{
+				if (strcmp($1.cad,$3.cad)!=0) $$.valbool =0; 
+				else $$.valbool=1;
+			}
+			if ($1.tipo==6)//si es numero
+			{
+				if ($1.valint!=$3.valint) $$.valbool =0 ;
+				else $$.valbool=1;
+			} 
+		}	
+
+		else if (($1.tipo==2)&&($3.tipo==4))//cadena y constante
 		{
-			if ($1.valnum!=$3.valnum) $$.valbool =0 ;
-			else $$.valbool=1;
-		} 
-		else if($1.tipo==2)//si es string
+		if (strcmp($1.valstr,$3.cad)!=0) $$.valbool =0; 
+		else $$.valbool=1;
+		}
+		else if (($1.tipo==4)&&($3.tipo==2))//constante y cadena
 		{
-			if (strcmp($1.valstr,$3.valstr)!=0) $$.valbool =0; 
-			else $$.valbool=1;
-		} 	
-		else if($1.tipo==4)//si es cte cadena
+		if (strcmp($1.cad,$3.valstr)!=0) $$.valbool =0; 
+		else $$.valbool=1;
+		}
+		else if (($1.tipo==6)&&($3.tipo==1))//constante y cadena
 		{
-			if (strcmp($1.cad,$3.cad)!=0) $$.valbool =0; 
+			if ($1.valint!=$3.valnum) $$.valbool =0; 
 			else $$.valbool=1;
 		}
-		if ($1.tipo==6)//si es numero
+		else if (($1.tipo==1)&&($3.tipo==6))//constante y cadena
 		{
-			if ($1.valint!=$3.valint) $$.valbool =0 ;
+			if ($1.valnum!=$3.valint) $$.valbool =0; 
 			else $$.valbool=1;
-		} 
-	}	
+		}
 
-	else if (($1.tipo==2)&&($3.tipo==4))//cadena y constante
-	{
-	if (strcmp($1.valstr,$3.cad)!=0) $$.valbool =0; 
-	else $$.valbool=1;
-	}
-	else if (($1.tipo==4)&&($3.tipo==2))//constante y cadena
-	{
-	if (strcmp($1.cad,$3.valstr)!=0) $$.valbool =0; 
-	else $$.valbool=1;
-	}
-	else if (($1.tipo==6)&&($3.tipo==1))//constante y cadena
-	{
-		if ($1.valint!=$3.valnum) $$.valbool =0; 
-		else $$.valbool=1;
-	}
-	else if (($1.tipo==1)&&($3.tipo==6))//constante y cadena
-	{
-		if ($1.valnum!=$3.valint) $$.valbool =0; 
-		else $$.valbool=1;
-	}
-
-	else yyerror("Error: Operaciones sobre tipos diferentes\n");                                  
+		else yyerror("Error: Operaciones sobre tipos diferentes\n");                               
 	}
 
 
@@ -1468,13 +1462,14 @@ exp:
 	|	TK_NUM
 	{
 		$$.tipo=1;
-		$$.valnum =$1.valnum;	         
+		$$.valnum =$1.valnum;	  
 	}
 /*************************************************************************************************/
 //esto es un número entero
 	|	TK_ENT
 	{
 		$$.tipo=6;
+		
 		$$.valint =$1.valint;	
 	}
 /*************************************************************************************************/
@@ -1649,18 +1644,18 @@ int ejecutar() {
 					break;
 			}//switch
 		case OP_ASIGNAR:
-			
-			if ((aux->var->tipo==aux->var->tipo)&&(aux->var->escons==0)&&(aux->var->espun==0)) {
-				aux->var->tipo=aux->exp2.tipo;
-				strcpy(aux->var->valstr,aux->exp2.valstr);
-				aux->var->valbool= aux->exp2.valbool;
-				aux->var->valnum = aux->exp2.valnum;
-				aux->var->valint = aux->exp2.valint;
+		
+			if ((aux->var->tipo==aux->exp1.tipo)&&(aux->var->escons==0)&&(aux->var->espun==0)) {
+				aux->var->tipo=aux->exp1.tipo;
+				strcpy(aux->var->valstr,aux->exp1.valstr);
+				aux->var->valbool= aux->exp1.valbool;
+				aux->var->valnum = aux->exp1.valnum;
+				aux->var->valint = aux->exp1.valint;
 			}
-			else if((aux->var->tipo=2)&&(aux->exp2.tipo==4)&&(aux->var->escons==0)&&(aux->var->espun==0)) {	
-				strcpy(aux->var->valstr,aux->exp2.valstr);
+			else if((aux->var->tipo=2)&&(aux->exp1.tipo==4)&&(aux->var->escons==0)&&(aux->var->espun==0)) {	
+				strcpy(aux->var->valstr,aux->exp1.valstr);
 			}
-			else yyerror("Error en la asignacion: no concuerdan los tipos o %s es constante\n",aux->exp1.nombre);	
+			else yyerror("Error en la asignación, no concuerdan los tipos o %s es constante\n",aux->exp1.nombre);	
 			break;
 		}//switch
 		aux=aux->der;

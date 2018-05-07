@@ -43,10 +43,12 @@ typedef struct ARBOL{
 	int op;
 	
 	NODO *var;
+	NODO *var2;
 }ARBOL;
 
 ARBOL *INICIO;
 ARBOL *FINAL;
+
 
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para pasar del pseudo a C*/
@@ -94,6 +96,10 @@ void intr_dec(char *nombre,int post);
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para la compilación*/
 //////////////////////////////////////////////////////////////////////////
-
-//Crear la lista y añadir ARBOLs
+//Pasar de elemento a nodo
+void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool,float valnum,int valint);
+//Crear el árbol o añadir nodo
 int insertar(NODO expre1,NODO expre2, int ope, NODO *var);
+
+//Crear el árbol o añadir nodo
+int insertarexp(NODO expre1,NODO expre2, int ope, NODO *var1,NODO *var2);

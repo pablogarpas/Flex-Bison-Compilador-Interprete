@@ -11,5 +11,5 @@ inicio
 		aux1=false
 		aux5=true
 		
-		escribir(aux1 and aux5)
+		escribir(not aux1)
 fin

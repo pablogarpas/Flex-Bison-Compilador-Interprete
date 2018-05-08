@@ -1315,54 +1315,10 @@ exp:
 	{
 	strcat($$.trad," != ");//introducimos la cadena creada para la traduccion
 	strcat($$.trad,$3.trad);
-
-	$$.tipo=3;//asigno tipo bool
-	if (($1.tipo)==($3.tipo))
-	{ 	
-		if ($1.tipo==1)//si es numero
-		{
-			if ($1.valnum!=$3.valnum) $$.valbool =1 ;
-			else $$.valbool=0;
-		} 
-		else if($1.tipo==2)//si es string
-		{
-			if (strcmp($1.valstr,$3.valstr)!=0) $$.valbool =1; 
-			else $$.valbool=0;
-		} 	
-		else if($1.tipo==4)//si es cte cadena
-		{
-			if (strcmp($1.cad,$3.cad)!=0) $$.valbool =1; 
-			else $$.valbool=0;
-		}
-		if ($1.tipo==6)//si es numero
-		{
-			if ($1.valint!=$3.valint) $$.valbool =1 ;
-			else $$.valbool=0;
-		} 
-	}	
-
-	else if (($1.tipo==2)&&($3.tipo==4))//cadena y constante
-	{
-	if (strcmp($1.valstr,$3.cad)!=0) $$.valbool =1; 
-	else $$.valbool=0;
-	}
-	else if (($1.tipo==4)&&($3.tipo==2))//constante y cadena
-	{
-	if (strcmp($1.cad,$3.valstr)!=0) $$.valbool =1; 
-	else $$.valbool=0;
-	}
-	else if (($1.tipo==6)&&($3.tipo==1))//constante y cadena
-	{
-		if ($1.valint!=$3.valnum) $$.valbool =1; 
-		else $$.valbool=0;
-	}
-	else if (($1.tipo==1)&&($3.tipo==6))//constante y cadena
-	{
-		if ($1.valnum!=$3.valint) $$.valbool =1; 
-		else $$.valbool=0;
-	}
-
-	else yyerror("Error: Operaciones sobre tipos diferentes\n");                                  
+	
+	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
+	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$1.nombre);
+	insertarexp(auxnodo1,auxnodo2,OP_DESIGUALDAD);                                 
 	}
 /*************************************************************************************************/						
 //Esta es la coparacion de  igualdad, que devuelve true o false
@@ -1650,22 +1606,61 @@ NODO procesarexp(ARBOL *aux){
 	extern com;
 	extern fin;
 	int i,k;
+	char *a,*b;
+	float real1,real2;
+	int bool1,bool2;
+	
+	a= malloc(sizeof(NODO));
+	b= malloc(sizeof(NODO));
+	
 	do {
 		switch(aux->op){
 			case OP_IGUALDAD:
+				if(aux->exp1.escons) {
+					i=aux->exp1.valint;
+					real1=aux->exp1.valnum;
+					bool1=aux->exp1.valbool;
+					strcpy(a,aux->exp1.valstr);
+				} else {
+					variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+				}
+					
+				if(aux->exp2.escons) {
+					k=aux->exp2.valint;
+					real2=aux->exp2.valnum;
+					bool2=aux->exp2.valbool;
+					strcpy(b,aux->exp2.valstr);
+				} else {
+					variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+					k=variable->valint;
+					real2=variable->valnum;
+					bool2=variable->valbool;
+					strcpy(b,variable->valstr);
+				}
+				
 				retorno.tipo=3;//asigno tipo bool
+				
 				if ((aux->exp1.tipo)==(aux->exp2.tipo))
 				{ 	
 					if (aux->exp1.tipo==1)//si es numero
 					{
-						if (aux->exp1.valnum!=aux->exp2.valnum) retorno.valbool =0 ;
+						if (real1!=real2) retorno.valbool =0 ;
 						else retorno.valbool=1;
 					} 
 					else if(aux->exp1.tipo==2)//si es string
 					{
-						if (strcmp(aux->exp1.valstr,aux->exp2.valstr)!=0) retorno.valbool =0; 
+						if (strcmp(a,b)!=0) retorno.valbool =0; 
 						else retorno.valbool=1;
-					} 	
+					}
+					if (aux->exp1.tipo==3)//si es numero
+					{
+						if (bool1!=bool2) retorno.valbool =0 ;
+						else retorno.valbool=1;
+					}  	
 					else if(aux->exp1.tipo==4)//si es cte cadena
 					{
 						if (strcmp(aux->exp1.cad,aux->exp2.cad)!=0) retorno.valbool =0; 
@@ -1673,33 +1668,32 @@ NODO procesarexp(ARBOL *aux){
 					}
 					if (aux->exp1.tipo==6)//si es numero
 					{
-						if (aux->exp1.valint!=aux->exp2.valint) retorno.valbool =0 ;
+						if (i!=k) retorno.valbool =0 ;
 						else retorno.valbool=1;
 					} 
 				}	
 
 				else if ((aux->exp1.tipo==2)&&(aux->exp2.tipo==4))//cadena y constante
 				{
-				if (strcmp(aux->exp1.valstr,aux->exp2.cad)!=0) retorno.valbool =0; 
+				if (strcmp(a,aux->exp2.cad)!=0) retorno.valbool =0; 
 				else retorno.valbool=1;
 				}
 				else if ((aux->exp1.tipo==4)&&(aux->exp2.tipo==2))//constante y cadena
 				{
-				if (strcmp(aux->exp1.cad,aux->exp2.valstr)!=0) retorno.valbool =0; 
+				if (strcmp(aux->exp1.cad,b)!=0) retorno.valbool =0; 
 				else retorno.valbool=1;
 				}
 				else if ((aux->exp1.tipo==6)&&(aux->exp2.tipo==1))//constante y cadena
 				{
-					if (aux->exp1.valint!=aux->exp2.valnum) retorno.valbool =0; 
+					if (i!=real2) retorno.valbool =0; 
 					else retorno.valbool=1;
 				}
 				else if ((aux->exp1.tipo==1)&&(aux->exp2.tipo==6))//constante y cadena
 				{
-					if (aux->exp1.valnum!=aux->exp2.valint) retorno.valbool =0; 
+					if (real1!=k) retorno.valbool =0; 
 					else retorno.valbool=1;
 				}
-				else yyerror("Error: Operaciones sobre tipos diferentes \n");                                                            
-				
+				else yyerror("Error en la desigualdad: Operaciones sobre tipos diferentes \n");                                                            
 				retorno.escons=1;
 				retorno.espun=0;
 				return retorno;
@@ -1708,9 +1702,16 @@ NODO procesarexp(ARBOL *aux){
 				if (aux->exp1.tipo==3) 
 				{
 					retorno.tipo=3;
-					retorno.valbool = aux->exp1.valbool;
+					if(aux->exp1.escons)
+						retorno.valbool = !aux->exp1.valbool;
+					else {
+						variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+						retorno.valbool=!(variable->valbool);
+					}
 				}
 				else yyerror("Error en la negación: Operaciones sobre tipos incorrectos\n");
+				retorno.escons=1;
+				retorno.espun=0;
 				return retorno;
 				break;
 			case OP_OR:
@@ -1755,6 +1756,90 @@ NODO procesarexp(ARBOL *aux){
 				}
 				else yyerror("Error en el AND: Operación sobre tipos diferentes\n");
 				
+				retorno.escons=1;
+				retorno.espun=0;
+				return retorno;
+				break;
+			case OP_DESIGUALDAD:		
+				if(aux->exp1.escons) {
+					i=aux->exp1.valint;
+					real1=aux->exp1.valnum;
+					bool1=aux->exp1.valbool;
+					strcpy(a,aux->exp1.valstr);
+				} else {
+					variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+				}
+					
+				if(aux->exp2.escons) {
+					k=aux->exp2.valint;
+					real2=aux->exp2.valnum;
+					bool2=aux->exp2.valbool;
+					strcpy(b,aux->exp2.valstr);
+				} else {
+					variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+					k=variable->valint;
+					real2=variable->valnum;
+					bool2=variable->valbool;
+					strcpy(b,variable->valstr);
+				}
+				
+				retorno.tipo=3;//asigno tipo bool
+				
+				if ((aux->exp1.tipo)==(aux->exp2.tipo))
+				{ 	
+					if (aux->exp1.tipo==1)//si es numero
+					{
+						if (real1!=real2) retorno.valbool =0 ;
+						else retorno.valbool=1;
+					} 
+					else if(aux->exp1.tipo==2)//si es string
+					{
+						if (strcmp(a,b)!=0) retorno.valbool =0; 
+						else retorno.valbool=1;
+					}
+					if (aux->exp1.tipo==3)//si es numero
+					{
+						if (bool1!=bool2) retorno.valbool =0 ;
+						else retorno.valbool=1;
+					}  	
+					else if(aux->exp1.tipo==4)//si es cte cadena
+					{
+						if (strcmp(aux->exp1.cad,aux->exp2.cad)!=0) retorno.valbool =0; 
+						else retorno.valbool=1;
+					}
+					if (aux->exp1.tipo==6)//si es numero
+					{
+						if (i!=k) retorno.valbool =0 ;
+						else retorno.valbool=1;
+					} 
+				}	
+
+				else if ((aux->exp1.tipo==2)&&(aux->exp2.tipo==4))//cadena y constante
+				{
+				if (strcmp(a,aux->exp2.cad)!=0) retorno.valbool =0; 
+				else retorno.valbool=1;
+				}
+				else if ((aux->exp1.tipo==4)&&(aux->exp2.tipo==2))//constante y cadena
+				{
+				if (strcmp(aux->exp1.cad,b)!=0) retorno.valbool =0; 
+				else retorno.valbool=1;
+				}
+				else if ((aux->exp1.tipo==6)&&(aux->exp2.tipo==1))//constante y cadena
+				{
+					if (i!=real2) retorno.valbool =0; 
+					else retorno.valbool=1;
+				}
+				else if ((aux->exp1.tipo==1)&&(aux->exp2.tipo==6))//constante y cadena
+				{
+					if (real1!=k) retorno.valbool =0; 
+					else retorno.valbool=1;
+				}
+				else yyerror("Error en la desigualdad: Operaciones sobre tipos diferentes \n");                                                            
+				retorno.valbool=!retorno.valbool;
 				retorno.escons=1;
 				retorno.espun=0;
 				return retorno;

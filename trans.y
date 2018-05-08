@@ -2007,5 +2007,154 @@ NODO procesarexp(ARBOL *aux){
 			retorno.espun=0;
 			return retorno;
 			break;
+		case OP_SUMA:
+			if(aux->exp1.escons) {
+				i=aux->exp1.valint;
+				real1=aux->exp1.valnum;
+				bool1=aux->exp1.valbool;
+				strcpy(a,aux->exp1.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				i=variable->valint;
+				real1=variable->valnum;
+				bool1=variable->valbool;
+				strcpy(a,variable->valstr);
+			}
+				
+			if(aux->exp2.escons) {
+				k=aux->exp2.valint;
+				real2=aux->exp2.valnum;
+				bool2=aux->exp2.valbool;
+				strcpy(b,aux->exp2.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				k=variable->valint;
+				real2=variable->valnum;
+				bool2=variable->valbool;
+				strcpy(b,variable->valstr);
+			}
+			strcat(retorno.trad," + ");//Traducción
+			strcat(retorno.trad,$3.trad);
+			if ((aux->exp1.tipo==1) && (aux->exp2.tipo==1)){
+				retorno.tipo=1;
+				retorno.valnum = real1 + real2;
+			}
+			else if((aux->exp1.tipo==2) && (aux->exp2.tipo==2)){
+				retorno.tipo=2;
+				strcpy(retorno.va$lstr,strcat(a,b));
+			}
+			else if((aux->exp1.tipo==2) && (aux->exp2.tipo==4)){
+				retorno.tipo=2;
+				strcpy(retorno.valstr,strcat(a,aux->exp2.cad));
+			}
+			else if((aux->exp1.tipo==4) && (aux->exp2.tipo==2)){
+				retorno.tipo=2;
+				strcpy(retorno.valstr,strcat(aux->exp1.cad,b));
+			}
+			else if((aux->exp1.tipo==4) && (aux->exp2.tipo==4)){
+				retorno.tipo=4;
+				strcpy(retorno.cad,strcat(aux->exp1.cad,aux->exp2.cad));
+			}
+			else if((aux->exp1.tipo==6) && (aux->exp2.tipo==6)){
+				retorno.tipo=6;
+				retorno.valint = i + k;
+			}
+			else if((aux->exp1.tipo==1) && (aux->exp2.tipo==6)){
+				retorno.tipo=1;
+				retorno.valnum = real1 + k;
+			}
+			else if((aux->exp1.tipo==6) && (aux->exp2.tipo==1)){
+				retorno.tipo=1;
+				retorno.valnum = i + real2;
+			}
+			else
+			yyerror("Error en la suma: Operaciones sobre tipos diferentes\n");
+			}
+			retorno.escons=1;
+			retorno.espun=0;
+			return retorno;
+			break;
+		case OP_RESTA:
+			if(aux->exp1.escons) {
+				i=aux->exp1.valint;
+				real1=aux->exp1.valnum;
+				bool1=aux->exp1.valbool;
+				strcpy(a,aux->exp1.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				i=variable->valint;
+				real1=variable->valnum;
+				bool1=variable->valbool;
+				strcpy(a,variable->valstr);
+			}
+				
+			if(aux->exp2.escons) {
+				k=aux->exp2.valint;
+				real2=aux->exp2.valnum;
+				bool2=aux->exp2.valbool;
+				strcpy(b,aux->exp2.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				k=variable->valint;
+				real2=variable->valnum;
+				bool2=variable->valbool;
+				strcpy(b,variable->valstr);
+			}
+	
+			strcat(retorno.trad," - ");//introducimos la cadena creada para la traduccion
+			strcat(retorno.trad,$3.trad);
+			if ((aux->exp1.tipo==1) && (aux->exp2.tipo==1)) {
+				retorno.tipo=1;
+				retorno.valnum = real1 - real2;
+				}
+			else if((aux->exp1.tipo==6) && (aux->exp2.tipo==6)){
+				retorno.tipo=6;
+				retorno.valint = i - k;
+			}
+			else if((aux->exp1.tipo==1) && (aux->exp2.tipo==6)){
+				retorno.tipo=1;
+				retorno.valnum = real1 - k;
+			}
+			else if((aux->exp1.tipo==6) && (aux->exp2.tipo==1)){
+				retorno.tipo=1;
+				retorno.valnum = i - real2;
+			}
+			else {                   
+			yyerror("Error: Operaciones sobre tipos diferentes\n");
+			}
+			retorno.escons=1;
+			retorno.espun=0;
+			return retorno;
+			break;
+		case OP_MULT:
+
+			retorno.escons=1;
+			retorno.espun=0;
+			return retorno;
+			break;
+		case OP_DIV:
+
+			retorno.escons=1;
+			retorno.espun=0;
+			return retorno;
+			break;
+		case OP_MOD:
+
+			retorno.escons=1;
+			retorno.espun=0;
+			return retorno;
+			break;
+		case OP_CAM:
+
+			retorno.escons=1;
+			retorno.espun=0;
+			return retorno;
+			break;
+		case OP_POW:
+
+			retorno.escons=1;
+			retorno.espun=0;
+			return retorno;
+			break;
 	}//switch
 }//función

@@ -28,8 +28,10 @@
 #define OP_CAM 16
 #define OP_POW 17
 #define OP_MOD 18
-#define OP_FIN 20
+#define OP_INC 19
+#define OP_DEC 20
 #define OP_SI 21
+#define OP_FIN 22
 
 
 //tipo de los simbolos
@@ -52,6 +54,8 @@ FILE *salida;
 
 //Buscar y añadir
 NODO *buscar_simbolo(char *nombre,NODO **com,NODO **fin);
+//Buscar y devolver un nodo a esa variable
+NODO **buscar(char *nombre,NODO **com,NODO **fin);
 
 typedef struct ARBOL{
 	struct ARBOL *der;
@@ -111,9 +115,6 @@ void vis_exp(int tipo,char *cad);
 
 //Función para traducir incrementos con comprobación de post o pre incremento
 void intr_inc(char *nombre,int post);
-
-//Función para traducir decrementos con comprobación de post o pre decremento
-void intr_dec(char *nombre,int post);
 
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para la compilación*/

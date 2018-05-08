@@ -8,11 +8,7 @@ inicio
 		aux1=3
 		aux2=3
 		
-		escribir(3+3)
-		escribir(3-3)
-		escribir(3*3)
-		escribir(3/3)
-		escribir(3%3)
-		escribir(3@3)
-		escribir(-3)
+		escribir(aux1)
+		--aux1
+		escribir(aux1)
 fin

@@ -86,7 +86,7 @@ NODO *auxvar2;
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar control2
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar control2 decre
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -517,7 +517,36 @@ sentencia:
 		strcat($$.trad,$5.trad);
 		strcat($$.trad,");\n");
 	}
+/************************************************************************************************/
+	| decre
+	{
+		strcpy($$.trad,$1.trad);
+	}
 	;
+//////////////////////////////////////////////////////////////////////////////////////////////////
+decre:
+//Postincremento 
+	TK_INC exp
+	{
+		strcpy($$.trad,$2.nombre);
+		strcat($$.trad,"++;\n");
+			
+		strcpy(auxnodo1.nombre,$2.nombre);
+	
+		insertar(auxnodo1,auxnodo2,OP_INC,auxvar);
+	}
+/*************************************************************************************************/
+//Postdecremento 
+	|	TK_DEC exp
+	{
+		strcpy($$.trad,$2.nombre);
+		strcat($$.trad,"--;\n");
+	
+		strcpy(auxnodo1.nombre,$2.nombre);
+	
+		insertar(auxnodo1,auxnodo2,OP_DEC,auxvar);
+	}
+;
 /////////////////////////////////////////////////////////////////////////////////////////////////	
 llamar:
 	exp
@@ -1161,60 +1190,14 @@ exp:
 		$$.escons=$1.escons;
 	}  		
 /*************************************************************************************************/
-
-//Preincremento 
-	|	TK_INC variable
-	{
-		if($2.tipo==6) {
-			intr_inc($2.nombre,0);
-			$$.valint=$2.valint;		
-			$$.tipo=$2.tipo;
-			}
-		else
-			yyerror("Error: No se puede incrementar una variable no númerica");
-	}
-/*************************************************************************************************/
-//Postincremento 
-	|	variable TK_INC
-	{
-		if($1.tipo==6) {
-			intr_inc($1.nombre,1);
-			$$.valint=$1.valint;
-			$$.tipo=$1.tipo;
-			}
-		else
-			yyerror("Error: No se puede incrementar una variable no númerica");
-	}
-/*************************************************************************************************/
-//Predecremento
-	|	TK_DEC variable
-	{
-		if($2.tipo==6) {
-			intr_dec($2.nombre,0);
-			$$.valint=$2.valint;		
-			$$.tipo=$2.tipo;
-			}
-		else
-			yyerror("Error: No se puede decrementar una variable no númerica");
-	}
-/*************************************************************************************************/
-//Postdecremento 
-	|	variable TK_DEC
-	{
-		if($1.tipo==6) {
-			intr_dec($1.nombre,1);
-			$$.valint=$1.valint;
-			$$.tipo=$1.tipo;
-			}
-		else
-			yyerror("Error: No se puede decrementar una variable no númerica");
-	}
-/*************************************************************************************************/
+//Operaciones con punteros y arrays
 	| TK_VAL exp
 	{
 		strcpy($$.trad,"*");
 		strcat($$.trad,$2.trad);
 	}
+/*************************************************************************************************/
+//Dir de memoria 
 	| TK_DIR exp 
 	{
 		strcpy($$.trad,"&");
@@ -1318,6 +1301,28 @@ int ejecutar() {
 				strcpy(aux->var->valstr,aux->exp1.valstr);
 			}
 			else yyerror("Error en la asignación, no concuerdan los tipos o la variable es constante\n");	
+			break;
+		case OP_INC:
+			if(aux->var->tipo==6) {			
+				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				variable->valint=variable->valint+1;				
+			}else if(aux->var->tipo==1) {
+				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				variable->valnum=variable->valnum+1;
+			}
+			else
+			yyerror("Error en el incremento: No se puede incrementar una variable no númerica");
+			break;
+		case OP_DEC:
+			if(aux->var->tipo==6) {			
+				variable=buscar(aux->exp1.nombre,&com,&fin);
+				variable->valint=variable->valint-1;				
+			}else if(aux->var->tipo==1) {
+				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				variable->valnum=variable->valnum-1;
+			}
+			else
+			yyerror("Error en el decremento: No se puede incrementar una variable no númerica");
 			break;
 		case OP_SI:		
 			if (aux->exp1.tipo != 3){

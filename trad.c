@@ -44,6 +44,25 @@ NODO *buscar_simbolo(char nombre[20],NODO **com,NODO **fin)
 		}
 	}
 }
+
+NODO **buscar(char nombre[20],NODO **com,NODO **fin)
+{
+	//variables
+	NODO *nuevo,*aux, **retorno;
+	aux=*com;//comienzo
+	int encontrado=0;
+	
+	while ((aux!=NULL)&&(encontrado==0))
+	{
+		if (strcmp(aux->nombre,nombre)==0)//El símbolo existe
+		{
+      (encontrado=1);
+			*retorno=aux;
+			return(retorno);//Devolver nodo
+		}
+	 aux=aux->sig;
+	}
+}
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para pasar del pseudo a C*/
 //////////////////////////////////////////////////////////////////////////
@@ -285,15 +304,6 @@ void vis_exp(int tipo,char *cad)
 
 //Función para traducir incrementos con comprobación de post o pre incremento
 void intr_inc(char *nombre,int post)
-{
-	if(post)
-		fprintf(salida,"%s++;\n",nombre);
-	else
-		fprintf(salida,"++%s;\n",nombre);
-}
-
-//Función para traducir decrementos con comprobación de post o pre decremento
-void intr_dec(char *nombre,int post)
 {
 	if(post)
 		fprintf(salida,"%s++;\n",nombre);

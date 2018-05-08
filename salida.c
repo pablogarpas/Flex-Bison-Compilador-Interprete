@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <math.h>
-int main() 
+#include <stdlib.h>
+#include <string.h>int main() 
 {
-int aux;
-float aux2;
-char *aux3;
+int aux3;
+int aux2;
 int aux1;
-int aux5;
-aux1=false;
-aux5=true;
-printf(" %d \n", !aux1);
+aux1=true;
+aux2=false;
+aux3=false;
+printf(" %d \n",aux1 && aux2 && aux3);
 }

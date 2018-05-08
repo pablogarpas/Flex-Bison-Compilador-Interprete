@@ -1,15 +1,12 @@
 programa prueba2
 
 var
-	aux entero
-	aux2 real
-	aux3 string
-	aux1 bool
-	aux5 bool
+	aux2 entero
+	aux1 entero
 
 inicio
-		aux1=false
-		aux5=true
+		aux1=true
+		aux2=false
 		
-		escribir(not aux1)
+		escribir(aux1 and aux2 and aux3)
 fin

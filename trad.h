@@ -17,8 +17,19 @@
 #define OP_OR 5
 #define OP_AND 6
 #define OP_DESIGUALDAD 7
-#define OP_FIN 14
-#define OP_SI 15
+#define OP_MAYOR 8
+#define OP_MENOR 9
+#define OP_MEI 10
+#define OP_MAI 11
+#define OP_SUMA 12
+#define OP_RESTA 13
+#define OP_MULT 14
+#define OP_DIV 15
+#define OP_CAM 16
+#define OP_POW 17
+#define OP_MOD 18
+#define OP_FIN 20
+#define OP_SI 21
 
 
 //tipo de los simbolos

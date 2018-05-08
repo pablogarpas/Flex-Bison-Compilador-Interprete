@@ -523,9 +523,9 @@ static const yytype_uint16 yyrline[] =
      554,   564,   575,   584,   637,   665,   675,   686,   691,   702,
      709,   716,   722,   728,   739,   779,   782,   785,   792,   847,
      854,   862,   873,   880,   885,   892,   900,   943,   969,   996,
-    1025,  1045,  1078,  1095,  1149,  1204,  1259,  1314,  1325,  1340,
-    1353,  1366,  1379,  1386,  1394,  1401,  1417,  1426,  1438,  1450,
-    1462,  1473,  1478
+    1025,  1045,  1078,  1096,  1107,  1118,  1130,  1141,  1152,  1167,
+    1180,  1193,  1206,  1213,  1221,  1228,  1244,  1253,  1265,  1277,
+    1289,  1300,  1305
 };
 #endif
 
@@ -1514,7 +1514,7 @@ yyreduce:
   case 8:
 #line 134 "trans.y" /* yacc.c:1646  */
     {
-		strcpy((yyval.ELEMENTO).trad,"#include <stdio.h>\n#include <math.h>\n");
+		strcpy((yyval.ELEMENTO).trad,"#include <stdio.h>\n#include <math.h>\n#include <stdlib.h>\n#include <string.h>");
 	}
 #line 1520 "trans.tab.c" /* yacc.c:1646  */
     break;
@@ -2599,252 +2599,79 @@ yyreduce:
 	(yyval.ELEMENTO).valbool = (yyvsp[-1].ELEMENTO).valbool;
 	(yyval.ELEMENTO).valint= (yyvsp[-1].ELEMENTO).valint;
 	(yyval.ELEMENTO).espun= (yyvsp[-1].ELEMENTO).espun;
+	(yyval.ELEMENTO).escons= (yyvsp[-1].ELEMENTO).escons;
 	}
-#line 2604 "trans.tab.c" /* yacc.c:1646  */
+#line 2605 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 83:
-#line 1096 "trans.y" /* yacc.c:1646  */
+#line 1097 "trans.y" /* yacc.c:1646  */
     {
 	strcat((yyval.ELEMENTO).trad," < ");//Traducción
 	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
 
-	(yyval.ELEMENTO).tipo=3;//Se asigna el tipo bool
-	if (((yyvsp[-2].ELEMENTO).tipo)==((yyvsp[0].ELEMENTO).tipo))
-	{ 	
-		if ((yyvsp[-2].ELEMENTO).tipo==1)//si es real
-		{
-			if ((yyvsp[-2].ELEMENTO).valnum<(yyvsp[0].ELEMENTO).valnum) (yyval.ELEMENTO).valbool=1 ;
-			else (yyval.ELEMENTO).valbool=0;
-		} 
-		else if((yyvsp[-2].ELEMENTO).tipo==2)//si es string
-		{
-			if (strcmp((yyvsp[-2].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).valstr)<0) (yyval.ELEMENTO).valbool =1; 
-			else (yyval.ELEMENTO).valbool=0;
-		} 	
-		else if((yyvsp[-2].ELEMENTO).tipo==4)//si es cte cadena
-		{
-			if (strcmp((yyvsp[-2].ELEMENTO).cad,(yyvsp[0].ELEMENTO).cad)<0) (yyval.ELEMENTO).valbool =1; 
-			else (yyval.ELEMENTO).valbool=0;
-		}
-		else if((yyvsp[-2].ELEMENTO).tipo==6)//si es entero
-		{
-			if ((yyvsp[-2].ELEMENTO).valint<(yyvsp[0].ELEMENTO).valint) (yyval.ELEMENTO).valbool=1 ;
-			else (yyval.ELEMENTO).valbool=0;
-		}
-	}	
-
-	else if (((yyvsp[-2].ELEMENTO).tipo==2)&&((yyvsp[0].ELEMENTO).tipo==4))//cadena y constante
-	{
-		if (strcmp((yyvsp[-2].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).cad)<0) (yyval.ELEMENTO).valbool =1; 
-		else (yyval.ELEMENTO).valbool=0;
+	copiardatos(&auxnodo1,(yyvsp[-2].ELEMENTO).tipo,(yyvsp[-2].ELEMENTO).escons,(yyvsp[-2].ELEMENTO).espun,(yyvsp[-2].ELEMENTO).valstr,(yyvsp[-2].ELEMENTO).valbool,(yyvsp[-2].ELEMENTO).valnum,(yyvsp[-2].ELEMENTO).valint,(yyvsp[-2].ELEMENTO).nombre);
+	copiardatos(&auxnodo2,(yyvsp[0].ELEMENTO).tipo,(yyvsp[0].ELEMENTO).escons,(yyvsp[0].ELEMENTO).espun,(yyvsp[0].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).valbool,(yyvsp[0].ELEMENTO).valnum,(yyvsp[0].ELEMENTO).valint,(yyvsp[0].ELEMENTO).nombre);
+	insertarexp(auxnodo1,auxnodo2,OP_MENOR);
 	}
-	else if (((yyvsp[-2].ELEMENTO).tipo==4)&&((yyvsp[0].ELEMENTO).tipo==2))//constante y cadena
-	{
-		if (strcmp((yyvsp[-2].ELEMENTO).cad,(yyvsp[0].ELEMENTO).valstr)<0) (yyval.ELEMENTO).valbool =1; 
-		else (yyval.ELEMENTO).valbool=0;
-	}
-	else if (((yyvsp[-2].ELEMENTO).tipo==6)&&((yyvsp[0].ELEMENTO).tipo==1))//constante y cadena
-	{
-		if ((yyvsp[-2].ELEMENTO).valint<(yyvsp[0].ELEMENTO).valnum) (yyval.ELEMENTO).valbool =1; 
-		else (yyval.ELEMENTO).valbool=0;
-	}
-	else if (((yyvsp[-2].ELEMENTO).tipo==1)&&((yyvsp[0].ELEMENTO).tipo==6))//constante y cadena
-	{
-		if ((yyvsp[-2].ELEMENTO).valnum<(yyvsp[0].ELEMENTO).valint) (yyval.ELEMENTO).valbool =1; 
-		else (yyval.ELEMENTO).valbool=0;
-	}
-	else yyerror("Error: Operaciones sobre tipos diferentes\n"); 
-	}
-#line 2660 "trans.tab.c" /* yacc.c:1646  */
+#line 2618 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 84:
-#line 1150 "trans.y" /* yacc.c:1646  */
+#line 1108 "trans.y" /* yacc.c:1646  */
     {
-		strcat((yyval.ELEMENTO).trad," > ");//introducimos la cadena creada para la traduccion
-		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
+	strcat((yyval.ELEMENTO).trad," > ");//introducimos la cadena creada para la traduccion
+	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
 
-		(yyval.ELEMENTO).tipo=3;//asigno tipo bool
-		if (((yyvsp[-2].ELEMENTO).tipo)==((yyvsp[0].ELEMENTO).tipo))
-		{ 	
-			if ((yyvsp[-2].ELEMENTO).tipo==1)//si es numero
-			{
-			if ((yyvsp[-2].ELEMENTO).valnum>(yyvsp[0].ELEMENTO).valnum) (yyval.ELEMENTO).valbool =1 ;
-			else (yyval.ELEMENTO).valbool=0;
-			} 
-			else if((yyvsp[-2].ELEMENTO).tipo==2)//si es string
-			{
-			if (strcmp((yyvsp[-2].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).valstr)>0) (yyval.ELEMENTO).valbool =1; 
-			else (yyval.ELEMENTO).valbool=0;
-			} 	
-			else if((yyvsp[-2].ELEMENTO).tipo==4)//si es cte cadena
-			{
-				if (strcmp((yyvsp[-2].ELEMENTO).cad,(yyvsp[0].ELEMENTO).cad)>0) (yyval.ELEMENTO).valbool =1; 
-				else (yyval.ELEMENTO).valbool=0;
-			}
-			else if((yyvsp[-2].ELEMENTO).tipo==6)//si es cte cadena
-			{
-				if ((yyvsp[-2].ELEMENTO).valint>(yyvsp[0].ELEMENTO).valint) (yyval.ELEMENTO).valbool =1 ;
-				else (yyval.ELEMENTO).valbool=0;
-			} 	 	
-		}	
-
-		else if (((yyvsp[-2].ELEMENTO).tipo==2)&&((yyvsp[0].ELEMENTO).tipo==4))//cadena y constante
-		{
-		if (strcmp((yyvsp[-2].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).cad)>0) (yyval.ELEMENTO).valbool =1; 
-		else (yyval.ELEMENTO).valbool=0;
-		}
-		else if (((yyvsp[-2].ELEMENTO).tipo==4)&&((yyvsp[0].ELEMENTO).tipo==2))//constante y cadena
-		{
-			if (strcmp((yyvsp[-2].ELEMENTO).cad,(yyvsp[0].ELEMENTO).valstr)>0) (yyval.ELEMENTO).valbool =1; 
-			else (yyval.ELEMENTO).valbool=0;
-		}
-		else if (((yyvsp[-2].ELEMENTO).tipo==6)&&((yyvsp[0].ELEMENTO).tipo==1))//constante y cadena
-		{
-			if ((yyvsp[-2].ELEMENTO).valint>(yyvsp[0].ELEMENTO).valnum) (yyval.ELEMENTO).valbool =1; 
-			else (yyval.ELEMENTO).valbool=0;
-		}
-			else if (((yyvsp[-2].ELEMENTO).tipo==1)&&((yyvsp[0].ELEMENTO).tipo==6))//constante y cadena
-		{
-			if ((yyvsp[-2].ELEMENTO).valnum>(yyvsp[0].ELEMENTO).valint) (yyval.ELEMENTO).valbool =1; 
-			else (yyval.ELEMENTO).valbool=0;
-		}
-
-		else yyerror("Error: Operaciones sobre tipos diferentes\n"); 
+	copiardatos(&auxnodo1,(yyvsp[-2].ELEMENTO).tipo,(yyvsp[-2].ELEMENTO).escons,(yyvsp[-2].ELEMENTO).espun,(yyvsp[-2].ELEMENTO).valstr,(yyvsp[-2].ELEMENTO).valbool,(yyvsp[-2].ELEMENTO).valnum,(yyvsp[-2].ELEMENTO).valint,(yyvsp[-2].ELEMENTO).nombre);
+	copiardatos(&auxnodo2,(yyvsp[0].ELEMENTO).tipo,(yyvsp[0].ELEMENTO).escons,(yyvsp[0].ELEMENTO).espun,(yyvsp[0].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).valbool,(yyvsp[0].ELEMENTO).valnum,(yyvsp[0].ELEMENTO).valint,(yyvsp[0].ELEMENTO).nombre);
+	insertarexp(auxnodo1,auxnodo2,OP_MAYOR);
 	}
-#line 2717 "trans.tab.c" /* yacc.c:1646  */
+#line 2631 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 85:
-#line 1205 "trans.y" /* yacc.c:1646  */
+#line 1119 "trans.y" /* yacc.c:1646  */
     {
 	strcat((yyval.ELEMENTO).trad," >= ");//introducimos la cadena creada para la traduccion
 	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
 
-	(yyval.ELEMENTO).tipo=3;//asigno tipo bool
-	if (((yyvsp[-2].ELEMENTO).tipo)==((yyvsp[0].ELEMENTO).tipo))
-	{ 	
-		if ((yyvsp[-2].ELEMENTO).tipo==1)//si es numero
-		{
-			if ((yyvsp[-2].ELEMENTO).valnum>=(yyvsp[0].ELEMENTO).valnum) (yyval.ELEMENTO).valbool =1 ;
-			else (yyval.ELEMENTO).valbool=0;
-		} 
-		else if((yyvsp[-2].ELEMENTO).tipo==2)//si es string
-		{
-			if (strcmp((yyvsp[-2].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).valstr)>=0) (yyval.ELEMENTO).valbool =1; 
-			else (yyval.ELEMENTO).valbool=0;
-		} 	
-		else if((yyvsp[-2].ELEMENTO).tipo==4)//si es cte cadena
-		{
-			if (strcmp((yyvsp[-2].ELEMENTO).cad,(yyvsp[0].ELEMENTO).cad)>=0) (yyval.ELEMENTO).valbool =1; 
-			else (yyval.ELEMENTO).valbool=0;
-		} 	
-		else if ((yyvsp[-2].ELEMENTO).tipo==6)//si es numero
-		{
-			if ((yyvsp[-2].ELEMENTO).valint>=(yyvsp[0].ELEMENTO).valint) (yyval.ELEMENTO).valbool =1 ;
-			else (yyval.ELEMENTO).valbool=0;
-		} 
-	}	
-
-	else if (((yyvsp[-2].ELEMENTO).tipo==2)&&((yyvsp[0].ELEMENTO).tipo==4))//cadena y constante
-	{
-		if (strcmp((yyvsp[-2].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).cad)>=0) (yyval.ELEMENTO).valbool =1; 
-		else (yyval.ELEMENTO).valbool=0;
+	copiardatos(&auxnodo1,(yyvsp[-2].ELEMENTO).tipo,(yyvsp[-2].ELEMENTO).escons,(yyvsp[-2].ELEMENTO).espun,(yyvsp[-2].ELEMENTO).valstr,(yyvsp[-2].ELEMENTO).valbool,(yyvsp[-2].ELEMENTO).valnum,(yyvsp[-2].ELEMENTO).valint,(yyvsp[-2].ELEMENTO).nombre);
+	copiardatos(&auxnodo2,(yyvsp[0].ELEMENTO).tipo,(yyvsp[0].ELEMENTO).escons,(yyvsp[0].ELEMENTO).espun,(yyvsp[0].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).valbool,(yyvsp[0].ELEMENTO).valnum,(yyvsp[0].ELEMENTO).valint,(yyvsp[0].ELEMENTO).nombre);
+	
+	insertarexp(auxnodo1,auxnodo2,OP_MAI);
 	}
-	else if (((yyvsp[-2].ELEMENTO).tipo==4)&&((yyvsp[0].ELEMENTO).tipo==2))//constante y cadena
-	{
-		if (strcmp((yyvsp[-2].ELEMENTO).cad,(yyvsp[0].ELEMENTO).valstr)>=0) (yyval.ELEMENTO).valbool =1; 
-		else (yyval.ELEMENTO).valbool=0;
-	}
-		else if (((yyvsp[-2].ELEMENTO).tipo==6)&&((yyvsp[0].ELEMENTO).tipo==1))//constante y cadena
-	{
-		if ((yyvsp[-2].ELEMENTO).valint>=(yyvsp[0].ELEMENTO).valnum) (yyval.ELEMENTO).valbool =1; 
-		else (yyval.ELEMENTO).valbool=0;
-	}
-		else if (((yyvsp[-2].ELEMENTO).tipo==1)&&((yyvsp[0].ELEMENTO).tipo==6))//constante y cadena
-	{
-		if ((yyvsp[-2].ELEMENTO).valnum>=(yyvsp[0].ELEMENTO).valint) (yyval.ELEMENTO).valbool =1; 
-		else (yyval.ELEMENTO).valbool=0;
-	}
-
-	else yyerror("Error: Operaciones sobre tipos diferentes\n"); 
-	}
-#line 2774 "trans.tab.c" /* yacc.c:1646  */
+#line 2645 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 86:
-#line 1260 "trans.y" /* yacc.c:1646  */
+#line 1131 "trans.y" /* yacc.c:1646  */
     {
 	strcat((yyval.ELEMENTO).trad," <= ");//introducimos la cadena creada para la traduccion
 	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
 
-	(yyval.ELEMENTO).tipo=3;//asigno tipo bool
-	if (((yyvsp[-2].ELEMENTO).tipo)==((yyvsp[0].ELEMENTO).tipo))
-	{ 	
-		if ((yyvsp[-2].ELEMENTO).tipo==1)//si es numero
-		{
-		if ((yyvsp[-2].ELEMENTO).valnum<=(yyvsp[0].ELEMENTO).valnum) (yyval.ELEMENTO).valbool =1 ;
-			else (yyval.ELEMENTO).valbool=0;
-		} 
-		else if((yyvsp[-2].ELEMENTO).tipo==2)//si es string
-		{
-			if (strcmp((yyvsp[-2].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).valstr)<=0) (yyval.ELEMENTO).valbool =1; 
-			else (yyval.ELEMENTO).valbool=0;
-		} 	
-		else if((yyvsp[-2].ELEMENTO).tipo==4)//si es cte cadena
-		{
-			if (strcmp((yyvsp[-2].ELEMENTO).cad,(yyvsp[0].ELEMENTO).cad)<=0) (yyval.ELEMENTO).valbool =1; 
-			else (yyval.ELEMENTO).valbool=0;
-		} 	
-		if ((yyvsp[-2].ELEMENTO).tipo==6)//si es numero
-		{
-			if ((yyvsp[-2].ELEMENTO).valint<=(yyvsp[0].ELEMENTO).valint) (yyval.ELEMENTO).valbool =1 ;
-			else (yyval.ELEMENTO).valbool=0;
-		} 
-	}	
-
-	else if (((yyvsp[-2].ELEMENTO).tipo==2)&&((yyvsp[0].ELEMENTO).tipo==4))//cadena y constante
-	{
-		if (strcmp((yyvsp[-2].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).cad)<=0) (yyval.ELEMENTO).valbool =1; 
-		else (yyval.ELEMENTO).valbool=0;
-	}
-	else if (((yyvsp[-2].ELEMENTO).tipo==4)&&((yyvsp[0].ELEMENTO).tipo==2))//constante y cadena
-	{
-		if (strcmp((yyvsp[-2].ELEMENTO).cad,(yyvsp[0].ELEMENTO).valstr)<=0) (yyval.ELEMENTO).valbool =1; 
-		else (yyval.ELEMENTO).valbool=0;
-	}
-	else if (((yyvsp[-2].ELEMENTO).tipo==6)&&((yyvsp[0].ELEMENTO).tipo==1))//constante y cadena
-	{
-		if ((yyvsp[-2].ELEMENTO).valint>=(yyvsp[0].ELEMENTO).valnum) (yyval.ELEMENTO).valbool =1; 
-		else (yyval.ELEMENTO).valbool=0;
-	}
-		else if (((yyvsp[-2].ELEMENTO).tipo==1)&&((yyvsp[0].ELEMENTO).tipo==6))//constante y cadena
-	{
-		if ((yyvsp[-2].ELEMENTO).valnum>=(yyvsp[0].ELEMENTO).valint) (yyval.ELEMENTO).valbool =1; 
-		else (yyval.ELEMENTO).valbool=0;
-	}
-
-	else yyerror("Error: Operaciones sobre tipos diferentes\n");                                  
+	copiardatos(&auxnodo1,(yyvsp[-2].ELEMENTO).tipo,(yyvsp[-2].ELEMENTO).escons,(yyvsp[-2].ELEMENTO).espun,(yyvsp[-2].ELEMENTO).valstr,(yyvsp[-2].ELEMENTO).valbool,(yyvsp[-2].ELEMENTO).valnum,(yyvsp[-2].ELEMENTO).valint,(yyvsp[-2].ELEMENTO).nombre);
+	copiardatos(&auxnodo2,(yyvsp[0].ELEMENTO).tipo,(yyvsp[0].ELEMENTO).escons,(yyvsp[0].ELEMENTO).espun,(yyvsp[0].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).valbool,(yyvsp[0].ELEMENTO).valnum,(yyvsp[0].ELEMENTO).valint,(yyvsp[0].ELEMENTO).nombre);
+	insertarexp(auxnodo1,auxnodo2,OP_MEI);                                
 }
-#line 2831 "trans.tab.c" /* yacc.c:1646  */
+#line 2658 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 87:
-#line 1315 "trans.y" /* yacc.c:1646  */
+#line 1142 "trans.y" /* yacc.c:1646  */
     {
 	strcat((yyval.ELEMENTO).trad," != ");//introducimos la cadena creada para la traduccion
 	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
 	
 	copiardatos(&auxnodo1,(yyvsp[-2].ELEMENTO).tipo,(yyvsp[-2].ELEMENTO).escons,(yyvsp[-2].ELEMENTO).espun,(yyvsp[-2].ELEMENTO).valstr,(yyvsp[-2].ELEMENTO).valbool,(yyvsp[-2].ELEMENTO).valnum,(yyvsp[-2].ELEMENTO).valint,(yyvsp[-2].ELEMENTO).nombre);
-	copiardatos(&auxnodo2,(yyvsp[0].ELEMENTO).tipo,(yyvsp[0].ELEMENTO).escons,(yyvsp[0].ELEMENTO).espun,(yyvsp[0].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).valbool,(yyvsp[0].ELEMENTO).valnum,(yyvsp[0].ELEMENTO).valint,(yyvsp[-2].ELEMENTO).nombre);
+	copiardatos(&auxnodo2,(yyvsp[0].ELEMENTO).tipo,(yyvsp[0].ELEMENTO).escons,(yyvsp[0].ELEMENTO).espun,(yyvsp[0].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).valbool,(yyvsp[0].ELEMENTO).valnum,(yyvsp[0].ELEMENTO).valint,(yyvsp[0].ELEMENTO).nombre);
 	insertarexp(auxnodo1,auxnodo2,OP_DESIGUALDAD);                                 
 	}
-#line 2844 "trans.tab.c" /* yacc.c:1646  */
+#line 2671 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 88:
-#line 1326 "trans.y" /* yacc.c:1646  */
+#line 1153 "trans.y" /* yacc.c:1646  */
     {
 		strcat((yyval.ELEMENTO).trad," == ");//introducimos la cadena creada para la traduccion
 		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
@@ -2852,14 +2679,14 @@ yyreduce:
 		
 
 		copiardatos(&auxnodo1,(yyvsp[-2].ELEMENTO).tipo,(yyvsp[-2].ELEMENTO).escons,(yyvsp[-2].ELEMENTO).espun,(yyvsp[-2].ELEMENTO).valstr,(yyvsp[-2].ELEMENTO).valbool,(yyvsp[-2].ELEMENTO).valnum,(yyvsp[-2].ELEMENTO).valint,(yyvsp[-2].ELEMENTO).nombre);
-		copiardatos(&auxnodo2,(yyvsp[0].ELEMENTO).tipo,(yyvsp[0].ELEMENTO).escons,(yyvsp[0].ELEMENTO).espun,(yyvsp[0].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).valbool,(yyvsp[0].ELEMENTO).valnum,(yyvsp[0].ELEMENTO).valint,(yyvsp[-2].ELEMENTO).nombre);
+		copiardatos(&auxnodo2,(yyvsp[0].ELEMENTO).tipo,(yyvsp[0].ELEMENTO).escons,(yyvsp[0].ELEMENTO).espun,(yyvsp[0].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).valbool,(yyvsp[0].ELEMENTO).valnum,(yyvsp[0].ELEMENTO).valint,(yyvsp[0].ELEMENTO).nombre);
 		insertarexp(auxnodo1,auxnodo2,OP_IGUALDAD);
 	}
-#line 2859 "trans.tab.c" /* yacc.c:1646  */
+#line 2686 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 89:
-#line 1343 "trans.y" /* yacc.c:1646  */
+#line 1170 "trans.y" /* yacc.c:1646  */
     {
 	strcat((yyval.ELEMENTO).trad," && ");//introducimos la cadena creada para la traduccion
 	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
@@ -2868,11 +2695,11 @@ yyreduce:
 	copiardatos(&auxnodo2,(yyvsp[0].ELEMENTO).tipo,(yyvsp[0].ELEMENTO).escons,(yyvsp[0].ELEMENTO).espun,(yyvsp[0].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).valbool,(yyvsp[0].ELEMENTO).valnum,(yyvsp[0].ELEMENTO).valint,(yyvsp[0].ELEMENTO).nombre);
 	insertarexp(auxnodo1,auxnodo2,OP_AND);
 	}
-#line 2872 "trans.tab.c" /* yacc.c:1646  */
+#line 2699 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 90:
-#line 1355 "trans.y" /* yacc.c:1646  */
+#line 1182 "trans.y" /* yacc.c:1646  */
     {
 	strcat((yyval.ELEMENTO).trad," || ");//introducimos la cadena creada para la traduccion
 	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
@@ -2882,11 +2709,11 @@ yyreduce:
 	insertarexp(auxnodo1,auxnodo2,OP_OR);
 	
 	}
-#line 2886 "trans.tab.c" /* yacc.c:1646  */
+#line 2713 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 91:
-#line 1369 "trans.y" /* yacc.c:1646  */
+#line 1196 "trans.y" /* yacc.c:1646  */
     {
 	strcpy((yyval.ELEMENTO).trad," !");//introducimos la cadena creada para la traduccion
 	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
@@ -2895,39 +2722,39 @@ yyreduce:
 	copiardatos(&auxnodo1,(yyvsp[0].ELEMENTO).tipo,(yyvsp[0].ELEMENTO).escons,(yyvsp[0].ELEMENTO).espun,(yyvsp[0].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).valbool,(yyvsp[0].ELEMENTO).valnum,(yyvsp[0].ELEMENTO).valint,(yyvsp[0].ELEMENTO).nombre);
 	insertarexp(auxnodo1,auxnodo2,OP_NOT);	
 	}
-#line 2899 "trans.tab.c" /* yacc.c:1646  */
+#line 2726 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 92:
-#line 1380 "trans.y" /* yacc.c:1646  */
+#line 1207 "trans.y" /* yacc.c:1646  */
     {
 		(yyval.ELEMENTO).tipo=1;
 		(yyval.ELEMENTO).valnum =(yyvsp[0].ELEMENTO).valnum;	  
 	}
-#line 2908 "trans.tab.c" /* yacc.c:1646  */
+#line 2735 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 93:
-#line 1387 "trans.y" /* yacc.c:1646  */
+#line 1214 "trans.y" /* yacc.c:1646  */
     {
 		(yyval.ELEMENTO).tipo=6;
 		
 		(yyval.ELEMENTO).valint =(yyvsp[0].ELEMENTO).valint;	
 	}
-#line 2918 "trans.tab.c" /* yacc.c:1646  */
+#line 2745 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 94:
-#line 1395 "trans.y" /* yacc.c:1646  */
+#line 1222 "trans.y" /* yacc.c:1646  */
     {
 		(yyval.ELEMENTO).tipo=3;
 		(yyval.ELEMENTO).valbool= (yyvsp[0].ELEMENTO).valbool;
 	}
-#line 2927 "trans.tab.c" /* yacc.c:1646  */
+#line 2754 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 95:
-#line 1402 "trans.y" /* yacc.c:1646  */
+#line 1229 "trans.y" /* yacc.c:1646  */
     {
 		strcpy((yyval.ELEMENTO).trad,(yyvsp[0].indice)->nombre);//copio el nombre de la variable para la traduccion
 		strcpy((yyval.ELEMENTO).nombre,(yyvsp[0].indice)->nombre);//copio el nombre de la variable para la traduccion
@@ -2941,21 +2768,21 @@ yyreduce:
 		(yyval.ELEMENTO).vis=(yyvsp[0].indice)->aux;//para traducir la visualizacion
 		(yyval.ELEMENTO).espun= (yyvsp[0].indice)->espun;
 	}
-#line 2945 "trans.tab.c" /* yacc.c:1646  */
+#line 2772 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 96:
-#line 1418 "trans.y" /* yacc.c:1646  */
+#line 1245 "trans.y" /* yacc.c:1646  */
     {
 		(yyval.ELEMENTO).tipo=(yyvsp[0].ELEMENTO).tipo;
 		strcpy((yyval.ELEMENTO).valstr,(yyvsp[0].ELEMENTO).cad);
 		(yyval.ELEMENTO).escons=(yyvsp[0].ELEMENTO).escons;
 	}
-#line 2955 "trans.tab.c" /* yacc.c:1646  */
+#line 2782 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 97:
-#line 1427 "trans.y" /* yacc.c:1646  */
+#line 1254 "trans.y" /* yacc.c:1646  */
     {
 		if((yyvsp[0].ELEMENTO).tipo==6) {
 			intr_inc((yyvsp[0].ELEMENTO).nombre,0);
@@ -2965,11 +2792,11 @@ yyreduce:
 		else
 			yyerror("Error: No se puede incrementar una variable no númerica");
 	}
-#line 2969 "trans.tab.c" /* yacc.c:1646  */
+#line 2796 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 98:
-#line 1439 "trans.y" /* yacc.c:1646  */
+#line 1266 "trans.y" /* yacc.c:1646  */
     {
 		if((yyvsp[-1].ELEMENTO).tipo==6) {
 			intr_inc((yyvsp[-1].ELEMENTO).nombre,1);
@@ -2979,11 +2806,11 @@ yyreduce:
 		else
 			yyerror("Error: No se puede incrementar una variable no númerica");
 	}
-#line 2983 "trans.tab.c" /* yacc.c:1646  */
+#line 2810 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 99:
-#line 1451 "trans.y" /* yacc.c:1646  */
+#line 1278 "trans.y" /* yacc.c:1646  */
     {
 		if((yyvsp[0].ELEMENTO).tipo==6) {
 			intr_dec((yyvsp[0].ELEMENTO).nombre,0);
@@ -2993,11 +2820,11 @@ yyreduce:
 		else
 			yyerror("Error: No se puede decrementar una variable no númerica");
 	}
-#line 2997 "trans.tab.c" /* yacc.c:1646  */
+#line 2824 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 100:
-#line 1463 "trans.y" /* yacc.c:1646  */
+#line 1290 "trans.y" /* yacc.c:1646  */
     {
 		if((yyvsp[-1].ELEMENTO).tipo==6) {
 			intr_dec((yyvsp[-1].ELEMENTO).nombre,1);
@@ -3007,29 +2834,29 @@ yyreduce:
 		else
 			yyerror("Error: No se puede decrementar una variable no númerica");
 	}
-#line 3011 "trans.tab.c" /* yacc.c:1646  */
+#line 2838 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 101:
-#line 1474 "trans.y" /* yacc.c:1646  */
+#line 1301 "trans.y" /* yacc.c:1646  */
     {
 		strcpy((yyval.ELEMENTO).trad,"*");
 		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
 	}
-#line 3020 "trans.tab.c" /* yacc.c:1646  */
+#line 2847 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 102:
-#line 1479 "trans.y" /* yacc.c:1646  */
+#line 1306 "trans.y" /* yacc.c:1646  */
     {
 		strcpy((yyval.ELEMENTO).trad,"&");
 		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
 	}
-#line 3029 "trans.tab.c" /* yacc.c:1646  */
+#line 2856 "trans.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 3033 "trans.tab.c" /* yacc.c:1646  */
+#line 2860 "trans.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -3257,7 +3084,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 1484 "trans.y" /* yacc.c:1906  */
+#line 1311 "trans.y" /* yacc.c:1906  */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Main, dónde se genera el fichero
@@ -3390,239 +3217,553 @@ NODO procesarexp(ARBOL *aux){
 	a= malloc(sizeof(NODO));
 	b= malloc(sizeof(NODO));
 	
-	do {
-		switch(aux->op){
-			case OP_IGUALDAD:
-				if(aux->exp1.escons) {
-					i=aux->exp1.valint;
-					real1=aux->exp1.valnum;
-					bool1=aux->exp1.valbool;
-					strcpy(a,aux->exp1.valstr);
-				} else {
-					variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
-					i=variable->valint;
-					real1=variable->valnum;
-					bool1=variable->valbool;
-					strcpy(a,variable->valstr);
-				}
-					
-				if(aux->exp2.escons) {
-					k=aux->exp2.valint;
-					real2=aux->exp2.valnum;
-					bool2=aux->exp2.valbool;
-					strcpy(b,aux->exp2.valstr);
-				} else {
-					variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
-					k=variable->valint;
-					real2=variable->valnum;
-					bool2=variable->valbool;
-					strcpy(b,variable->valstr);
-				}
+	switch(aux->op){
+		case OP_IGUALDAD:
+			if(aux->exp1.escons) {
+				i=aux->exp1.valint;
+				real1=aux->exp1.valnum;
+				bool1=aux->exp1.valbool;
+				strcpy(a,aux->exp1.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				i=variable->valint;
+				real1=variable->valnum;
+				bool1=variable->valbool;
+				strcpy(a,variable->valstr);
+			}
 				
-				retorno.tipo=3;//asigno tipo bool
-				
-				if ((aux->exp1.tipo)==(aux->exp2.tipo))
-				{ 	
-					if (aux->exp1.tipo==1)//si es numero
-					{
-						if (real1!=real2) retorno.valbool =0 ;
-						else retorno.valbool=1;
-					} 
-					else if(aux->exp1.tipo==2)//si es string
-					{
-						if (strcmp(a,b)!=0) retorno.valbool =0; 
-						else retorno.valbool=1;
-					}
-					if (aux->exp1.tipo==3)//si es numero
-					{
-						if (bool1!=bool2) retorno.valbool =0 ;
-						else retorno.valbool=1;
-					}  	
-					else if(aux->exp1.tipo==4)//si es cte cadena
-					{
-						if (strcmp(aux->exp1.cad,aux->exp2.cad)!=0) retorno.valbool =0; 
-						else retorno.valbool=1;
-					}
-					if (aux->exp1.tipo==6)//si es numero
-					{
-						if (i!=k) retorno.valbool =0 ;
-						else retorno.valbool=1;
-					} 
-				}	
+			if(aux->exp2.escons) {
+				k=aux->exp2.valint;
+				real2=aux->exp2.valnum;
+				bool2=aux->exp2.valbool;
+				strcpy(b,aux->exp2.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				k=variable->valint;
+				real2=variable->valnum;
+				bool2=variable->valbool;
+				strcpy(b,variable->valstr);
+			}
+			
+			retorno.tipo=3;//asigno tipo bool
+			
+			if ((aux->exp1.tipo)==(aux->exp2.tipo))
+			{ 	
+				if (aux->exp1.tipo==1)//si es numero
+				{
+					if (real1!=real2) retorno.valbool =0 ;
+					else retorno.valbool=1;
+				} 
+				else if(aux->exp1.tipo==2)//si es string
+				{
+					if (strcmp(a,b)!=0) retorno.valbool =0; 
+					else retorno.valbool=1;
+				}
+				if (aux->exp1.tipo==3)//si es numero
+				{
+					if (bool1!=bool2) retorno.valbool =0 ;
+					else retorno.valbool=1;
+				}  	
+				else if(aux->exp1.tipo==4)//si es cte cadena
+				{
+					if (strcmp(aux->exp1.cad,aux->exp2.cad)!=0) retorno.valbool =0; 
+					else retorno.valbool=1;
+				}
+				if (aux->exp1.tipo==6)//si es numero
+				{
+					if (i!=k) retorno.valbool =0 ;
+					else retorno.valbool=1;
+				} 
+			}	
 
-				else if ((aux->exp1.tipo==2)&&(aux->exp2.tipo==4))//cadena y constante
-				{
-				if (strcmp(a,aux->exp2.cad)!=0) retorno.valbool =0; 
+			else if ((aux->exp1.tipo==2)&&(aux->exp2.tipo==4))//cadena y constante
+			{
+			if (strcmp(a,aux->exp2.cad)!=0) retorno.valbool =0; 
+			else retorno.valbool=1;
+			}
+			else if ((aux->exp1.tipo==4)&&(aux->exp2.tipo==2))//constante y cadena
+			{
+			if (strcmp(aux->exp1.cad,b)!=0) retorno.valbool =0; 
+			else retorno.valbool=1;
+			}
+			else if ((aux->exp1.tipo==6)&&(aux->exp2.tipo==1))//constante y cadena
+			{
+				if (i!=real2) retorno.valbool =0; 
 				else retorno.valbool=1;
-				}
-				else if ((aux->exp1.tipo==4)&&(aux->exp2.tipo==2))//constante y cadena
-				{
-				if (strcmp(aux->exp1.cad,b)!=0) retorno.valbool =0; 
+			}
+			else if ((aux->exp1.tipo==1)&&(aux->exp2.tipo==6))//constante y cadena
+			{
+				if (real1!=k) retorno.valbool =0; 
 				else retorno.valbool=1;
-				}
-				else if ((aux->exp1.tipo==6)&&(aux->exp2.tipo==1))//constante y cadena
-				{
-					if (i!=real2) retorno.valbool =0; 
-					else retorno.valbool=1;
-				}
-				else if ((aux->exp1.tipo==1)&&(aux->exp2.tipo==6))//constante y cadena
-				{
-					if (real1!=k) retorno.valbool =0; 
-					else retorno.valbool=1;
-				}
-				else yyerror("Error en la desigualdad: Operaciones sobre tipos diferentes \n");                                                            
-				retorno.escons=1;
-				retorno.espun=0;
-				return retorno;
-				break;
-			case OP_NOT:
-				if (aux->exp1.tipo==3) 
-				{
-					retorno.tipo=3;
-					if(aux->exp1.escons)
-						retorno.valbool = !aux->exp1.valbool;
-					else {
-						variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
-						printf("valor:%d\n",variable->valbool);
-						retorno.valbool=!(variable->valbool);
-					}
-				}
-				else yyerror("Error en la negación: Operaciones sobre tipos incorrectos\n");
-				retorno.escons=1;
-				retorno.espun=0;
-				return retorno;
-				break;
-			case OP_OR:
-				if ((aux->exp2.tipo==3) && (aux->exp2.tipo==3)) {
-					retorno.tipo=3;
-					if(!aux->exp1.escons) {
-						variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
-						i=variable->valbool;
-					} else
-						i=aux->exp1.valbool;
-						
-					if(!aux->exp2.escons) {
-						variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
-						k=variable->valbool;
-					} else
-						k=aux->exp2.valbool;
-					
-					retorno.valbool = (k || i);
-				}
-				else yyerror("Error en el OR: Operación sobre tipos diferentes\n");
-				
-				retorno.escons=1;
-				retorno.espun=0;
-				return retorno;
-				break;
-			case OP_AND:
-				if ((aux->exp2.tipo==3) && (aux->exp2.tipo==3)) {
-					retorno.tipo=3;
-					if(!aux->exp1.escons) {
-						variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
-						i=variable->valbool;
-					} else
-						i=aux->exp1.valbool;
-						
-					if(!aux->exp2.escons) {
-						variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
-						k=variable->valbool;
-					} else
-						k=aux->exp2.valbool;
-					
-					retorno.valbool = (k && i);
-				}
-				else yyerror("Error en el AND: Operación sobre tipos diferentes\n");
-				
-				retorno.escons=1;
-				retorno.espun=0;
-				return retorno;
-				break;
-			case OP_DESIGUALDAD:		
-				if(aux->exp1.escons) {
-					i=aux->exp1.valint;
-					real1=aux->exp1.valnum;
-					bool1=aux->exp1.valbool;
-					strcpy(a,aux->exp1.valstr);
-				} else {
+			}
+			else yyerror("Error en la desigualdad: Operaciones sobre tipos diferentes \n");                                                            
+			retorno.escons=1;
+			retorno.espun=0;
+			return retorno;
+			break;
+		case OP_NOT:
+			if (aux->exp1.tipo==3) 
+			{
+				retorno.tipo=3;
+				if(aux->exp1.escons)
+					retorno.valbool = !aux->exp1.valbool;
+				else {
 					variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
-					i=variable->valint;
-					real1=variable->valnum;
-					bool1=variable->valbool;
-					strcpy(a,variable->valstr);
+					retorno.valbool=!(variable->valbool);
 				}
+			}
+			else yyerror("Error en la negación: Operaciones sobre tipos incorrectos\n");
+			retorno.escons=1;
+			retorno.espun=0;
+			return retorno;
+			break;
+		case OP_OR:
+			if ((aux->exp2.tipo==3) && (aux->exp2.tipo==3)) {
+				retorno.tipo=3;
+				if(!aux->exp1.escons) {
+					variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+					i=variable->valbool;
+				} else
+					i=aux->exp1.valbool;
 					
-				if(aux->exp2.escons) {
-					k=aux->exp2.valint;
-					real2=aux->exp2.valnum;
-					bool2=aux->exp2.valbool;
-					strcpy(b,aux->exp2.valstr);
-				} else {
+				if(!aux->exp2.escons) {
 					variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
-					k=variable->valint;
-					real2=variable->valnum;
-					bool2=variable->valbool;
-					strcpy(b,variable->valstr);
+					k=variable->valbool;
+				} else
+					k=aux->exp2.valbool;
+				
+				retorno.valbool = (k || i);
+			}
+			else yyerror("Error en el OR: Operación sobre tipos diferentes\n");
+			
+			retorno.escons=1;
+			retorno.espun=0;
+			return retorno;
+			break;
+		case OP_AND:
+			if ((aux->exp2.tipo==3) && (aux->exp2.tipo==3)) {
+				retorno.tipo=3;
+				if(!aux->exp1.escons) {
+					variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+					i=variable->valbool;
+				} else
+					i=aux->exp1.valbool;
+					
+				if(!aux->exp2.escons) {
+					variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+					k=variable->valbool;
+				} else
+					k=aux->exp2.valbool;
+				
+				retorno.valbool = (k && i);
+			}
+			else yyerror("Error en el AND: Operación sobre tipos diferentes\n");
+			
+			retorno.escons=1;
+			retorno.espun=0;
+			return retorno;
+			break;
+		case OP_DESIGUALDAD:		
+			if(aux->exp1.escons) {
+				i=aux->exp1.valint;
+				real1=aux->exp1.valnum;
+				bool1=aux->exp1.valbool;
+				strcpy(a,aux->exp1.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				i=variable->valint;
+				real1=variable->valnum;
+				bool1=variable->valbool;
+				strcpy(a,variable->valstr);
+			}
+				
+			if(aux->exp2.escons) {
+				k=aux->exp2.valint;
+				real2=aux->exp2.valnum;
+				bool2=aux->exp2.valbool;
+				strcpy(b,aux->exp2.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				k=variable->valint;
+				real2=variable->valnum;
+				bool2=variable->valbool;
+				strcpy(b,variable->valstr);
+			}
+			
+			retorno.tipo=3;//asigno tipo bool
+			
+			if ((aux->exp1.tipo)==(aux->exp2.tipo))
+			{ 	
+				if (aux->exp1.tipo==1)//si es numero
+				{
+					if (real1!=real2) retorno.valbool =0 ;
+					else retorno.valbool=1;
+				} 
+				else if(aux->exp1.tipo==2)//si es string
+				{
+					if (strcmp(a,b)!=0) retorno.valbool =0; 
+					else retorno.valbool=1;
 				}
-				
-				retorno.tipo=3;//asigno tipo bool
-				
-				if ((aux->exp1.tipo)==(aux->exp2.tipo))
-				{ 	
-					if (aux->exp1.tipo==1)//si es numero
-					{
-						if (real1!=real2) retorno.valbool =0 ;
-						else retorno.valbool=1;
-					} 
-					else if(aux->exp1.tipo==2)//si es string
-					{
-						if (strcmp(a,b)!=0) retorno.valbool =0; 
-						else retorno.valbool=1;
-					}
-					if (aux->exp1.tipo==3)//si es numero
-					{
-						if (bool1!=bool2) retorno.valbool =0 ;
-						else retorno.valbool=1;
-					}  	
-					else if(aux->exp1.tipo==4)//si es cte cadena
-					{
-						if (strcmp(aux->exp1.cad,aux->exp2.cad)!=0) retorno.valbool =0; 
-						else retorno.valbool=1;
-					}
-					if (aux->exp1.tipo==6)//si es numero
-					{
-						if (i!=k) retorno.valbool =0 ;
-						else retorno.valbool=1;
-					} 
-				}	
+				if (aux->exp1.tipo==3)//si es numero
+				{
+					if (bool1!=bool2) retorno.valbool =0 ;
+					else retorno.valbool=1;
+				}  	
+				else if(aux->exp1.tipo==4)//si es cte cadena
+				{
+					if (strcmp(aux->exp1.cad,aux->exp2.cad)!=0) retorno.valbool =0; 
+					else retorno.valbool=1;
+				}
+				if (aux->exp1.tipo==6)//si es numero
+				{
+					if (i!=k) retorno.valbool =0 ;
+					else retorno.valbool=1;
+				} 
+			}	
 
-				else if ((aux->exp1.tipo==2)&&(aux->exp2.tipo==4))//cadena y constante
-				{
-				if (strcmp(a,aux->exp2.cad)!=0) retorno.valbool =0; 
+			else if ((aux->exp1.tipo==2)&&(aux->exp2.tipo==4))//cadena y constante
+			{
+			if (strcmp(a,aux->exp2.cad)!=0) retorno.valbool =0; 
+			else retorno.valbool=1;
+			}
+			else if ((aux->exp1.tipo==4)&&(aux->exp2.tipo==2))//constante y cadena
+			{
+			if (strcmp(aux->exp1.cad,b)!=0) retorno.valbool =0; 
+			else retorno.valbool=1;
+			}
+			else if ((aux->exp1.tipo==6)&&(aux->exp2.tipo==1))//constante y cadena
+			{
+				if (i!=real2) retorno.valbool =0; 
 				else retorno.valbool=1;
-				}
-				else if ((aux->exp1.tipo==4)&&(aux->exp2.tipo==2))//constante y cadena
-				{
-				if (strcmp(aux->exp1.cad,b)!=0) retorno.valbool =0; 
+			}
+			else if ((aux->exp1.tipo==1)&&(aux->exp2.tipo==6))//constante y cadena
+			{
+				if (real1!=k) retorno.valbool =0; 
 				else retorno.valbool=1;
-				}
-				else if ((aux->exp1.tipo==6)&&(aux->exp2.tipo==1))//constante y cadena
+			}
+			else yyerror("Error en la desigualdad: Operaciones sobre tipos diferentes \n");                                                            
+			retorno.valbool=!retorno.valbool;
+			retorno.escons=1;
+			retorno.espun=0;
+			return retorno;
+			break;
+			
+		case OP_MENOR:
+			if(aux->exp1.escons) {
+				i=aux->exp1.valint;
+				real1=aux->exp1.valnum;
+				bool1=aux->exp1.valbool;
+				strcpy(a,aux->exp1.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				i=variable->valint;
+				real1=variable->valnum;
+				bool1=variable->valbool;
+				strcpy(a,variable->valstr);
+			}
+			
+				if(aux->exp2.escons) {
+				k=aux->exp2.valint;
+				real2=aux->exp2.valnum;
+				bool2=aux->exp2.valbool;
+				strcpy(b,aux->exp2.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				k=variable->valint;
+				real2=variable->valnum;
+				bool2=variable->valbool;
+				strcpy(b,variable->valstr);
+			}
+			
+			//printf("%d\t%d\n",i,k);
+
+			retorno.tipo=3;//Se asigna el tipo bool
+			if ((aux->exp1.tipo)==(aux->exp2.tipo))
+			{ 	
+				if (aux->exp1.tipo==1)//si es real
 				{
-					if (i!=real2) retorno.valbool =0; 
-					else retorno.valbool=1;
+					if (real1<real2) retorno.valbool=1 ;
+					else retorno.valbool=0;
+				} 
+				else if(aux->exp1.tipo==2)//si es string
+				{
+					if (strcmp(a,b)<0) retorno.valbool =1; 
+					else retorno.valbool=0;
+				} 	
+				else if(aux->exp1.tipo==4)//si es cte cadena
+				{
+					if (strcmp(aux->exp1.cad,aux->exp2.cad)<0) retorno.valbool =1; 
+					else retorno.valbool=0;
 				}
+				else if(aux->exp1.tipo==6)//si es entero
+				{
+					if (i<k) retorno.valbool=1 ;
+					else retorno.valbool=0;
+				}
+			}	
+
+			else if ((aux->exp1.tipo==2)&&(aux->exp2.tipo==4))//cadena y constante
+			{
+				if (strcmp(a,aux->exp2.cad)<0) retorno.valbool =1; 
+				else retorno.valbool=0;
+			}
+			else if ((aux->exp1.tipo==4)&&(aux->exp2.tipo==2))//constante y cadena
+			{
+				if (strcmp(aux->exp1.cad,b)<0) retorno.valbool =1; 
+				else retorno.valbool=0;
+			}
+			else if ((aux->exp1.tipo==6)&&(aux->exp2.tipo==1))//constante y cadena
+			{
+				if (i<real2) retorno.valbool =1; 
+				else retorno.valbool=0;
+			}
+			else if ((aux->exp1.tipo==1)&&(aux->exp2.tipo==6))//constante y cadena
+			{
+				if (real1<k) retorno.valbool =1; 
+				else retorno.valbool=0;
+			}
+			else yyerror("Error en el menor: Operaciones sobre tipos diferentes\n");
+			retorno.tipo=3;
+			retorno.escons=1;
+			retorno.espun=0;
+			return retorno;
+			break;
+		case OP_MAYOR:
+			if(aux->exp1.escons) {
+				i=aux->exp1.valint;
+				real1=aux->exp1.valnum;
+				bool1=aux->exp1.valbool;
+				strcpy(a,aux->exp1.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				i=variable->valint;
+				real1=variable->valnum;
+				bool1=variable->valbool;
+				strcpy(a,variable->valstr);
+			}	
+			
+			if(aux->exp2.escons) {
+				k=aux->exp2.valint;
+				real2=aux->exp2.valnum;
+				bool2=aux->exp2.valbool;
+				strcpy(b,aux->exp2.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				k=variable->valint;
+				real2=variable->valnum;
+				bool2=variable->valbool;
+				strcpy(b,variable->valstr);
+			}
+
+			retorno.tipo=3;//asigno tipo bool
+			if ((aux->exp1.tipo)==(aux->exp2.tipo))
+			{ 	
+				if (aux->exp1.tipo==1)//si es numero
+				{
+				if (real1>real2) retorno.valbool =1 ;
+				else retorno.valbool=0;
+				} 
+				else if(aux->exp1.tipo==2)//si es string
+				{
+				if (strcmp(a,b)>0) retorno.valbool =1; 
+				else retorno.valbool=0;
+				} 	
+				else if(aux->exp1.tipo==4)//si es cte cadena
+				{
+					if (strcmp(aux->exp1.cad,aux->exp2.cad)>0) retorno.valbool =1; 
+					else retorno.valbool=0;
+				}
+				else if(aux->exp1.tipo==6)//si es cte cadena
+				{
+					if (i>k) retorno.valbool =1 ;
+					else retorno.valbool=0;
+				} 	 	
+			}	
+
+			else if ((aux->exp1.tipo==2)&&(aux->exp2.tipo==4))//cadena y constante
+			{
+			if (strcmp(a,aux->exp2.cad)>0) retorno.valbool =1; 
+			else retorno.valbool=0;
+			}
+			else if ((aux->exp1.tipo==4)&&(aux->exp2.tipo==2))//constante y cadena
+			{
+				if (strcmp(aux->exp1.cad,b)>0) retorno.valbool =1; 
+				else retorno.valbool=0;
+			}
+			else if ((aux->exp1.tipo==6)&&(aux->exp2.tipo==1))//constante y cadena
+			{
+				if (i>real2) retorno.valbool =1; 
+				else retorno.valbool=0;
+			}
 				else if ((aux->exp1.tipo==1)&&(aux->exp2.tipo==6))//constante y cadena
-				{
-					if (real1!=k) retorno.valbool =0; 
-					else retorno.valbool=1;
-				}
-				else yyerror("Error en la desigualdad: Operaciones sobre tipos diferentes \n");                                                            
-				retorno.valbool=!retorno.valbool;
-				retorno.escons=1;
-				retorno.espun=0;
-				return retorno;
-				break;
-		}//switch
-		aux=aux->izq;
-	}while(aux!=NULL);
+			{
+				if (real1>k) retorno.valbool =1; 
+				else retorno.valbool=0;
+			}
+
+			else yyerror("Error en el mayor: Operaciones sobre tipos diferentes\n"); 
+			retorno.tipo=3;
+			retorno.escons=1;
+			retorno.espun=0;
+			return retorno;
+			break;
+		case OP_MAI:
+			if(aux->exp1.escons) {
+				i=aux->exp1.valint;
+				real1=aux->exp1.valnum;
+				bool1=aux->exp1.valbool;
+				strcpy(a,aux->exp1.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				i=variable->valint;
+				real1=variable->valnum;
+				bool1=variable->valbool;
+				strcpy(a,variable->valstr);
+			}	
+		
+			if(aux->exp2.escons) {
+				k=aux->exp2.valint;
+				real2=aux->exp2.valnum;
+				bool2=aux->exp2.valbool;
+				strcpy(b,aux->exp2.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				k=variable->valint;
+				real2=variable->valnum;
+				bool2=variable->valbool;
+				strcpy(b,variable->valstr);
+			}
+
+		retorno.tipo=3;//asigno tipo bool
+		if ((aux->exp1.tipo)==(aux->exp2.tipo))
+		{ 	
+			if (aux->exp1.tipo==1)//si es numero
+			{
+				if (real1>=real2) retorno.valbool =1 ;
+				else retorno.valbool=0;
+			} 
+			else if(aux->exp1.tipo==2)//si es string
+			{
+				if (strcmp(a,b)>=0) retorno.valbool =1; 
+				else retorno.valbool=0;
+			} 	
+			else if(aux->exp1.tipo==4)//si es cte cadena
+			{
+				if (strcmp(aux->exp1.cad,aux->exp2.cad)>=0) retorno.valbool =1; 
+				else retorno.valbool=0;
+			} 	
+			else if (aux->exp1.tipo==6)//si es numero
+			{
+				if (i>=k) retorno.valbool =1 ;
+				else retorno.valbool=0;
+			} 
+		}	
+
+		else if ((aux->exp1.tipo==2)&&(aux->exp2.tipo==4))//cadena y constante
+		{
+			if (strcmp(a,aux->exp2.cad)>=0) retorno.valbool =1; 
+			else retorno.valbool=0;
+		}
+		else if ((aux->exp1.tipo==4)&&(aux->exp2.tipo==2))//constante y cadena
+		{
+			if (strcmp(aux->exp1.cad,b)>=0) retorno.valbool =1; 
+			else retorno.valbool=0;
+		}
+			else if ((aux->exp1.tipo==6)&&(aux->exp2.tipo==1))//constante y cadena
+		{
+			if (i>=real2) retorno.valbool =1; 
+			else retorno.valbool=0;
+		}
+			else if ((aux->exp1.tipo==1)&&(aux->exp2.tipo==6))//constante y cadena
+		{
+			if (real1>=k) retorno.valbool =1; 
+			else retorno.valbool=0;
+		}
+
+		else yyerror("Error en el mayor o igual: Operaciones sobre tipos diferentes\n"); 
+			retorno.tipo=3;
+			retorno.escons=1;
+			retorno.espun=0;
+			return retorno;
+			break;
+		case OP_MEI:
+		if(aux->exp1.escons) {
+			i=aux->exp1.valint;
+			real1=aux->exp1.valnum;
+			bool1=aux->exp1.valbool;
+			strcpy(a,aux->exp1.valstr);
+		} else {
+			variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+			i=variable->valint;
+			real1=variable->valnum;
+			bool1=variable->valbool;
+			strcpy(a,variable->valstr);
+		}
+			
+		if(aux->exp2.escons) {
+			k=aux->exp2.valint;
+			real2=aux->exp2.valnum;
+			bool2=aux->exp2.valbool;
+			strcpy(b,aux->exp2.valstr);
+		} else {
+			variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+			k=variable->valint;
+			real2=variable->valnum;
+			bool2=variable->valbool;
+			strcpy(b,variable->valstr);
+		}
+
+		retorno.tipo=3;//asigno tipo bool
+		if ((aux->exp1.tipo)==(aux->exp2.tipo))
+		{ 	
+			if (aux->exp1.tipo==1)//si es numero
+			{
+			if (real1<=real2) retorno.valbool =1 ;
+				else retorno.valbool=0;
+			} 
+			else if(aux->exp1.tipo==2)//si es string
+			{
+				if (strcmp(a,b)<=0) retorno.valbool =1; 
+				else retorno.valbool=0;
+			} 	
+			else if(aux->exp1.tipo==4)//si es cte cadena
+			{
+				if (strcmp(aux->exp1.cad,aux->exp2.cad)<=0) retorno.valbool =1; 
+				else retorno.valbool=0;
+			} 	
+			if (aux->exp1.tipo==6)//si es numero
+			{
+				if (i<=k) retorno.valbool =1 ;
+				else retorno.valbool=0;
+			} 
+		}	
+
+		else if ((aux->exp1.tipo==2)&&(aux->exp2.tipo==4))//cadena y constante
+		{
+			if (strcmp(a,aux->exp2.cad)<=0) retorno.valbool =1; 
+			else retorno.valbool=0;
+		}
+		else if ((aux->exp1.tipo==4)&&(aux->exp2.tipo==2))//constante y cadena
+		{
+			if (strcmp(aux->exp1.cad,b)<=0) retorno.valbool =1; 
+			else retorno.valbool=0;
+		}
+		else if ((aux->exp1.tipo==6)&&(aux->exp2.tipo==1))//constante y cadena
+		{
+			if (i>=real2) retorno.valbool =1; 
+			else retorno.valbool=0;
+		}
+			else if ((aux->exp1.tipo==1)&&(aux->exp2.tipo==6))//constante y cadena
+		{
+			if (real1>=k) retorno.valbool =1; 
+			else retorno.valbool=0;
+		}
+
+		else yyerror("Error en el menor o igual: Operaciones sobre tipos diferentes\n");
+			retorno.tipo=3;
+			retorno.escons=1;
+			retorno.espun=0;
+			return retorno;
+			break;
+	}//switch
 }//función

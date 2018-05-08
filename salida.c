@@ -5,15 +5,10 @@
 {
 int aux2;
 int aux1;
-if (true)
-printf("hola\n");
-printf("hola\n");
-printf("hola\n");
-printf("hola\n");
-} else {
-printf("adios\n");
-printf("adios\n");
-printf("adios\n");
-printf("adios\n");
+aux1=0;
+aux2=5;
+if (aux1 < aux2)
+{
 }
+printf("una vez\n");
 }

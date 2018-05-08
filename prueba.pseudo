@@ -5,16 +5,13 @@ var
 	aux1 entero
 
 inicio
+		aux1=0
+		aux2=5
 		
-		si true
-			escribir("hola")
-			escribir("hola")
-			escribir("hola")
-			escribir("hola")
-		sino
-			escribir("adios")
-			escribir("adios")
-			escribir("adios")
-			escribir("adios")
+		mientras aux1<aux2
+			escribir(aux1)
+			++aux1
 		fin
+		
+			escribir("una vez")
 fin

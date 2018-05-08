@@ -7,11 +7,9 @@
 #include <math.h>
 
 //Prototipos
-int ejecutar();
+int ejecutar(ARBOL *var,int parar);
 NODO procesarexp(ARBOL *aux);
 //Variables globales
-int eje[10]={1,0,0,0,0,0,0,0,0,0};//variable para ver que añadir al AST
-int poscontrol;//variable guardando posición
 int   auxb;  //variable auxiliar para la lectura de booleanos 
 int   auxint;  //variable auxiliar para la lectura de enteros
 float auxn;  //variable auxiliar para la lectura de numeros
@@ -574,7 +572,16 @@ control2:
 		copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre);
 	
 		insertar(auxnodo1,auxnodo2,OP_SI,auxvar);
-	};
+	}
+	| TK_MIENTRAS exp
+	{
+		strcpy($$.trad,$2.trad);
+		
+		copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre);
+	
+		insertar(auxnodo1,auxnodo2,OP_WHILE,auxvar);
+	}
+	;
 /////////////////////////////////////////////////////////////////////////////////////////////////	
 control:
 //if sin else
@@ -597,12 +604,12 @@ control:
 		strcat($$.trad,$5.trad);
 	}
 /*************************************************************************************************/
-	| TK_MIENTRAS exp cont lista_sentencias 
+	| control2 cont lista_sentencias 
 	{
 		strcpy($$.trad,"while (");
-		strcat($$.trad,$2.trad);
+		strcat($$.trad,$1.trad);
 		strcat($$.trad,") {\n");
-		strcat($$.trad,$4.trad);
+		strcat($$.trad,$3.trad);
 		
 		//while($2.valbool)
 			//strcpy($$.res,$4.res);
@@ -1231,15 +1238,15 @@ int main(int argc, char **argv)
 	if(INICIO==NULL)
 		printf("\nError, programa vacio.\n");
 	else
-		ejecutar();
+		ejecutar(INICIO,0);
 }
 
-int ejecutar() {
+int ejecutar(ARBOL *var,int parar) {
 	ARBOL *aux;
 	extern com;
 	extern fin;
 	NODO *variable;
-	aux=INICIO;
+	aux=var;
 	
 	do {
 		switch(aux->op){
@@ -1331,10 +1338,6 @@ int ejecutar() {
 			yyerror("Error en el decremento: No se puede incrementar una variable no númerica");
 			break;
 		case OP_SI:		
-			if (aux->exp1.tipo != 3){
-				yyerror("Error en el si\n");
-				break;
-				}
 			if(aux->izq!=NULL) 
 				aux->exp1=procesarexp(aux->izq);	
 			
@@ -1348,6 +1351,19 @@ int ejecutar() {
 			while(aux->der->op!=OP_FIN) {
 					aux=aux->der;
 				}
+			break;
+		case OP_WHILE:		
+			if(aux->izq!=NULL) 
+				aux->exp1=procesarexp(aux->izq);
+			
+			while(aux->exp1.valbool) {
+				ejecutar(aux->der,1);
+				aux->exp1=procesarexp(aux->izq);
+				}
+			break;
+		case OP_FIN:
+			if(parar)
+				return 1;
 			break;
 		}//switch
 		aux=aux->der;

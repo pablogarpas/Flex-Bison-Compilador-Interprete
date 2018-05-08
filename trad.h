@@ -32,6 +32,7 @@
 #define OP_DEC 20
 #define OP_SI 21
 #define OP_ELSE 22
+#define OP_WHILE 23
 #define OP_FIN 30
 
 

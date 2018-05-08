@@ -15,6 +15,7 @@
 #define OP_IGUALDAD 3
 #define OP_NOT 4
 #define OP_OR 5
+#define OP_AND 6
 #define OP_FIN 14
 #define OP_SI 15
 

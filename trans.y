@@ -1387,13 +1387,10 @@ exp:
 	{
 	strcat($$.trad," && ");//introducimos la cadena creada para la traduccion
 	strcat($$.trad,$3.trad);
-
-	if (($1.tipo==3) && ($3.tipo==3))
-	{
-	$$.tipo=3;
-	$$.valbool = $1.valbool && $3.valbool;
-	}
-	else yyerror("Error: Operaciones sobre tipos diferentes\n");
+	
+	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
+	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre);
+	insertarexp(auxnodo1,auxnodo2,OP_AND);
 	}   
 
 /*************************************************************************************************/
@@ -1734,6 +1731,29 @@ NODO procesarexp(ARBOL *aux){
 					retorno.valbool = (k || i);
 				}
 				else yyerror("Error en el OR: Operación sobre tipos diferentes\n");
+				
+				retorno.escons=1;
+				retorno.espun=0;
+				return retorno;
+				break;
+			case OP_AND:
+				if ((aux->exp2.tipo==3) && (aux->exp2.tipo==3)) {
+					retorno.tipo=3;
+					if(!aux->exp1.escons) {
+						variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+						i=variable->valbool;
+					} else
+						i=aux->exp1.valbool;
+						
+					if(!aux->exp2.escons) {
+						variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+						k=variable->valbool;
+					} else
+						k=aux->exp2.valbool;
+					
+					retorno.valbool = (k && i);
+				}
+				else yyerror("Error en el AND: Operación sobre tipos diferentes\n");
 				
 				retorno.escons=1;
 				retorno.espun=0;

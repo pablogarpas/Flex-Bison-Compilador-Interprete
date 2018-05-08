@@ -524,8 +524,8 @@ static const yytype_uint16 yyrline[] =
      709,   716,   722,   728,   739,   779,   782,   785,   792,   847,
      854,   862,   873,   880,   885,   892,   900,   943,   969,   996,
     1025,  1045,  1078,  1095,  1149,  1204,  1259,  1314,  1369,  1384,
-    1400,  1413,  1426,  1433,  1441,  1448,  1464,  1473,  1485,  1497,
-    1509,  1520,  1525
+    1397,  1410,  1423,  1430,  1438,  1445,  1461,  1470,  1482,  1494,
+    1506,  1517,  1522
 };
 #endif
 
@@ -2907,19 +2907,16 @@ yyreduce:
     {
 	strcat((yyval.ELEMENTO).trad," && ");//introducimos la cadena creada para la traduccion
 	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
-
-	if (((yyvsp[-2].ELEMENTO).tipo==3) && ((yyvsp[0].ELEMENTO).tipo==3))
-	{
-	(yyval.ELEMENTO).tipo=3;
-	(yyval.ELEMENTO).valbool = (yyvsp[-2].ELEMENTO).valbool && (yyvsp[0].ELEMENTO).valbool;
+	
+	copiardatos(&auxnodo1,(yyvsp[-2].ELEMENTO).tipo,(yyvsp[-2].ELEMENTO).escons,(yyvsp[-2].ELEMENTO).espun,(yyvsp[-2].ELEMENTO).valstr,(yyvsp[-2].ELEMENTO).valbool,(yyvsp[-2].ELEMENTO).valnum,(yyvsp[-2].ELEMENTO).valint,(yyvsp[-2].ELEMENTO).nombre);
+	copiardatos(&auxnodo2,(yyvsp[0].ELEMENTO).tipo,(yyvsp[0].ELEMENTO).escons,(yyvsp[0].ELEMENTO).espun,(yyvsp[0].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).valbool,(yyvsp[0].ELEMENTO).valnum,(yyvsp[0].ELEMENTO).valint,(yyvsp[0].ELEMENTO).nombre);
+	insertarexp(auxnodo1,auxnodo2,OP_AND);
 	}
-	else yyerror("Error: Operaciones sobre tipos diferentes\n");
-	}
-#line 2919 "trans.tab.c" /* yacc.c:1646  */
+#line 2916 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 90:
-#line 1402 "trans.y" /* yacc.c:1646  */
+#line 1399 "trans.y" /* yacc.c:1646  */
     {
 	strcat((yyval.ELEMENTO).trad," || ");//introducimos la cadena creada para la traduccion
 	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
@@ -2929,11 +2926,11 @@ yyreduce:
 	insertarexp(auxnodo1,auxnodo2,OP_OR);
 	
 	}
-#line 2933 "trans.tab.c" /* yacc.c:1646  */
+#line 2930 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 91:
-#line 1416 "trans.y" /* yacc.c:1646  */
+#line 1413 "trans.y" /* yacc.c:1646  */
     {
 	strcpy((yyval.ELEMENTO).trad," !");//introducimos la cadena creada para la traduccion
 	strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
@@ -2942,39 +2939,39 @@ yyreduce:
 	copiardatos(&auxnodo1,(yyvsp[0].ELEMENTO).tipo,(yyvsp[0].ELEMENTO).escons,(yyvsp[0].ELEMENTO).espun,(yyvsp[0].ELEMENTO).valstr,(yyvsp[0].ELEMENTO).valbool,(yyvsp[0].ELEMENTO).valnum,(yyvsp[0].ELEMENTO).valint,(yyvsp[0].ELEMENTO).nombre);
 	insertarexp(auxnodo1,auxnodo2,OP_NOT);	
 	}
-#line 2946 "trans.tab.c" /* yacc.c:1646  */
+#line 2943 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 92:
-#line 1427 "trans.y" /* yacc.c:1646  */
+#line 1424 "trans.y" /* yacc.c:1646  */
     {
 		(yyval.ELEMENTO).tipo=1;
 		(yyval.ELEMENTO).valnum =(yyvsp[0].ELEMENTO).valnum;	  
 	}
-#line 2955 "trans.tab.c" /* yacc.c:1646  */
+#line 2952 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 93:
-#line 1434 "trans.y" /* yacc.c:1646  */
+#line 1431 "trans.y" /* yacc.c:1646  */
     {
 		(yyval.ELEMENTO).tipo=6;
 		
 		(yyval.ELEMENTO).valint =(yyvsp[0].ELEMENTO).valint;	
 	}
-#line 2965 "trans.tab.c" /* yacc.c:1646  */
+#line 2962 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 94:
-#line 1442 "trans.y" /* yacc.c:1646  */
+#line 1439 "trans.y" /* yacc.c:1646  */
     {
 		(yyval.ELEMENTO).tipo=3;
 		(yyval.ELEMENTO).valbool= (yyvsp[0].ELEMENTO).valbool;
 	}
-#line 2974 "trans.tab.c" /* yacc.c:1646  */
+#line 2971 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 95:
-#line 1449 "trans.y" /* yacc.c:1646  */
+#line 1446 "trans.y" /* yacc.c:1646  */
     {
 		strcpy((yyval.ELEMENTO).trad,(yyvsp[0].indice)->nombre);//copio el nombre de la variable para la traduccion
 		strcpy((yyval.ELEMENTO).nombre,(yyvsp[0].indice)->nombre);//copio el nombre de la variable para la traduccion
@@ -2988,21 +2985,21 @@ yyreduce:
 		(yyval.ELEMENTO).vis=(yyvsp[0].indice)->aux;//para traducir la visualizacion
 		(yyval.ELEMENTO).espun= (yyvsp[0].indice)->espun;
 	}
-#line 2992 "trans.tab.c" /* yacc.c:1646  */
+#line 2989 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 96:
-#line 1465 "trans.y" /* yacc.c:1646  */
+#line 1462 "trans.y" /* yacc.c:1646  */
     {
 		(yyval.ELEMENTO).tipo=(yyvsp[0].ELEMENTO).tipo;
 		strcpy((yyval.ELEMENTO).valstr,(yyvsp[0].ELEMENTO).cad);
 		(yyval.ELEMENTO).escons=(yyvsp[0].ELEMENTO).escons;
 	}
-#line 3002 "trans.tab.c" /* yacc.c:1646  */
+#line 2999 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 97:
-#line 1474 "trans.y" /* yacc.c:1646  */
+#line 1471 "trans.y" /* yacc.c:1646  */
     {
 		if((yyvsp[0].ELEMENTO).tipo==6) {
 			intr_inc((yyvsp[0].ELEMENTO).nombre,0);
@@ -3012,11 +3009,11 @@ yyreduce:
 		else
 			yyerror("Error: No se puede incrementar una variable no númerica");
 	}
-#line 3016 "trans.tab.c" /* yacc.c:1646  */
+#line 3013 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 98:
-#line 1486 "trans.y" /* yacc.c:1646  */
+#line 1483 "trans.y" /* yacc.c:1646  */
     {
 		if((yyvsp[-1].ELEMENTO).tipo==6) {
 			intr_inc((yyvsp[-1].ELEMENTO).nombre,1);
@@ -3026,11 +3023,11 @@ yyreduce:
 		else
 			yyerror("Error: No se puede incrementar una variable no númerica");
 	}
-#line 3030 "trans.tab.c" /* yacc.c:1646  */
+#line 3027 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 99:
-#line 1498 "trans.y" /* yacc.c:1646  */
+#line 1495 "trans.y" /* yacc.c:1646  */
     {
 		if((yyvsp[0].ELEMENTO).tipo==6) {
 			intr_dec((yyvsp[0].ELEMENTO).nombre,0);
@@ -3040,11 +3037,11 @@ yyreduce:
 		else
 			yyerror("Error: No se puede decrementar una variable no númerica");
 	}
-#line 3044 "trans.tab.c" /* yacc.c:1646  */
+#line 3041 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 100:
-#line 1510 "trans.y" /* yacc.c:1646  */
+#line 1507 "trans.y" /* yacc.c:1646  */
     {
 		if((yyvsp[-1].ELEMENTO).tipo==6) {
 			intr_dec((yyvsp[-1].ELEMENTO).nombre,1);
@@ -3054,29 +3051,29 @@ yyreduce:
 		else
 			yyerror("Error: No se puede decrementar una variable no númerica");
 	}
-#line 3058 "trans.tab.c" /* yacc.c:1646  */
+#line 3055 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 101:
-#line 1521 "trans.y" /* yacc.c:1646  */
+#line 1518 "trans.y" /* yacc.c:1646  */
     {
 		strcpy((yyval.ELEMENTO).trad,"*");
 		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
 	}
-#line 3067 "trans.tab.c" /* yacc.c:1646  */
+#line 3064 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 102:
-#line 1526 "trans.y" /* yacc.c:1646  */
+#line 1523 "trans.y" /* yacc.c:1646  */
     {
 		strcpy((yyval.ELEMENTO).trad,"&");
 		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
 	}
-#line 3076 "trans.tab.c" /* yacc.c:1646  */
+#line 3073 "trans.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 3080 "trans.tab.c" /* yacc.c:1646  */
+#line 3077 "trans.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -3304,7 +3301,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 1531 "trans.y" /* yacc.c:1906  */
+#line 1528 "trans.y" /* yacc.c:1906  */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Main, dónde se genera el fichero
@@ -3511,6 +3508,29 @@ NODO procesarexp(ARBOL *aux){
 					retorno.valbool = (k || i);
 				}
 				else yyerror("Error en el OR: Operación sobre tipos diferentes\n");
+				
+				retorno.escons=1;
+				retorno.espun=0;
+				return retorno;
+				break;
+			case OP_AND:
+				if ((aux->exp2.tipo==3) && (aux->exp2.tipo==3)) {
+					retorno.tipo=3;
+					if(!aux->exp1.escons) {
+						variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+						i=variable->valbool;
+					} else
+						i=aux->exp1.valbool;
+						
+					if(!aux->exp2.escons) {
+						variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+						k=variable->valbool;
+					} else
+						k=aux->exp2.valbool;
+					
+					retorno.valbool = (k && i);
+				}
+				else yyerror("Error en el AND: Operación sobre tipos diferentes\n");
 				
 				retorno.escons=1;
 				retorno.espun=0;

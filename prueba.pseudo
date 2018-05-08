@@ -8,8 +8,8 @@ var
 	aux5 bool
 
 inicio
-		aux1=true
+		aux1=false
 		aux5=true
 		
-		escribir(aux1 or aux5)
+		escribir(aux1 and aux5)
 fin

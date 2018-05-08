@@ -14,6 +14,7 @@
 #define OP_ASIGNAR 2
 #define OP_IGUALDAD 3
 #define OP_NOT 4
+#define OP_OR 5
 #define OP_FIN 14
 #define OP_SI 15
 
@@ -105,7 +106,7 @@ void intr_dec(char *nombre,int post);
 /*Funciones para la compilación*/
 //////////////////////////////////////////////////////////////////////////
 //Pasar de elemento a nodo
-void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool,float valnum,int valint);
+void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool,float valnum,int valint,char *nombre);
 //Crear el árbol o añadir nodo
 int insertar(NODO expre1,NODO expre2, int ope, NODO *var);
 

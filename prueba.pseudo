@@ -5,9 +5,11 @@ var
 	aux2 real
 	aux3 string
 	aux1 bool
+	aux5 bool
 
 inicio
 		aux1=true
+		aux5=true
 		
-		escribir(not aux1,aux1)
+		escribir(aux1 or aux5)
 fin

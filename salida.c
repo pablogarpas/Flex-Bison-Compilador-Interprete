@@ -6,7 +6,8 @@ int aux;
 float aux2;
 char *aux3;
 int aux1;
+int aux5;
 aux1=true;
-printf(" TRUE \n");
-printf(" TRUE \n");
+aux5=true;
+printf(" %d \n",aux1 || aux5);
 }

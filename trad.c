@@ -368,7 +368,7 @@ int insertarexp(NODO expre1,NODO expre2, int ope) {
 }
 
 //Función para copiar los datos de un elemento a un nodo
-void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool,float valnum,int valint) {
+void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool,float valnum,int valint,char *nombre) {
 	a->tipo=tipo;
 	a->escons=escons;
 	a->espun=espun;
@@ -376,4 +376,5 @@ void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool
 	a->valbool=valbool;
 	a->valnum = valnum;
 	a->valint = valint;
+	strcpy(a->nombre,nombre);
 }

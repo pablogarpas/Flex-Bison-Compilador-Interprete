@@ -535,7 +535,7 @@ control2:
 	{
 		strcpy($$.trad,$2.trad);
 			
-		copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint);
+		copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre);
 	
 		insertar(auxnodo1,auxnodo2,OP_SI,auxvar);
 	};
@@ -769,7 +769,7 @@ punteros_asignar TK_VARIABLE TK_ASIG punteros_asignar exp
 	
 	auxvar=$2;
 	
-	copiardatos(&auxnodo1,$5.tipo,$5.escons,$5.espun,$5.valstr,$5.valbool,$5.valnum,$5.valint);
+	copiardatos(&auxnodo1,$5.tipo,$5.escons,$5.espun,$5.valstr,$5.valbool,$5.valnum,$5.valint,$5.nombre);
 	
 	insertar(auxnodo1,auxnodo2,OP_ASIGNAR,auxvar);
 	}
@@ -810,16 +810,12 @@ exp
 		strcpy(auxnodo1.cad,$1.trad);
 		break;
 	case 3: 
-		auxnodo1.valint=$1.valint;
-		strcpy(auxnodo1.cad,$1.trad);
-		if($1.valbool==1) {
-		 	strcpy($$.trad,"printf(\" TRUE \\n\");\n");
-			break;
-		 }
-		else if($1.valbool==0) {
-			strcpy($$.trad,"printf(\" TRUE \\n\");\n");
-			break;
-			}
+		auxnodo1.valbool=$1.valbool;
+		strcpy(auxnodo1.valstr,$1.trad);
+		strcpy($$.trad,"printf(\" %%d \\n\",");
+		strcat($$.trad,$1.trad);
+		strcat($$.trad,");\n");
+		break;
 	case 4: 
 		strcpy($$.trad,"printf(\"");
 		strcat($$.trad,$1.cad);
@@ -840,7 +836,7 @@ exp
 	}//switch
 	
 
-	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint);
+	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
 	
 	insertar(auxnodo1,auxnodo2,OP_ESCRIBIR,auxvar);
 };
@@ -1377,8 +1373,8 @@ exp:
 		$$.tipo=3;
 		
 
-		copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint);
-		copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint);
+		copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
+		copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$1.nombre);
 		insertarexp(auxnodo1,auxnodo2,OP_IGUALDAD);
 	}
 
@@ -1406,13 +1402,11 @@ exp:
 	{
 	strcat($$.trad," || ");//introducimos la cadena creada para la traduccion
 	strcat($$.trad,$3.trad);
-
-	if (($1.tipo==3) && ($3.tipo==3))
-	{
-		$$.tipo=3;
-		$$.valbool = $1.valbool || $3.valbool;
-	}
-	else yyerror("Error: Operaciones sobre tipos diferentes\n");
+	
+	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
+	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre);
+	insertarexp(auxnodo1,auxnodo2,OP_OR);
+	
 	}   
 
 /*************************************************************************************************/
@@ -1424,7 +1418,7 @@ exp:
 	strcat($$.trad,$2.trad);
 
 	
-	copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint);
+	copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre);
 	insertarexp(auxnodo1,auxnodo2,OP_NOT);	
 	}   
 /*************************************************************************************************/
@@ -1454,6 +1448,7 @@ exp:
 	| TK_VARIABLE //copiamos toda la informacion del nodo
 	{
 		strcpy($$.trad,$1->nombre);//copio el nombre de la variable para la traduccion
+		strcpy($$.nombre,$1->nombre);//copio el nombre de la variable para la traduccion
 		strcpy($$.valstr,$1->valstr);//strign
 		strcpy($$.cad,$1->cad);//cadena, esto es por los identificadores de las constantes
 		$$.valnum=$1->valnum;	//variable numerica
@@ -1569,14 +1564,14 @@ int ejecutar() {
 		case OP_ESCRIBIR:
 			if(aux->izq!=NULL) 
 				aux->exp1=procesarexp(aux->izq);
-
+			
 			switch (aux->exp1.tipo){
 				case 1:
 					if(aux->exp1.escons) {
 						printf("%f\n",aux->exp1.valnum);
 					}
 					else {
-						variable=buscar_simbolo(aux->exp1.cad,&com,&fin);
+						variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
 						printf("%f\n",variable->valnum);
 					}
 					break;
@@ -1585,7 +1580,7 @@ int ejecutar() {
 						printf("%s\n",aux->exp1.valstr);
 					}
 					else {
-						variable=buscar_simbolo(aux->exp1.cad,&com,&fin);
+						variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
 						printf("%s\n",variable->valstr);
 					}
 					break;
@@ -1594,7 +1589,7 @@ int ejecutar() {
 						printf("%d\n",aux->exp1.valbool);
 					}
 					else {
-						variable=buscar_simbolo(aux->exp1.cad,&com,&fin);
+						variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
 						printf("%d\n",variable->valbool);
 					}
 					break;
@@ -1603,7 +1598,7 @@ int ejecutar() {
 						printf("%s\n",aux->exp1.valstr);
 					}
 					else {
-						variable=buscar_simbolo(aux->exp1.cad,&com,&fin);
+						variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
 						printf("%s\n",variable->valstr);
 					}
 					break;
@@ -1612,7 +1607,7 @@ int ejecutar() {
 						printf("%d\n",aux->exp1.valint);
 					}
 					else {
-						variable=buscar_simbolo(aux->exp1.cad,&com,&fin);
+						variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
 						printf("%d\n",variable->valint);
 					}
 					break;
@@ -1654,6 +1649,10 @@ int ejecutar() {
 
 NODO procesarexp(ARBOL *aux){
 	NODO retorno;
+	NODO *variable;
+	extern com;
+	extern fin;
+	int i,k;
 	do {
 		switch(aux->op){
 			case OP_IGUALDAD:
@@ -1715,6 +1714,29 @@ NODO procesarexp(ARBOL *aux){
 					retorno.valbool = aux->exp1.valbool;
 				}
 				else yyerror("Error en la negación: Operaciones sobre tipos incorrectos\n");
+				return retorno;
+				break;
+			case OP_OR:
+				if ((aux->exp2.tipo==3) && (aux->exp2.tipo==3)) {
+					retorno.tipo=3;
+					if(!aux->exp1.escons) {
+						variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+						i=variable->valbool;
+					} else
+						i=aux->exp1.valbool;
+						
+					if(!aux->exp2.escons) {
+						variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+						k=variable->valbool;
+					} else
+						k=aux->exp2.valbool;
+					
+					retorno.valbool = (k || i);
+				}
+				else yyerror("Error en el OR: Operación sobre tipos diferentes\n");
+				
+				retorno.escons=1;
+				retorno.espun=0;
 				return retorno;
 				break;
 		}//switch

@@ -5,9 +5,15 @@
 {
 int aux2;
 int aux1;
-aux1=3;
-aux2=3;
-printf(" %d \n",aux1);
-aux1=10;
-printf(" %d \n",aux1);
+if (true)
+printf("hola\n");
+printf("hola\n");
+printf("hola\n");
+printf("hola\n");
+} else {
+printf("adios\n");
+printf("adios\n");
+printf("adios\n");
+printf("adios\n");
+}
 }

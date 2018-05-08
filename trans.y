@@ -86,7 +86,7 @@ NODO *auxvar2;
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar control2 decre
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar control2 decre else
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -560,6 +560,12 @@ llamar:
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////	
+else:
+	TK_ELSE
+	{
+		insertar(auxnodo1,auxnodo2,OP_ELSE,auxvar);
+	};
+/////////////////////////////////////////////////////////////////////////////////////////////////	
 control2:	
 	TK_SI exp
 	{
@@ -581,14 +587,14 @@ control:
 	}
 /*************************************************************************************************/
 //if con else
-	| TK_SI exp cont lista_sentencias TK_ELSE lista_sentencias
+	| control2 cont lista_sentencias else lista_sentencias
 	{
 		strcpy($$.trad,"if (");
-		strcat($$.trad,$2.trad);
+		strcat($$.trad,$1.trad);
 		strcat($$.trad,")\n");
-		strcat($$.trad,$4.trad);
+		strcat($$.trad,$3.trad);
 		strcat($$.trad,"} else {\n");
-		strcat($$.trad,$6.trad);
+		strcat($$.trad,$5.trad);
 	}
 /*************************************************************************************************/
 	| TK_MIENTRAS exp cont lista_sentencias 
@@ -1329,16 +1335,19 @@ int ejecutar() {
 				yyerror("Error en el si\n");
 				break;
 				}
-				
 			if(aux->izq!=NULL) 
 				aux->exp1=procesarexp(aux->izq);	
 			
 			if(aux->exp1.valbool==0) {
-				while(aux->der->op!=OP_FIN) {
+				while(aux->op!=OP_ELSE) {
 					aux=aux->der;
 				}
 			}
-				
+			break;
+		case OP_ELSE:
+			while(aux->der->op!=OP_FIN) {
+					aux=aux->der;
+				}
 			break;
 		}//switch
 		aux=aux->der;

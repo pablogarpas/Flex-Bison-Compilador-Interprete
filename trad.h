@@ -31,7 +31,8 @@
 #define OP_INC 19
 #define OP_DEC 20
 #define OP_SI 21
-#define OP_FIN 22
+#define OP_ELSE 22
+#define OP_FIN 30
 
 
 //tipo de los simbolos

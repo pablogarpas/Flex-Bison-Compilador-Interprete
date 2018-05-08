@@ -5,8 +5,6 @@ var
 	aux1 entero
 
 inicio
-		aux1=true
-		aux2=false
 		
-		escribir(aux1 and aux2 and aux3)
+		escribir(4%5)
 fin

@@ -69,6 +69,7 @@ NODO *auxvar2;
 %token    TK_LEER
 %token    TK_LLAMAR
 %token	  TK_FIN
+%token	  TK_MOD
 %token	  TK_HACER
 %token	  TK_INC
 %token	  TK_DEC
@@ -824,7 +825,7 @@ exp
 		strcpy(auxnodo1.cad,$1.trad);
 		break;
 	case 6: 
-		strcpy($$.trad,"printf(\" %%s \\n\",");
+		strcpy($$.trad,"printf(\" %%d \\n\",");
 		strcat($$.trad,$1.trad);
 		strcat($$.trad,");\n");
 		auxnodo1.valint=$1.valint;
@@ -1044,7 +1045,7 @@ exp:
 //Exponenciales
 	|	exp TK_POW exp
 	{
-		strcpy($$.trad," TK_POW");//Traducción
+		strcpy($$.trad," pow");//Traducción
 		strcpy(auxt,"(");
 		strcat(auxt,$1.trad);
 		strcat(auxt,",");
@@ -1068,6 +1069,24 @@ exp:
 		else if(($1.tipo==6) && ($3.tipo==1)){
 			$$.tipo=1;
 			$$.valnum = pow($1.valint,$3.valnum);
+		}
+		else {
+			yyerror("Error: Operaciones sobre tipos diferentes\n");
+		}
+	}
+/*************************************************************************************************/
+//Modulo
+	|	exp TK_MOD exp
+	{
+		strcat(auxt,$1.trad);
+		strcat(auxt,"%");
+		strcat(auxt,$3.trad);
+		strcpy($$.trad,auxt);
+
+		if (($1.tipo==6)&& ($3.tipo==6))
+		{
+		$$.tipo=6;
+		$$.valnum = pow($1.valnum,$3.valnum);
 		}
 		else {
 			yyerror("Error: Operaciones sobre tipos diferentes\n");

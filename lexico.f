@@ -106,6 +106,7 @@ comentario [^$$\n]*[$$]
 "and"		return TK_AND;
 "or"		return TK_OR;
 "not"		return TK_NOT;
+"%" return TK_MOD;
 
 {variable}       {yylval.indice = buscar_simbolo(yytext,&com,&fin);
                  //buscamos es la TS la variable y si no esta la añadimos

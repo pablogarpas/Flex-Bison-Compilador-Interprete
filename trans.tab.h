@@ -67,31 +67,32 @@ extern int yydebug;
     TK_LEER = 277,
     TK_LLAMAR = 278,
     TK_FIN = 279,
-    TK_HACER = 280,
-    TK_INC = 281,
-    TK_DEC = 282,
-    TK_FUNCION = 283,
-    TK_CONT = 284,
-    TK_DEFAULT = 285,
-    TK_HASTA = 286,
-    TK_ELSE = 287,
-    TK_PARA = 288,
-    TK_CASO = 289,
-    TK_COM = 290,
-    TK_CADENA = 291,
-    TK_NBOOL = 292,
-    TK_NUM = 293,
-    TK_ENT = 294,
-    TK_VARIABLE = 295,
-    TK_MEI = 296,
-    TK_MAI = 297,
-    TK_DIS = 298,
-    TK_ASIG = 299,
-    TK_OR = 300,
-    TK_AND = 301,
-    TK_NOT = 302,
-    MENOSUNARIO = 303,
-    TK_POW = 304
+    TK_MOD = 280,
+    TK_HACER = 281,
+    TK_INC = 282,
+    TK_DEC = 283,
+    TK_FUNCION = 284,
+    TK_CONT = 285,
+    TK_DEFAULT = 286,
+    TK_HASTA = 287,
+    TK_ELSE = 288,
+    TK_PARA = 289,
+    TK_CASO = 290,
+    TK_COM = 291,
+    TK_CADENA = 292,
+    TK_NBOOL = 293,
+    TK_NUM = 294,
+    TK_ENT = 295,
+    TK_VARIABLE = 296,
+    TK_MEI = 297,
+    TK_MAI = 298,
+    TK_DIS = 299,
+    TK_ASIG = 300,
+    TK_OR = 301,
+    TK_AND = 302,
+    TK_NOT = 303,
+    MENOSUNARIO = 304,
+    TK_POW = 305
   };
 #endif
 
@@ -118,7 +119,7 @@ union YYSTYPE
 		char res[255];//cadena para mostrar por pantalla
 		} ELEMENTO;
 
-#line 122 "trans.tab.h" /* yacc.c:1909  */
+#line 123 "trans.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

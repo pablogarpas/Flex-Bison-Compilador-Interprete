@@ -1423,12 +1423,9 @@ exp:
 	strcpy($$.trad," !");//introducimos la cadena creada para la traduccion
 	strcat($$.trad,$2.trad);
 
-	if ($2.tipo==3) 
-	{
-		$$.tipo=3;
-		$$.valbool = !$2.valbool;
-	}
-	else yyerror("Error: Operaciones sobre tipos diferentes\n");	
+	
+	copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint);
+	insertarexp(auxnodo1,auxnodo2,OP_NOT);	
 	}   
 /*************************************************************************************************/
 //esto es un número real
@@ -1632,7 +1629,7 @@ int ejecutar() {
 			else if((aux->var->tipo=2)&&(aux->exp1.tipo==4)&&(aux->var->escons==0)&&(aux->var->espun==0)) {	
 				strcpy(aux->var->valstr,aux->exp1.valstr);
 			}
-			else yyerror("Error en la asignación, no concuerdan los tipos o %s es constante\n",aux->exp1.nombre);	
+			else yyerror("Error en la asignación, no concuerdan los tipos o la variable es constante\n");	
 			break;
 		case OP_SI:		
 			if (aux->exp1.tipo != 3){
@@ -1705,11 +1702,21 @@ NODO procesarexp(ARBOL *aux){
 					if (aux->exp1.valnum!=aux->exp2.valint) retorno.valbool =0; 
 					else retorno.valbool=1;
 				}
-				else yyerror("Error: Operaciones sobre tipos diferentes\n");                                                            
+				else yyerror("Error: Operaciones sobre tipos diferentes \n");                                                            
 				
 				retorno.escons=1;
 				retorno.espun=0;
 				return retorno;
+				break;
+			case OP_NOT:
+				if (aux->exp1.tipo==3) 
+				{
+					retorno.tipo=3;
+					retorno.valbool = aux->exp1.valbool;
+				}
+				else yyerror("Error en la negación: Operaciones sobre tipos incorrectos\n");
+				return retorno;
+				break;
 		}//switch
 		aux=aux->izq;
 	}while(aux!=NULL);

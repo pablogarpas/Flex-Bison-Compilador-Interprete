@@ -7,9 +7,7 @@ var
 	aux1 bool
 
 inicio
-	escribir("holi")
-
-	si 4==4
-		escribir("asd")
-	fin
+		aux1=true
+		
+		escribir(not aux1,aux1)
 fin

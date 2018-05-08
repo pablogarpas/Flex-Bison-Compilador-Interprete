@@ -13,6 +13,7 @@
 #define OP_ESCRIBIR 1
 #define OP_ASIGNAR 2
 #define OP_IGUALDAD 3
+#define OP_NOT 4
 #define OP_FIN 14
 #define OP_SI 15
 

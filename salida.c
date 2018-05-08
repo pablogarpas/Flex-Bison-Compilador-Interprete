@@ -6,8 +6,7 @@ int aux;
 float aux2;
 char *aux3;
 int aux1;
-printf("holi\n");
-if (4 == 5)
-{
-}
+aux1=true;
+printf(" TRUE \n");
+printf(" TRUE \n");
 }

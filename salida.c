@@ -5,5 +5,13 @@
 {
 int aux2;
 int aux1;
-printf(" %s \n",4%5);
+aux1=3;
+aux2=3;
+printf(" %d \n",3 + 3);
+printf(" %d \n",3 - 3);
+printf(" %d \n",3 * 3);
+printf(" %d \n",3 / 0);
+printf(" %d \n",3%3);
+printf(" %d \n", pow(3,3));
+printf(" %f \n", -3);
 }

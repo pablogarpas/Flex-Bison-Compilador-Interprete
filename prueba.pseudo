@@ -5,6 +5,14 @@ var
 	aux1 entero
 
 inicio
+		aux1=3
+		aux2=3
 		
-		escribir(4%5)
+		escribir(3+3)
+		escribir(3-3)
+		escribir(3*3)
+		escribir(3/3)
+		escribir(3%3)
+		escribir(3@3)
+		escribir(-3)
 fin

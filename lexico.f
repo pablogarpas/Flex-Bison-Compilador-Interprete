@@ -70,13 +70,13 @@ comentario [^$$\n]*[$$]
 "="			return TK_ASIG;
 "=="		return TK_IGU;
 "<>"		return TK_DIS;
-"**"		return TK_POW;
+"@"		return TK_POW;
 "<="		return TK_MEI;
 ">="		return TK_MAI;
 "++"		return TK_INC;
 "--"		return TK_DEC;
 "&"		return TK_DIR;
-"*"		return TK_VAL;
+"#"		return TK_VAL;
 "default" return TK_DEFAULT;
 "devolver" return TK_RETORNO;
 "caso" return TK_CASO;

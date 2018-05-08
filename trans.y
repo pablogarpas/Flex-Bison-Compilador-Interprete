@@ -903,40 +903,10 @@ exp:
 	{
 	strcat($$.trad," + ");//Traducción
 	strcat($$.trad,$3.trad);
-	if (($1.tipo==1) && ($3.tipo==1)){
-		$$.tipo=1;
-		$$.valnum = $1.valnum + $3.valnum;
-	}
-	else if(($1.tipo==2) && ($3.tipo==2)){
-		$$.tipo=2;
-		strcpy($$.valstr,strcat($1.valstr,$3.valstr));
-	}
-	else if(($1.tipo==2) && ($3.tipo==4)){
-		$$.tipo=2;
-		strcpy($$.valstr,strcat($1.valstr,$3.cad));
-	}
-	else if(($1.tipo==4) && ($3.tipo==2)){
-		$$.tipo=2;
-		strcpy($$.valstr,strcat($1.cad,$3.valstr));
-	}
-	else if(($1.tipo==4) && ($3.tipo==4)){
-		$$.tipo=4;
-		strcpy($$.cad,strcat($1.cad,$3.cad));
-	}
-	else if(($1.tipo==6) && ($3.tipo==6)){
-		$$.tipo=6;
-		$$.valint = $1.valint + $3.valint;
-	}
-	else if(($1.tipo==1) && ($3.tipo==6)){
-		$$.tipo=1;
-		$$.valnum = $1.valnum + $3.valint;
-	}
-	else if(($1.tipo==6) && ($3.tipo==1)){
-		$$.tipo=1;
-		$$.valnum = $1.valint + $3.valnum;
-	}
-	else
-	yyerror("Error: Operaciones sobre tipos diferentes\n");
+	
+	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
+	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre);
+	insertarexp(auxnodo1,auxnodo2,OP_SUMA);
 	}
 
 /*************************************************************************************************/
@@ -945,25 +915,11 @@ exp:
 	{
 		strcat($$.trad," - ");//introducimos la cadena creada para la traduccion
 		strcat($$.trad,$3.trad);
-		if (($1.tipo==1) && ($3.tipo==1)) {
-			$$.tipo=1;
-			$$.valnum = $1.valnum - $3.valnum;
-			}
-		else if(($1.tipo==6) && ($3.tipo==6)){
-			$$.tipo=6;
-			$$.valint = $1.valint - $3.valint;
-		}
-		else if(($1.tipo==1) && ($3.tipo==6)){
-			$$.tipo=1;
-			$$.valnum = $1.valnum - $3.valint;
-		}
-		else if(($1.tipo==6) && ($3.tipo==1)){
-			$$.tipo=1;
-			$$.valnum = $1.valint - $3.valnum;
-		}
-		else {                   
-		yyerror("Error: Operaciones sobre tipos diferentes\n");
-		}
+		
+		copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
+		copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre);
+		insertarexp(auxnodo1,auxnodo2,OP_RESTA);
+		
 	}
 /*************************************************************************************************/
 //Multiplicación, sólo números
@@ -972,25 +928,9 @@ exp:
 		strcat($$.trad," * ");//Traducción
 		strcat($$.trad,$3.trad);
 		
-		if (($1.tipo==1) && ($3.tipo==1))	{
-			$$.tipo=1;
-			$$.valnum = $1.valnum * $3.valnum;
-		}
-		else if(($1.tipo==6) && ($3.tipo==6)){
-			$$.tipo=6;
-			$$.valint = $1.valint * $3.valint;
-		}
-		else if(($1.tipo==1) && ($3.tipo==6)){
-			$$.tipo=1;
-			$$.valnum = $1.valnum * $3.valint;
-		}
-		else if(($1.tipo==6) && ($3.tipo==1)){
-			$$.tipo=1;
-			$$.valnum = $1.valint * $3.valnum;
-		}		
-		else {		                   
-		yyerror("Error: Operaciones sobre tipos diferentes\n");
-		}
+	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
+	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre);
+	insertarexp(auxnodo1,auxnodo2,OP_MULT);
 	}
 /*************************************************************************************************/
 //Divisiones
@@ -999,27 +939,9 @@ exp:
 		strcat($$.trad," / ");//Traducción
 		strcat($$.trad,$3.trad);
 
-		if ($3.valnum == 0)
-			yyerror("División por cero.\n");
-		else if (($1.tipo==1) && ($3.tipo==1))		{
-			$$.tipo=1;
-			$$.valnum = $1.valnum / $3.valnum;
-		}
-		else if(($1.tipo==6) && ($3.tipo==6)){
-			$$.tipo=6;
-			$$.valint = $1.valint / $3.valint;
-		}
-		else if(($1.tipo==1) && ($3.tipo==6)){
-			$$.tipo=1;
-			$$.valnum = $1.valnum / $3.valint;
-		}
-		else if(($1.tipo==6) && ($3.tipo==1)){
-			$$.tipo=1;
-			$$.valnum = $1.valint / $3.valnum;
-		}
-		else	{		                  
-			yyerror("Error: Operaciones sobre tipos diferentes\n");
-		}
+	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
+	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre);
+	insertarexp(auxnodo1,auxnodo2,OP_DIV);
 	}
 /*************************************************************************************************/
 //Operación de cambio de signo
@@ -1028,17 +950,8 @@ exp:
 		strcpy($$.trad," -");//introducimos la cadena creada para la traduccion
 		strcat($$.trad,$2.trad);
 
-		if ($2.tipo==1)	{
-			$$.tipo=1;
-			$$.valnum = -$2.valnum;
-		}
-		else if ($2.tipo==6) {
-			$$.tipo=6;
-			$$.valint = -$2.valint;
-		}
-		else	{                               
-		yyerror("Error: Operaciones sobre tipos diferentes\n");
-		}
+	copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre);
+	insertarexp(auxnodo1,auxnodo2,OP_CAM);
 	}
 
 /*************************************************************************************************/
@@ -1053,26 +966,9 @@ exp:
 		strcat(auxt,")");
 		strcat($$.trad,auxt);
 
-		if (($1.tipo==1)&& ($3.tipo==1))
-		{
-		$$.tipo=1;
-		$$.valnum = pow($1.valnum,$3.valnum);
-		}
-		else if(($1.tipo==6) && ($3.tipo==6)){
-			$$.tipo=6;
-			$$.valint = pow($1.valint,$3.valint);
-		}
-		else if(($1.tipo==1) && ($3.tipo==6)){
-			$$.tipo=1;
-			$$.valnum = pow($1.valnum,$3.valint);
-		}
-		else if(($1.tipo==6) && ($3.tipo==1)){
-			$$.tipo=1;
-			$$.valnum = pow($1.valint,$3.valnum);
-		}
-		else {
-			yyerror("Error: Operaciones sobre tipos diferentes\n");
-		}
+	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
+	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre);
+	insertarexp(auxnodo1,auxnodo2,OP_POW);
 	}
 /*************************************************************************************************/
 //Modulo
@@ -1083,14 +979,10 @@ exp:
 		strcat(auxt,$3.trad);
 		strcpy($$.trad,auxt);
 
-		if (($1.tipo==6)&& ($3.tipo==6))
-		{
-		$$.tipo=6;
-		$$.valnum = pow($1.valnum,$3.valnum);
-		}
-		else {
-			yyerror("Error: Operaciones sobre tipos diferentes\n");
-		}
+
+		copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
+		copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre);
+		insertarexp(auxnodo1,auxnodo2,OP_MOD);
 	}
 /*************************************************************************************************/
 //Operaciones entre parentesis
@@ -1225,6 +1117,7 @@ exp:
 	|	TK_NUM
 	{
 		$$.tipo=1;
+		$$.escons=1;
 		$$.valnum =$1.valnum;	  
 	}
 /*************************************************************************************************/
@@ -1232,7 +1125,7 @@ exp:
 	|	TK_ENT
 	{
 		$$.tipo=6;
-		
+		$$.escons=1;
 		$$.valint =$1.valint;	
 	}
 /*************************************************************************************************/
@@ -1240,6 +1133,7 @@ exp:
 	|	TK_NBOOL
 	{
 		$$.tipo=3;
+		$$.escons=1;
 		$$.valbool= $1.valbool;
 	}
 /*************************************************************************************************/
@@ -2033,15 +1927,14 @@ NODO procesarexp(ARBOL *aux){
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
 			}
-			strcat(retorno.trad," + ");//Traducción
-			strcat(retorno.trad,$3.trad);
+
 			if ((aux->exp1.tipo==1) && (aux->exp2.tipo==1)){
 				retorno.tipo=1;
 				retorno.valnum = real1 + real2;
 			}
 			else if((aux->exp1.tipo==2) && (aux->exp2.tipo==2)){
 				retorno.tipo=2;
-				strcpy(retorno.va$lstr,strcat(a,b));
+				strcpy(retorno.valstr,strcat(a,b));
 			}
 			else if((aux->exp1.tipo==2) && (aux->exp2.tipo==4)){
 				retorno.tipo=2;
@@ -2067,7 +1960,7 @@ NODO procesarexp(ARBOL *aux){
 				retorno.tipo=1;
 				retorno.valnum = i + real2;
 			}
-			else
+			else{
 			yyerror("Error en la suma: Operaciones sobre tipos diferentes\n");
 			}
 			retorno.escons=1;
@@ -2100,9 +1993,7 @@ NODO procesarexp(ARBOL *aux){
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
 			}
-	
-			strcat(retorno.trad," - ");//introducimos la cadena creada para la traduccion
-			strcat(retorno.trad,$3.trad);
+			
 			if ((aux->exp1.tipo==1) && (aux->exp2.tipo==1)) {
 				retorno.tipo=1;
 				retorno.valnum = real1 - real2;
@@ -2120,38 +2011,235 @@ NODO procesarexp(ARBOL *aux){
 				retorno.valnum = i - real2;
 			}
 			else {                   
-			yyerror("Error: Operaciones sobre tipos diferentes\n");
+			yyerror("Error en la resta: Operaciones sobre tipos diferentes\n");
 			}
 			retorno.escons=1;
 			retorno.espun=0;
 			return retorno;
 			break;
 		case OP_MULT:
-
+			if(aux->exp1.escons) {
+				i=aux->exp1.valint;
+				real1=aux->exp1.valnum;
+				bool1=aux->exp1.valbool;
+				strcpy(a,aux->exp1.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				i=variable->valint;
+				real1=variable->valnum;
+				bool1=variable->valbool;
+				strcpy(a,variable->valstr);
+			}
+				
+			if(aux->exp2.escons) {
+				k=aux->exp2.valint;
+				real2=aux->exp2.valnum;
+				bool2=aux->exp2.valbool;
+				strcpy(b,aux->exp2.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				k=variable->valint;
+				real2=variable->valnum;
+				bool2=variable->valbool;
+				strcpy(b,variable->valstr);
+			}
+			
+				if ((aux->exp1.tipo==1) && (aux->exp2.tipo==1))	{
+					retorno.tipo=1;
+					retorno.valnum = real1 * real2;
+				}
+				else if((aux->exp1.tipo==6) && (aux->exp2.tipo==6)){
+					retorno.tipo=6;
+					retorno.valint = i * k;
+				}
+				else if((aux->exp1.tipo==1) && (aux->exp2.tipo==6)){
+					retorno.tipo=1;
+					retorno.valnum = real1 * k;
+				}
+				else if((aux->exp1.tipo==6) && (aux->exp2.tipo==1)){
+					retorno.tipo=1;
+					retorno.valnum = i * real2;
+				}		
+				else {		                   
+				yyerror("Error en la multiplicación: Operaciones sobre tipos diferentes\n");
+				}
 			retorno.escons=1;
 			retorno.espun=0;
 			return retorno;
 			break;
 		case OP_DIV:
+			if(aux->exp1.escons) {
+				i=aux->exp1.valint;
+				real1=aux->exp1.valnum;
+				bool1=aux->exp1.valbool;
+				strcpy(a,aux->exp1.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				i=variable->valint;
+				real1=variable->valnum;
+				bool1=variable->valbool;
+				strcpy(a,variable->valstr);
+			}
+				
+			if(aux->exp2.escons) {
+				k=aux->exp2.valint;
+				real2=aux->exp2.valnum;
+				bool2=aux->exp2.valbool;
+				strcpy(b,aux->exp2.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				k=variable->valint;
+				real2=variable->valnum;
+				bool2=variable->valbool;
+				strcpy(b,variable->valstr);
+			}
 
+			if ((aux->exp1.tipo==1) && (aux->exp2.tipo==1))		{
+				if (real2 == 0)
+					yyerror("Error en la división: División por cero.\n");
+				retorno.tipo=1;
+				retorno.valnum = real1 / real2;
+			}
+			else if((aux->exp1.tipo==6) && (aux->exp2.tipo==6)){
+				if (k == 0)
+					yyerror("Error en la división: División por cero.\n");			
+				retorno.tipo=6;
+				retorno.valint = i / k;
+			}
+			else if((aux->exp1.tipo==1) && (aux->exp2.tipo==6)){
+				if (real2 == 0)
+					yyerror("Error en la división: División por cero.\n");			
+				retorno.tipo=1;
+				retorno.valnum = real1 / k;
+			}
+			else if((aux->exp1.tipo==6) && (aux->exp2.tipo==1)){
+				if (k == 0)
+					yyerror("Error en la división: División por cero.\n");
+				retorno.tipo=1;
+				retorno.valnum = i / real2;
+			}
+			else	{		                  
+				yyerror("Error en la division: Operaciones sobre tipos diferentes\n");
+			}
+			
 			retorno.escons=1;
 			retorno.espun=0;
 			return retorno;
 			break;
-		case OP_MOD:
+		case OP_MOD:	
+			if(aux->exp1.escons) {
+				i=aux->exp1.valint;
+				real1=aux->exp1.valnum;
+				bool1=aux->exp1.valbool;
+				strcpy(a,aux->exp1.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				i=variable->valint;
+				real1=variable->valnum;
+				bool1=variable->valbool;
+				strcpy(a,variable->valstr);
+			}
+				
+			if(aux->exp2.escons) {
+				k=aux->exp2.valint;
+				real2=aux->exp2.valnum;
+				bool2=aux->exp2.valbool;
+				strcpy(b,aux->exp2.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				k=variable->valint;
+				real2=variable->valnum;
+				bool2=variable->valbool;
+				strcpy(b,variable->valstr);
+			}
 
+			if ((aux->exp1.tipo==6)&& (aux->exp2.tipo==6)) {
+				retorno.tipo=6;
+				retorno.valint = i%k;
+			}
+			else {
+				yyerror("Error: Operaciones sobre tipos diferentes\n");
+			}
 			retorno.escons=1;
 			retorno.espun=0;
 			return retorno;
 			break;
 		case OP_CAM:
+			if(aux->exp1.escons) {
+				i=aux->exp1.valint;
+				real1=aux->exp1.valnum;
+				bool1=aux->exp1.valbool;
+				strcpy(a,aux->exp1.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				i=variable->valint;
+				real1=variable->valnum;
+				bool1=variable->valbool;
+				strcpy(a,variable->valstr);
+			}
 
+			if (aux->exp1.tipo==1)	{
+				retorno.tipo=1;
+				retorno.valnum = -real1;
+			}
+			else if (aux->exp1.tipo==6) {
+				retorno.tipo=6;
+				retorno.valint = -i;
+			}
+			else	{                               
+			yyerror("Error en el cambio de signo: Operaciones sobre tipos diferentes\n");
+			}
 			retorno.escons=1;
 			retorno.espun=0;
 			return retorno;
 			break;
 		case OP_POW:
+			if(aux->exp1.escons) {
+				i=aux->exp1.valint;
+				real1=aux->exp1.valnum;
+				bool1=aux->exp1.valbool;
+				strcpy(a,aux->exp1.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				i=variable->valint;
+				real1=variable->valnum;
+				bool1=variable->valbool;
+				strcpy(a,variable->valstr);
+			}
+				
+			if(aux->exp2.escons) {
+				k=aux->exp2.valint;
+				real2=aux->exp2.valnum;
+				bool2=aux->exp2.valbool;
+				strcpy(b,aux->exp2.valstr);
+			} else {
+				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				k=variable->valint;
+				real2=variable->valnum;
+				bool2=variable->valbool;
+				strcpy(b,variable->valstr);
+			}
 
+			if ((aux->exp1.tipo==1)&& (aux->exp2.tipo==1))
+			{
+			retorno.tipo=1;
+			retorno.valnum = pow(real1,real2);
+			}
+			else if((aux->exp1.tipo==6) && (aux->exp2.tipo==6)){
+				retorno.tipo=6;
+				retorno.valint = pow(i,k);
+			}
+			else if((aux->exp1.tipo==1) && (aux->exp2.tipo==6)){
+				retorno.tipo=1;
+				retorno.valnum = pow(real1,k);
+			}
+			else if((aux->exp1.tipo==6) && (aux->exp2.tipo==1)){
+				retorno.tipo=1;
+				retorno.valnum = pow(i,real2);
+			}
+			else {
+				yyerror("Error en el exponencial: Operaciones sobre tipos diferentes\n");
+			}
 			retorno.escons=1;
 			retorno.espun=0;
 			return retorno;

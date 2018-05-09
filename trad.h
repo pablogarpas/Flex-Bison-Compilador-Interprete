@@ -34,6 +34,9 @@
 #define OP_ELSE 22
 #define OP_WHILE 23
 #define OP_PARA 24
+#define OP_SWITCH 25
+#define OP_CASE 26
+#define OP_DEFAULT 27
 #define OP_FIN 30
 
 

@@ -84,7 +84,7 @@ NODO *auxvar2;
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar control2 decre else control3 control4
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar control2 decre else control3 control4 control5
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -635,6 +635,17 @@ TK_PARA TK_VARIABLE TK_ASIG TK_ENT TK_HASTA TK_ENT
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////	
+control5:
+	TK_SWITCH TK_VARIABLE {
+		strcpy($$.nombre,$2->nombre);
+		$$.tipo=$2->tipo;
+		
+		copiardatos(&auxnodo1,$2->tipo,$2->escons,$2->espun,$2->valstr,$2->valbool,$2->valnum,$2->valint,$2->nombre);
+		
+		insertar(auxnodo1,auxnodo2,OP_SWITCH,auxvar);
+	}
+	;
+/////////////////////////////////////////////////////////////////////////////////////////////////	
 control:
 //if sin else
 	control3 cont lista_sentencias 
@@ -677,16 +688,17 @@ control:
 		strcat($$.trad,$3.trad);
 	}
 /*************************************************************************************************/
-	| TK_SWITCH TK_VARIABLE cases
+//SWITCH
+	| control5 cases
 	{				
-		int aux=$3.tipo;
+		int aux=$2.tipo;
 		int compro;
 		
 		while(aux>0) {
 			compro= aux%10;
-			if($2->tipo==compro) {//no se hace nada, tipos compatibles
+			if($1.tipo==compro) {//no se hace nada, tipos compatibles
 			}else if (compro==9) {//no se hace nada, default
-			}else if ( ($2->tipo==1 && compro== 6) || ($2->tipo==6 && compro== 1) ) {
+			}else if ( ($1.tipo==1 && compro== 6) || ($1.tipo==6 && compro== 1) ) {
 			//Se puede comparar float con entero sin error
 			}
 		 	else {
@@ -698,9 +710,9 @@ control:
 		//Si todo está bien se traduce y saca por pantalla
 		
 		strcpy($$.trad,"switch (");
-		strcat($$.trad,$2->nombre);
+		strcat($$.trad,$1.nombre);
 		strcat($$.trad,"){\n");
-		strcat($$.trad,$3.trad);
+		strcat($$.trad,$2.trad);
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -714,6 +726,10 @@ case:
 		strcat($$.trad,":\n");		
 		strcat($$.trad,$3.trad);
 		strcat($$.trad,$4.trad);		
+		
+		copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre);
+	
+		insertar(auxnodo1,auxnodo2,OP_CASE,auxvar);
 	}
 	|	default lista_sentencias break
 	{
@@ -721,6 +737,8 @@ case:
 		strcat($$.trad,$2.trad);
 		strcat($$.trad,$3.trad);		
 		$$.tipo=9;
+		
+		insertar(auxnodo1,auxnodo2,OP_DEFAULT,auxvar);
 	}
 	;
 	;	
@@ -730,6 +748,8 @@ cases:
 	{
 		auxtip*=10;	//Se va aumentando esta variable para guardar los tipos en el mismo número
 		//De esta manera tenemos un número cuyas unidades, decenas ... representan un tipo
+		
+		
 	}
 	| case cases
 	{
@@ -1247,6 +1267,7 @@ int ejecutar(ARBOL *var,int parar) {
 	extern com;
 	extern fin;
 	NODO *variable;
+	int defecto;
 	aux=var;
 	
 	do {
@@ -1363,8 +1384,6 @@ int ejecutar(ARBOL *var,int parar) {
 				}
 			break;
 		case OP_PARA:
-			if(aux->izq!=NULL) 
-				aux->exp1=procesarexp(aux->izq);
 			
 			variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
 		
@@ -1379,7 +1398,34 @@ int ejecutar(ARBOL *var,int parar) {
 					variable->valint--;
 			}
 			break;
+		case OP_SWITCH:
+		
+			variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+		
+			while(aux->der->op!=OP_FIN) {
+				if(aux->der->op==OP_DEFAULT) {
+					if(defecto==0)
+						ejecutar(aux,1);	
+				}
+			
+				if(aux->der->op==OP_CASE && aux->der->exp1.valint==variable->valint) {
+					ejecutar(aux,1);
+					defecto=1;
+				}
+					
+				aux=aux->der;
+			}
+			defecto=0;
+			break;
 		case OP_FIN:
+			if(parar)
+				return 1;
+			break;
+		case OP_CASE:
+			if(parar)
+				return 1;
+			break;
+		case OP_DEFAULT:
 			if(parar)
 				return 1;
 			break;

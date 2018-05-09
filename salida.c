@@ -4,8 +4,16 @@
 #include <string.h>int main() 
 {
 int aux2;
-for (aux2=10;aux2>5;aux2--){
-printf(" %d \n",aux2);
+aux2=7;
+switch (aux2){
+default:
+printf("asd\n");
+break;
+case 6:
+printf("holi\n");
+break;
+case 5:
+printf("hola\n");
+break;
 }
-printf("una vez\n");
 }

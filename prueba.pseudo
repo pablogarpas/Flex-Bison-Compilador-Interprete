@@ -4,10 +4,14 @@ var
 	aux2 entero
 
 inicio
+		aux2=7
 		
-		para aux2=10 hasta 5 hacer
-			escribir(aux2)
-		fin	
-		
-		escribir("una vez")
+		switch aux2
+			caso 5
+				escribir("hola")
+			caso 6
+				escribir("holi")
+			default
+				escribir("asd")
+		fin
 fin

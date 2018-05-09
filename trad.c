@@ -377,6 +377,44 @@ int insertarexp(NODO expre1,NODO expre2, int ope) {
 	
 }
 
+int insertar_para(NODO expre1,NODO expre2, int ope, NODO *var) { 
+	ARBOL *aux;
+	
+	aux= malloc(sizeof(ARBOL));
+
+	if(aux==NULL)	{
+	 printf("Error. No hay memoria para otro ARBOL.");
+	 return 0;
+	}
+	else {
+		aux->exp1=expre1;		
+		aux->exp2=expre2;
+		aux->op=ope;
+		aux->var=var;
+		aux->izq=NULL;
+		
+		strcpy(aux->exp1.nombre,var->nombre);
+		
+		if(INICIO==NULL) {
+			INICIO=aux;
+			FINAL=aux;
+			aux->der=NULL;
+			aux->raiz=NULL;
+		}
+		else if(FINAL->op==PLACEHOLDER) {
+			aux->izq=FINAL->izq;
+			aux->raiz=FINAL->raiz;
+			*FINAL=*aux;
+		}
+		else {
+			FINAL->der=aux;
+			aux->raiz=FINAL;
+			FINAL=aux;
+			aux->der=NULL;
+		}
+	}
+}
+
 //Función para copiar los datos de un elemento a un nodo
 void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool,float valnum,int valint,char *nombre) {
 	a->tipo=tipo;

@@ -2,16 +2,12 @@ programa prueba2
 
 var
 	aux2 entero
-	aux1 entero
 
 inicio
-		aux1=0
-		aux2=5
 		
-		mientras aux1<aux2
-			escribir(aux1)
-			++aux1
-		fin
+		para aux2=10 hasta 5 hacer
+			escribir(aux2)
+		fin	
 		
-			escribir("una vez")
+		escribir("una vez")
 fin

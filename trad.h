@@ -33,6 +33,7 @@
 #define OP_SI 21
 #define OP_ELSE 22
 #define OP_WHILE 23
+#define OP_PARA 24
 #define OP_FIN 30
 
 
@@ -54,10 +55,7 @@ typedef struct NODO {
 //Manejador para el fichero de salida
 FILE *salida;
 
-//Buscar y añadir
-NODO *buscar_simbolo(char *nombre,NODO **com,NODO **fin);
-//Buscar y devolver un nodo a esa variable
-NODO **buscar(char *nombre,NODO **com,NODO **fin);
+
 
 typedef struct ARBOL{
 	struct ARBOL *der;
@@ -73,10 +71,19 @@ typedef struct ARBOL{
 	NODO *var2;
 }ARBOL;
 
+
 ARBOL *INICIO;
 ARBOL *FINAL;
 
 
+//////////////////////////////////////////////////////////////////////////
+/*Funciones para la busqueda en la tabla de símbolos*/
+//////////////////////////////////////////////////////////////////////////
+
+//Buscar y añadir
+NODO *buscar_simbolo(char *nombre,NODO **com,NODO **fin);
+//Buscar y devolver un nodo a esa variable
+NODO **buscar(char *nombre,NODO **com,NODO **fin);
 
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para pasar del pseudo a C*/
@@ -123,8 +130,12 @@ void intr_inc(char *nombre,int post);
 //////////////////////////////////////////////////////////////////////////
 //Pasar de elemento a nodo
 void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool,float valnum,int valint,char *nombre);
+
 //Crear el árbol o añadir nodo
 int insertar(NODO expre1,NODO expre2, int ope, NODO *var);
 
 //Insertar expresión en el hijo izquierdo del arbol
 int insertarexp(NODO expre1,NODO expre2, int ope);
+
+//Inserta un nodo para
+int insertar_para(NODO expre1,NODO expre2, int ope, NODO *var);

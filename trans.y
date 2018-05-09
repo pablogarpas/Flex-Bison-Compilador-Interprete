@@ -84,7 +84,7 @@ NODO *auxvar2;
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar control2 decre else
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar control2 decre else control3 control4
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -564,7 +564,7 @@ else:
 		insertar(auxnodo1,auxnodo2,OP_ELSE,auxvar);
 	};
 /////////////////////////////////////////////////////////////////////////////////////////////////	
-control2:	
+control3:
 	TK_SI exp
 	{
 		strcpy($$.trad,$2.trad);
@@ -573,8 +573,12 @@ control2:
 	
 		insertar(auxnodo1,auxnodo2,OP_SI,auxvar);
 	}
-	| TK_MIENTRAS exp
+	;
+////////////////////////////////////////////////////////////////////////////////////////////////
+control2:	
+ TK_MIENTRAS exp
 	{
+	
 		strcpy($$.trad,$2.trad);
 		
 		copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre);
@@ -582,57 +586,12 @@ control2:
 		insertar(auxnodo1,auxnodo2,OP_WHILE,auxvar);
 	}
 	;
-/////////////////////////////////////////////////////////////////////////////////////////////////	
-control:
-//if sin else
-	control2 cont lista_sentencias 
+////////////////////////////////////////////////////////////////////////////////////////////////
+control4:
+TK_PARA TK_VARIABLE TK_ASIG TK_ENT TK_HASTA TK_ENT 
 	{
-		strcpy($$.trad,"if (");
-		strcat($$.trad,$1.trad);
-		strcat($$.trad,")\n");
-		strcat($$.trad,$2.trad);
-	}
-/*************************************************************************************************/
-//if con else
-	| control2 cont lista_sentencias else lista_sentencias
-	{
-		strcpy($$.trad,"if (");
-		strcat($$.trad,$1.trad);
-		strcat($$.trad,")\n");
-		strcat($$.trad,$3.trad);
-		strcat($$.trad,"} else {\n");
-		strcat($$.trad,$5.trad);
-	}
-/*************************************************************************************************/
-	| control2 cont lista_sentencias 
-	{
-		strcpy($$.trad,"while (");
-		strcat($$.trad,$1.trad);
-		strcat($$.trad,") {\n");
-		strcat($$.trad,$3.trad);
-		
-		//while($2.valbool)
-			//strcpy($$.res,$4.res);
-	}
-/*************************************************************************************************/
-	| TK_HAZ sentencia TK_MIENTRAS exp
-	{
-		strcpy($$.trad,"do {\n");
-		strcat($$.trad,$2.trad);
-		strcat($$.trad,"} while(");		
-		strcat($$.trad,$4.trad);
-		strcat($$.trad,");\n");		
-	}
-/*************************************************************************************************/
-	| TK_PARA TK_VARIABLE TK_ASIG exp TK_HASTA exp cont lista_sentencias
-	{
-		//printf("%s",intr_para($2->nombre,$4.trad,$6.trad));
-		
 		char signo[3]=">";
 		char op[3];
-		int ini;
-		int obj;
-		int i;
 		
 		//Se comprueba si el valor objetivo es mayor o menor que el inicial para 
 		//Hacer el for bien
@@ -667,14 +626,55 @@ control:
 		strcat($$.trad,$2->nombre);
 		strcat($$.trad,op);
 		strcat($$.trad,")");
-		strcat($$.trad,$7.trad);
-		strcat($$.trad,$8.trad);
 		
-		ini=atoi($4.trad);
-		obj=atoi($6.trad);
+		auxvar=$2;
+		copiardatos(&auxnodo1,$4.tipo,$4.escons,$4.espun,$4.valstr,$4.valbool,$4.valnum,$4.valint,$4.nombre);
+		copiardatos(&auxnodo2,$6.tipo,$6.escons,$6.espun,$6.valstr,$6.valbool,$6.valnum,$6.valint,$6.nombre);
+	
+		insertar_para(auxnodo1,auxnodo2,OP_PARA,auxvar);
+	}
+	;
+/////////////////////////////////////////////////////////////////////////////////////////////////	
+control:
+//if sin else
+	control3 cont lista_sentencias 
+	{
+		strcpy($$.trad,"if (");
+		strcat($$.trad,$1.trad);
+		strcat($$.trad,")\n");
+		strcat($$.trad,$2.trad);
+	}
+/*************************************************************************************************/
+//if con else
+	| control3 cont lista_sentencias else lista_sentencias
+	{
+		strcpy($$.trad,"if (");
+		strcat($$.trad,$1.trad);
+		strcat($$.trad,")\n");
+		strcat($$.trad,$3.trad);
+		strcat($$.trad,"} else {\n");
+		strcat($$.trad,$5.trad);
+	}
+/*************************************************************************************************/
+//while
+	| control2 cont lista_sentencias 
+	{
+	
+		strcpy($$.trad,"while (");
+		strcat($$.trad,$1.trad);
+		strcat($$.trad,") {\n");
+		strcat($$.trad,$3.trad);
 		
-		for(i=ini;i<obj;i++)
-			printf("%s",$8.res);
+		//while($2.valbool)
+			//strcpy($$.res,$4.res);
+	}
+/*************************************************************************************************/
+//PARA
+	| control4 cont lista_sentencias
+	{		
+		strcpy($$.trad,$1.trad);
+		strcat($$.trad,$2.trad);
+		strcat($$.trad,$3.trad);
 	}
 /*************************************************************************************************/
 	| TK_SWITCH TK_VARIABLE cases
@@ -1239,6 +1239,7 @@ int main(int argc, char **argv)
 		printf("\nError, programa vacio.\n");
 	else
 		ejecutar(INICIO,0);
+		
 }
 
 int ejecutar(ARBOL *var,int parar) {
@@ -1360,6 +1361,23 @@ int ejecutar(ARBOL *var,int parar) {
 				ejecutar(aux->der,1);
 				aux->exp1=procesarexp(aux->izq);
 				}
+			break;
+		case OP_PARA:
+			if(aux->izq!=NULL) 
+				aux->exp1=procesarexp(aux->izq);
+			
+			variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+		
+			variable->valint=aux->exp1.valint;
+		
+			while(variable->valint!= aux->exp2.valint) {
+				ejecutar(aux->der,1);
+				
+				if(aux->exp1.valint < aux->exp2.valint)
+					variable->valint++;
+				if(aux->exp1.valint > aux->exp2.valint)
+					variable->valint--;
+			}
 			break;
 		case OP_FIN:
 			if(parar)

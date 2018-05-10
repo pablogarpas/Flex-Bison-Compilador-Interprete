@@ -5,7 +5,9 @@
 {
 int aux2;
 int aux1;
-printf("Introduzca el valor de la variable:\n");
-scanf("%d ",&aux1);
-printf(" %d \n",aux1);
+aux1=5;
+if (aux1 == 5)
+{
+printf("hola\n");
+}
 }

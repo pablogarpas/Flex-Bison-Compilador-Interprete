@@ -655,6 +655,7 @@ control:
 		strcat($$.trad,$1.trad);
 		strcat($$.trad,")\n");
 		strcat($$.trad,$2.trad);
+		strcat($$.trad,$3.trad);
 	}
 /*************************************************************************************************/
 //if con else
@@ -662,7 +663,7 @@ control:
 	{
 		strcpy($$.trad,"if (");
 		strcat($$.trad,$1.trad);
-		strcat($$.trad,")\n");
+		strcat($$.trad,") {\n");
 		strcat($$.trad,$3.trad);
 		strcat($$.trad,"} else {\n");
 		strcat($$.trad,$5.trad);

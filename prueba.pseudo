@@ -2,14 +2,12 @@ programa prueba2
 
 var
 	aux2 entero
-	aux1 bool
+	aux1 entero
 
 inicio
-	
-	escribir("Introduzca el valor de la variable:")
-	
-	leer(aux1)
-	
-	escribir(aux1)
-	
+		aux1=5		
+				si aux1==5
+					escribir("hola")
+				
+				fin
 fin

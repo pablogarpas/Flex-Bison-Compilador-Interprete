@@ -2,33 +2,14 @@ programa prueba2
 
 var
 	aux2 entero
-	aux1 entero
+	aux1 bool
 
 inicio
-		aux1=5
-		
-		para aux1=0 hasta 10 hacer
-			para aux2=0 hasta 10 hacer
-				escribir(aux1,aux2)
-				
-				si aux1==10
-					escribir("hola")
-				sino
-					mientras aux1>5
-						escribir("adios")
-						-- aux1
-						switch aux1
-							caso 1
-								escribir("asd")
-							caso 2
-								escribir("asd")
-							caso 3
-								escribir("asd")
-							default
-								escribir("qwe")
-						fin
-					fin
-				fin
-			fin
-		fin
+	
+	escribir("Introduzca el valor de la variable:")
+	
+	leer(aux1)
+	
+	escribir(aux1)
+	
 fin

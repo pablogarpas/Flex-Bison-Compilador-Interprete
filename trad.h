@@ -37,6 +37,7 @@
 #define OP_SWITCH 25
 #define OP_CASE 26
 #define OP_DEFAULT 27
+#define OP_LEER 28
 #define OP_FIN 30
 
 

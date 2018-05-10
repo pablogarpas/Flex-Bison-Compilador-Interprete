@@ -956,6 +956,10 @@ lectura:
 	TK_LEER '('TK_VARIABLE')' //aqui leemos una variable
 	{
 		strcpy($$.trad,vis_entrada($3->tipo,$3->nombre,$3->espun));//Traducción
+		
+		auxvar=$3;
+	
+		insertar(auxnodo1,auxnodo2,OP_LEER,auxvar);
 	}
 	;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1446,6 +1450,25 @@ int ejecutar(ARBOL *var,int parar) {
 				nivel++;
 			}
 			break;
+		case OP_LEER:
+			variable=buscar_simbolo(aux->var->nombre,&com,&fin);
+			
+			printf("asd\n");fflush(stdout);
+			
+			if(variable->tipo==4 || variable->tipo==2)
+				fgets(variable->valstr,255,stdin);
+			else if(variable->tipo==6) {
+			printf("asd\n");fflush(stdout);
+				scanf("%d",&(variable->valint));
+				}
+			else if(variable->tipo==3)
+				scanf("%d",&(variable->valbool));
+			else if(variable->tipo==1)
+				scanf("%lf",&(variable->valnum));
+			else
+				yyerror("Error al leer: tipo no reconocido");
+				
+			printf("asd\n");fflush(stdout);	
 		}//switch
 		aux=aux->der;
 	}while(aux!=NULL);

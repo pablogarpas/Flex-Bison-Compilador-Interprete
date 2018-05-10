@@ -2,16 +2,21 @@ programa prueba2
 
 var
 	aux2 entero
+	aux1 entero
 
 inicio
-		aux2=7
+		aux1=5
 		
-		switch aux2
-			caso 5
-				escribir("hola")
-			caso 6
-				escribir("holi")
-			default
-				escribir("asd")
+		para aux1=0 hasta 10 hacer
+			para aux2=0 hasta 10 hacer
+				escribir(aux1,aux2)
+				
+				si aux1==10
+					escribir("hola")
+				sino
+					escribir("adios")
+				fin
+				
+			fin
 		fin
 fin

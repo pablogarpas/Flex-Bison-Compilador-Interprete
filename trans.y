@@ -10,6 +10,7 @@
 int ejecutar(ARBOL *var,int parar);
 NODO procesarexp(ARBOL *aux);
 //Variables globales
+int nivel;//variable para controlar el nivel en el que parar
 int   auxb;  //variable auxiliar para la lectura de booleanos 
 int   auxint;  //variable auxiliar para la lectura de enteros
 float auxn;  //variable auxiliar para la lectura de numeros
@@ -1360,6 +1361,9 @@ int ejecutar(ARBOL *var,int parar) {
 			yyerror("Error en el decremento: No se puede incrementar una variable no númerica");
 			break;
 		case OP_SI:		
+			parar++;
+			nivel++;
+			
 			if(aux->izq!=NULL) 
 				aux->exp1=procesarexp(aux->izq);	
 			
@@ -1375,6 +1379,9 @@ int ejecutar(ARBOL *var,int parar) {
 				}
 			break;
 		case OP_WHILE:		
+			parar++;
+			nivel++;
+			
 			if(aux->izq!=NULL) 
 				aux->exp1=procesarexp(aux->izq);
 			
@@ -1384,6 +1391,8 @@ int ejecutar(ARBOL *var,int parar) {
 				}
 			break;
 		case OP_PARA:
+			parar++;
+			nivel++;
 			
 			variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
 		
@@ -1399,7 +1408,9 @@ int ejecutar(ARBOL *var,int parar) {
 			}
 			break;
 		case OP_SWITCH:
-		
+			parar++;
+			nivel++;
+					
 			variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
 		
 			while(aux->der->op!=OP_FIN) {
@@ -1418,16 +1429,22 @@ int ejecutar(ARBOL *var,int parar) {
 			defecto=0;
 			break;
 		case OP_FIN:
-			if(parar)
+			if(parar==nivel) {
 				return 1;
+				nivel++;
+			}
 			break;
 		case OP_CASE:
-			if(parar)
+			if(parar==nivel) {
 				return 1;
+				nivel++;
+			}
 			break;
 		case OP_DEFAULT:
-			if(parar)
+			if(parar==nivel) {
 				return 1;
+				nivel++;
+			}
 			break;
 		}//switch
 		aux=aux->der;

@@ -4,16 +4,17 @@
 #include <string.h>int main() 
 {
 int aux2;
-aux2=7;
-switch (aux2){
-default:
-printf("asd\n");
-break;
-case 6:
-printf("holi\n");
-break;
-case 5:
+int aux1;
+aux1=5;
+for (aux1=0;aux1<10;aux1++){
+for (aux2=0;aux2<10;aux2++){
+printf(" %d \n",aux1);
+printf(" %d \n",aux2);
+if (aux1 == 10)
 printf("hola\n");
-break;
+} else {
+printf("adios\n");
+}
+}
 }
 }

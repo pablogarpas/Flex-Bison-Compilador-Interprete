@@ -3103,16 +3103,16 @@ int ejecutar(ARBOL *var,int parar) {
 			else
 			yyerror("Error en el incremento: No se puede incrementar una variable no númerica");
 			break;
-		case OP_DEC:
+		case OP_DEC:			
 			if(aux->var->tipo==6) {			
-				variable=buscar(aux->exp1.nombre,&com,&fin);
+				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
 				variable->valint=variable->valint-1;				
 			}else if(aux->var->tipo==1) {
 				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
 				variable->valnum=variable->valnum-1;
 			}
 			else
-			yyerror("Error en el decremento: No se puede incrementar una variable no númerica");
+			yyerror("Error en el incremento: No se puede incrementar una variable no númerica");
 			break;
 		case OP_SI:		
 			parar++;

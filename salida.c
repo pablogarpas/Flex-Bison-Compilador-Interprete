@@ -13,7 +13,24 @@ printf(" %d \n",aux2);
 if (aux1 == 10)
 printf("hola\n");
 } else {
+while (aux1 > 5) {
 printf("adios\n");
+aux1--;
+switch (aux1){
+default:
+printf("qwe\n");
+break;
+case 3:
+printf("asd\n");
+break;
+case 2:
+printf("asd\n");
+break;
+case 1:
+printf("asd\n");
+break;
+}
+}
 }
 }
 }

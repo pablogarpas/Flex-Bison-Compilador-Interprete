@@ -3031,8 +3031,6 @@ int ejecutar(ARBOL *var,int parar) {
 	int defecto;
 	aux=var;
 	
-
-	
 	do {
 		switch(aux->op){
 		case OP_ESCRIBIR:
@@ -3244,6 +3242,9 @@ NODO procesarexp(ARBOL *aux){
 	
 	a= malloc(sizeof(NODO));
 	b= malloc(sizeof(NODO));
+
+	if(aux->izq!=NULL) 
+		aux->exp1=procesarexp(aux->izq);
 	
 	switch(aux->op){
 		case OP_IGUALDAD:
@@ -3820,6 +3821,8 @@ NODO procesarexp(ARBOL *aux){
 				strcpy(b,variable->valstr);
 			}
 
+			printf("s1:%d\ts2:%d\n",i,k);
+			
 			if ((aux->exp1.tipo==1) && (aux->exp2.tipo==1)){
 				retorno.tipo=1;
 				retorno.valnum = real1 + real2;

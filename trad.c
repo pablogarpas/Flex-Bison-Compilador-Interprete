@@ -355,7 +355,7 @@ int insertar(NODO expre1,NODO expre2, int ope, NODO *var)
 //Insertar expresión en el arbol
 int insertarexp(NODO expre1,NODO expre2, int ope) {
 
-	ARBOL *aux,*aux2;
+	ARBOL *aux,*aux2,*aux3;
 	aux= malloc(sizeof(ARBOL));
 	aux2= malloc(sizeof(ARBOL));
 	
@@ -363,17 +363,32 @@ int insertarexp(NODO expre1,NODO expre2, int ope) {
 	 printf("Error. No hay memoria para otro ARBOL.");
 	 return 0;
 	}else if(INICIO==NULL){
-		INICIO=aux;
-		FINAL=aux;
-		aux->der=NULL;
-		aux->raiz=NULL;
+		INICIO=aux2;
+		FINAL=aux2;
+
 		
 		aux->exp1=expre1;
 		aux->exp2=expre2;
 		aux->op=ope;
 		
-		INICIO->op=PLACEHOLDER;
-		INICIO->izq=aux;
+		aux2->op=PLACEHOLDER;
+		aux2->izq=aux;
+	}
+	else if(FINAL->izq!=NULL) {
+		aux->exp1=expre1;
+		aux->exp2=expre2;
+		aux->op=ope;
+		aux->izq=NULL;
+		aux2=FINAL;
+
+		do{
+			aux3=aux2;
+			aux2=aux2->izq;
+
+		}while(aux2!=NULL);
+
+		aux3->izq=aux;
+
 	}
 	else {
 		aux->exp1=expre1;

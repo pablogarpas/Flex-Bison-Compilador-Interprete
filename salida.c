@@ -5,5 +5,5 @@
 {
 int aux2;
 int aux1;
-printf(" %d \n",4 + 5 + 5);
+printf(" %d \n",5 + 6 + 7 - 15 / 2);
 }

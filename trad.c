@@ -362,6 +362,18 @@ int insertarexp(NODO expre1,NODO expre2, int ope) {
 	if(aux2==NULL|| aux==NULL)	{
 	 printf("Error. No hay memoria para otro ARBOL.");
 	 return 0;
+	}else if(INICIO==NULL){
+		INICIO=aux;
+		FINAL=aux;
+		aux->der=NULL;
+		aux->raiz=NULL;
+		
+		aux->exp1=expre1;
+		aux->exp2=expre2;
+		aux->op=ope;
+		
+		INICIO->op=PLACEHOLDER;
+		INICIO->izq=aux;
 	}
 	else {
 		aux->exp1=expre1;

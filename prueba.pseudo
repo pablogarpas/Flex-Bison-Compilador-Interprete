@@ -5,9 +5,5 @@ var
 	aux1 entero
 
 inicio
-		aux1=5		
-				si aux1==5
-					escribir("hola")
-				
-				fin
+	escribir(4+5+5)
 fin

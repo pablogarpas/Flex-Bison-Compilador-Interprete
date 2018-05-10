@@ -974,6 +974,7 @@ exp:
 	
 	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
 	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre);
+
 	insertarexp(auxnodo1,auxnodo2,OP_SUMA);
 	}
 
@@ -1275,6 +1276,8 @@ int ejecutar(ARBOL *var,int parar) {
 	NODO *variable;
 	int defecto;
 	aux=var;
+	
+
 	
 	do {
 		switch(aux->op){

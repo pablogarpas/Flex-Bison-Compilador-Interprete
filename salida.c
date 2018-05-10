@@ -5,9 +5,5 @@
 {
 int aux2;
 int aux1;
-aux1=5;
-if (aux1 == 5)
-{
-printf("hola\n");
-}
+printf(" %d \n",4 + 5 + 5);
 }

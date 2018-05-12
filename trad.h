@@ -6,7 +6,7 @@
 //2->string;
 //3->bool;
 //4->cadena;
-//5->tipo generico;
+//5->delimitador;
 //6->entero;
 
 #define PLACEHOLDER 0
@@ -87,12 +87,18 @@ ARBOL *FINAL;
 /*Funciones para la busqueda en la tabla de símbolos*/
 //////////////////////////////////////////////////////////////////////////
 
-//Buscar y añadir
+//añadir
 NODO *introducir(char *nombre,NODO **com,NODO **fin);
 //Buscar y devolver un nodo a esa variable
 NODO *buscar(char *nombre,NODO **com,NODO **fin);
 //Ver la tabla de símbolos
 void listar(NODO **com);
+//Revisar la tabla de símbolos para buscar fallos
+void revisar(NODO **com);
+//Introducir el delimitador para variables locales
+NODO *introducir_delim(char *nombre,NODO **com,NODO **fin);
+//Recorrer la tabla de símbolos buscando variables repetidas
+int recorrer(NODO **com,char *nombre);
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para pasar del pseudo a C*/
 //////////////////////////////////////////////////////////////////////////

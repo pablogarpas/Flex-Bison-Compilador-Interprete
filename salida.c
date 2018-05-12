@@ -13,8 +13,5 @@ int main()
 int aux;
 int aux3;
 printf("programa\n");
-printf(" %d \n",aux);
 prueba();
-aux=5;
-printf(" %d \n",aux);
 }

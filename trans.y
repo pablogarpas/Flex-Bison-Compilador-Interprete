@@ -131,6 +131,8 @@ cabecera:
 	{
 		$2->tipo=0;  	
 		insertar(auxnodo1,auxnodo2,OP_INICIO,auxvar);
+		
+		introducir_delim("main",&com,&fin);
 	};
 //////////////////////////////////////////////////////////////////////////////////////////////////
 librerias:
@@ -371,7 +373,8 @@ fun_dec:
 		auxvar=$2;
 		insertar_fun(auxvar,OP_FUN);
 		
-		introducir($2->nombre,&com,&fin);
+		
+		introducir_delim($2->nombre,&com,&fin);
 	}
 ;
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1303,9 +1306,9 @@ int main(int argc, char **argv)
 
 	fclose(salida);//se cierra el fichero de salida
 	
+	revisar(&com);
 	
-	
-	listar(&com);
+	//listar(&com);
 	
 	if(INICIO==NULL)
 		printf("\nError, programa vacio.\n");

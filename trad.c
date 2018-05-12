@@ -12,7 +12,38 @@ NODO *introducir(char nombre[20],NODO **com,NODO **fin)
 	}
     
 	strcpy(nuevo->nombre,nombre);//Nombre
-	nuevo->tipo=6;//Tipo génerico
+	nuevo->tipo=0;//Tipo génerico
+	if ((*com==NULL))
+	{
+		(nuevo->sig)=NULL;
+		*com=nuevo;
+		*fin=nuevo;
+		retorno=*com;
+		return (retorno);
+	}
+	else
+	{
+		(nuevo->sig)=NULL;			
+		(*fin)->sig=nuevo;
+		*fin=nuevo;
+		retorno=*fin;
+		return(retorno);
+	}
+}
+
+NODO *introducir_delim(char *nombre,NODO **com,NODO **fin) {
+	//variables
+	NODO *nuevo,*aux, *retorno;
+	aux=*com;//comienzo
+
+	if (!(nuevo=(NODO *)malloc(sizeof (NODO))))
+	{
+		printf("No se ha podido reservar memoria \n");
+		exit(0);
+	}
+  
+	strcpy(nuevo->nombre,nombre);//Nombre
+	nuevo->tipo=5;//Tipo génerico
 	if ((*com==NULL))
 	{
 		(nuevo->sig)=NULL;
@@ -57,9 +88,70 @@ void listar(NODO **com) {
 	
 	
 	while(aux!=NULL) {
-		if(aux->tipo!=0)
+		//if(aux->tipo!=0)
 			printf("%s\t%d\n",aux->nombre,aux->tipo);
 		aux=aux->sig;
+	}
+}
+
+void revisar(NODO **com) {
+	int error=0;
+	NODO **aux;
+	char msj[255];
+	
+	limpiar(com);
+	
+	aux=com;//comienzo
+	
+	while(*aux!=NULL) {
+		while((*aux)->tipo!=5) {
+			error=recorrer(aux,(*aux)->nombre);
+			if(error){
+				strcpy(msj,"Error en las variables, la variable ");
+				strcat(msj,(*aux)->nombre);
+				strcat(msj," está repetida");
+				
+				yyerror(msj);	
+			}
+			*aux=(*aux)->sig;
+		}
+		*aux=(*aux)->sig;
+	}
+}
+
+//recorre la lista
+int recorrer(NODO **com,char *nombre) {
+	NODO *aux;
+	aux=*com;//comienzo
+	int encontrado;
+
+	while(aux!=NULL && encontrado==0) {
+		if(strcmp(nombre,aux->nombre))
+			encontrado=1;
+		aux=aux->sig;
+	}
+	
+	return encontrado;
+}
+
+//Función para eliminar las variables que sobran de la lista
+void limpiar(NODO **com) {
+	NODO *aux,*aux2;
+	aux=*com;//comienzo
+	aux2=aux->sig;
+	aux=aux2->sig;
+	
+	*com=aux2;
+
+	while(aux!=NULL) {
+		if(aux->tipo==0) { 
+			aux2->sig=aux->sig;
+			free(aux);
+			aux=aux2->sig;
+		}else {
+			aux2=aux;
+			aux=aux->sig;
+		}
 	}
 }
 //////////////////////////////////////////////////////////////////////////

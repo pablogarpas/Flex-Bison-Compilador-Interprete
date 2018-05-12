@@ -21,6 +21,9 @@ NODO auxnodo1;//Variables para trabajar con la lista
 NODO auxnodo2;
 NODO *auxvar;
 NODO *auxvar2;
+
+extern com;
+extern fin;
 %}
 
 
@@ -362,10 +365,13 @@ funciones:
 fun_dec:
 	TK_FUNCION TK_VARIABLE
 	{
-		strcpy($$.trad,$2->valstr);
+		strcpy($$.trad,$2->nombre);
 		
+		$2->tipo=0;
 		auxvar=$2;
 		insertar_fun(auxvar,OP_FUN);
+		
+		introducir($2->nombre,&com,&fin);
 	}
 ;
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1298,7 +1304,7 @@ int main(int argc, char **argv)
 	fclose(salida);//se cierra el fichero de salida
 	
 	
-	extern com;
+	
 	listar(&com);
 	
 	if(INICIO==NULL)
@@ -1310,8 +1316,8 @@ int main(int argc, char **argv)
 
 int ejecutar(ARBOL *var,int parar) {
 	ARBOL *aux,*aux2;
-	extern com;
-	extern fin;
+	
+	
 	NODO *variable;
 	int defecto;
 	int encontrada;
@@ -1336,7 +1342,7 @@ int ejecutar(ARBOL *var,int parar) {
 						printf("%f\n",aux->exp1.valnum);
 					}
 					else {
-						variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+						variable=buscar(aux->exp1.nombre,&com,&fin);
 						printf("%f\n",variable->valnum);
 					}
 					break;
@@ -1345,7 +1351,7 @@ int ejecutar(ARBOL *var,int parar) {
 						printf("%s\n",aux->exp1.valstr);
 					}
 					else {
-						variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+						variable=buscar(aux->exp1.nombre,&com,&fin);
 						printf("%s\n",variable->valstr);
 					}
 					break;
@@ -1354,7 +1360,7 @@ int ejecutar(ARBOL *var,int parar) {
 						printf("%d\n",aux->exp1.valbool);
 					}
 					else {
-						variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+						variable=buscar(aux->exp1.nombre,&com,&fin);
 						printf("%d\n",variable->valbool);
 					}
 					break;
@@ -1363,7 +1369,7 @@ int ejecutar(ARBOL *var,int parar) {
 						printf("%s\n",aux->exp1.valstr);
 					}
 					else {
-						variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+						variable=buscar(aux->exp1.nombre,&com,&fin);
 						printf("%s\n",variable->valstr);
 					}
 					break;
@@ -1372,7 +1378,7 @@ int ejecutar(ARBOL *var,int parar) {
 						printf("%d\n",aux->exp1.valint);
 					}
 					else {
-						variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+						variable=buscar(aux->exp1.nombre,&com,&fin);
 						printf("%d\n",variable->valint);
 					}
 					break;
@@ -1393,10 +1399,10 @@ int ejecutar(ARBOL *var,int parar) {
 			break;
 		case OP_INC:
 			if(aux->var->tipo==6) {			
-				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				variable=buscar(aux->exp1.nombre,&com,&fin);
 				variable->valint=variable->valint+1;				
 			}else if(aux->var->tipo==1) {
-				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				variable=buscar(aux->exp1.nombre,&com,&fin);
 				variable->valnum=variable->valnum+1;
 			}
 			else
@@ -1404,10 +1410,10 @@ int ejecutar(ARBOL *var,int parar) {
 			break;
 		case OP_DEC:			
 			if(aux->var->tipo==6) {			
-				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				variable=buscar(aux->exp1.nombre,&com,&fin);
 				variable->valint=variable->valint-1;				
 			}else if(aux->var->tipo==1) {
-				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				variable=buscar(aux->exp1.nombre,&com,&fin);
 				variable->valnum=variable->valnum-1;
 			}
 			else
@@ -1447,7 +1453,7 @@ int ejecutar(ARBOL *var,int parar) {
 			parar++;
 			nivel++;
 			
-			variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+			variable=buscar(aux->exp1.nombre,&com,&fin);
 		
 			variable->valint=aux->exp1.valint;
 		
@@ -1464,7 +1470,7 @@ int ejecutar(ARBOL *var,int parar) {
 			parar++;
 			nivel++;
 					
-			variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+			variable=buscar(aux->exp1.nombre,&com,&fin);
 		
 			while(aux->der->op!=OP_FIN) {
 				if(aux->der->op==OP_DEFAULT) {
@@ -1500,7 +1506,7 @@ int ejecutar(ARBOL *var,int parar) {
 			}
 			break;
 		case OP_LEER:
-			variable=buscar_simbolo(aux->var->nombre,&com,&fin);
+			variable=buscar(aux->var->nombre,&com,&fin);
 			
 			printf("asd\n");fflush(stdout);
 			
@@ -1546,8 +1552,8 @@ int ejecutar(ARBOL *var,int parar) {
 NODO procesarexp(ARBOL *aux){
 	NODO retorno;
 	NODO *variable;
-	extern com;
-	extern fin;
+	
+	
 	int i,k;
 	char *a,*b;
 	float real1,real2;
@@ -1574,7 +1580,7 @@ NODO procesarexp(ARBOL *aux){
 				bool1=aux->exp1.valbool;
 				strcpy(a,aux->exp1.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				variable=buscar(aux->exp1.nombre,&com,&fin);
 				i=variable->valint;
 				real1=variable->valnum;
 				bool1=variable->valbool;
@@ -1587,7 +1593,7 @@ NODO procesarexp(ARBOL *aux){
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				variable=buscar(aux->exp2.nombre,&com,&fin);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
@@ -1657,7 +1663,7 @@ NODO procesarexp(ARBOL *aux){
 				if(aux->exp1.escons)
 					retorno.valbool = !aux->exp1.valbool;
 				else {
-					variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+					variable=buscar(aux->exp1.nombre,&com,&fin);
 					retorno.valbool=!(variable->valbool);
 				}
 			}
@@ -1670,13 +1676,13 @@ NODO procesarexp(ARBOL *aux){
 			if ((aux->exp2.tipo==3) && (aux->exp2.tipo==3)) {
 				retorno.tipo=3;
 				if(!aux->exp1.escons) {
-					variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+					variable=buscar(aux->exp1.nombre,&com,&fin);
 					i=variable->valbool;
 				} else
 					i=aux->exp1.valbool;
 					
 				if(!aux->exp2.escons) {
-					variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+					variable=buscar(aux->exp2.nombre,&com,&fin);
 					k=variable->valbool;
 				} else
 					k=aux->exp2.valbool;
@@ -1693,13 +1699,13 @@ NODO procesarexp(ARBOL *aux){
 			if ((aux->exp2.tipo==3) && (aux->exp2.tipo==3)) {
 				retorno.tipo=3;
 				if(!aux->exp1.escons) {
-					variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+					variable=buscar(aux->exp1.nombre,&com,&fin);
 					i=variable->valbool;
 				} else
 					i=aux->exp1.valbool;
 					
 				if(!aux->exp2.escons) {
-					variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+					variable=buscar(aux->exp2.nombre,&com,&fin);
 					k=variable->valbool;
 				} else
 					k=aux->exp2.valbool;
@@ -1719,7 +1725,7 @@ NODO procesarexp(ARBOL *aux){
 				bool1=aux->exp1.valbool;
 				strcpy(a,aux->exp1.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				variable=buscar(aux->exp1.nombre,&com,&fin);
 				i=variable->valint;
 				real1=variable->valnum;
 				bool1=variable->valbool;
@@ -1732,7 +1738,7 @@ NODO procesarexp(ARBOL *aux){
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				variable=buscar(aux->exp2.nombre,&com,&fin);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
@@ -1804,7 +1810,7 @@ NODO procesarexp(ARBOL *aux){
 				bool1=aux->exp1.valbool;
 				strcpy(a,aux->exp1.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				variable=buscar(aux->exp1.nombre,&com,&fin);
 				i=variable->valint;
 				real1=variable->valnum;
 				bool1=variable->valbool;
@@ -1817,7 +1823,7 @@ NODO procesarexp(ARBOL *aux){
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				variable=buscar(aux->exp2.nombre,&com,&fin);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
@@ -1884,7 +1890,7 @@ NODO procesarexp(ARBOL *aux){
 				bool1=aux->exp1.valbool;
 				strcpy(a,aux->exp1.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				variable=buscar(aux->exp1.nombre,&com,&fin);
 				i=variable->valint;
 				real1=variable->valnum;
 				bool1=variable->valbool;
@@ -1897,7 +1903,7 @@ NODO procesarexp(ARBOL *aux){
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				variable=buscar(aux->exp2.nombre,&com,&fin);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
@@ -1963,7 +1969,7 @@ NODO procesarexp(ARBOL *aux){
 				bool1=aux->exp1.valbool;
 				strcpy(a,aux->exp1.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				variable=buscar(aux->exp1.nombre,&com,&fin);
 				i=variable->valint;
 				real1=variable->valnum;
 				bool1=variable->valbool;
@@ -1976,7 +1982,7 @@ NODO procesarexp(ARBOL *aux){
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				variable=buscar(aux->exp2.nombre,&com,&fin);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
@@ -2042,7 +2048,7 @@ NODO procesarexp(ARBOL *aux){
 			bool1=aux->exp1.valbool;
 			strcpy(a,aux->exp1.valstr);
 		} else {
-			variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+			variable=buscar(aux->exp1.nombre,&com,&fin);
 			i=variable->valint;
 			real1=variable->valnum;
 			bool1=variable->valbool;
@@ -2055,7 +2061,7 @@ NODO procesarexp(ARBOL *aux){
 			bool2=aux->exp2.valbool;
 			strcpy(b,aux->exp2.valstr);
 		} else {
-			variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+			variable=buscar(aux->exp2.nombre,&com,&fin);
 			k=variable->valint;
 			real2=variable->valnum;
 			bool2=variable->valbool;
@@ -2121,7 +2127,7 @@ NODO procesarexp(ARBOL *aux){
 				bool1=aux->exp1.valbool;
 				strcpy(a,aux->exp1.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				variable=buscar(aux->exp1.nombre,&com,&fin);
 				i=variable->valint;
 				real1=variable->valnum;
 				bool1=variable->valbool;
@@ -2134,7 +2140,7 @@ NODO procesarexp(ARBOL *aux){
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				variable=buscar(aux->exp2.nombre,&com,&fin);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
@@ -2187,7 +2193,7 @@ NODO procesarexp(ARBOL *aux){
 				bool1=aux->exp1.valbool;
 				strcpy(a,aux->exp1.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				variable=buscar(aux->exp1.nombre,&com,&fin);
 				i=variable->valint;
 				real1=variable->valnum;
 				bool1=variable->valbool;
@@ -2200,7 +2206,7 @@ NODO procesarexp(ARBOL *aux){
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				variable=buscar(aux->exp2.nombre,&com,&fin);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
@@ -2237,7 +2243,7 @@ NODO procesarexp(ARBOL *aux){
 				bool1=aux->exp1.valbool;
 				strcpy(a,aux->exp1.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				variable=buscar(aux->exp1.nombre,&com,&fin);
 				i=variable->valint;
 				real1=variable->valnum;
 				bool1=variable->valbool;
@@ -2250,7 +2256,7 @@ NODO procesarexp(ARBOL *aux){
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				variable=buscar(aux->exp2.nombre,&com,&fin);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
@@ -2287,7 +2293,7 @@ NODO procesarexp(ARBOL *aux){
 				bool1=aux->exp1.valbool;
 				strcpy(a,aux->exp1.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				variable=buscar(aux->exp1.nombre,&com,&fin);
 				i=variable->valint;
 				real1=variable->valnum;
 				bool1=variable->valbool;
@@ -2300,7 +2306,7 @@ NODO procesarexp(ARBOL *aux){
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				variable=buscar(aux->exp2.nombre,&com,&fin);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
@@ -2346,7 +2352,7 @@ NODO procesarexp(ARBOL *aux){
 				bool1=aux->exp1.valbool;
 				strcpy(a,aux->exp1.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				variable=buscar(aux->exp1.nombre,&com,&fin);
 				i=variable->valint;
 				real1=variable->valnum;
 				bool1=variable->valbool;
@@ -2359,7 +2365,7 @@ NODO procesarexp(ARBOL *aux){
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				variable=buscar(aux->exp2.nombre,&com,&fin);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
@@ -2384,7 +2390,7 @@ NODO procesarexp(ARBOL *aux){
 				bool1=aux->exp1.valbool;
 				strcpy(a,aux->exp1.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				variable=buscar(aux->exp1.nombre,&com,&fin);
 				i=variable->valint;
 				real1=variable->valnum;
 				bool1=variable->valbool;
@@ -2413,7 +2419,7 @@ NODO procesarexp(ARBOL *aux){
 				bool1=aux->exp1.valbool;
 				strcpy(a,aux->exp1.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp1.nombre,&com,&fin);
+				variable=buscar(aux->exp1.nombre,&com,&fin);
 				i=variable->valint;
 				real1=variable->valnum;
 				bool1=variable->valbool;
@@ -2426,7 +2432,7 @@ NODO procesarexp(ARBOL *aux){
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
 			} else {
-				variable=buscar_simbolo(aux->exp2.nombre,&com,&fin);
+				variable=buscar(aux->exp2.nombre,&com,&fin);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;

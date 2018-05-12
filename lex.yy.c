@@ -1121,7 +1121,7 @@ return TK_MOD;
 case 46:
 YY_RULE_SETUP
 #line 111 "lexico.f"
-{yylval.indice = buscar_simbolo(yytext,&com,&fin);
+{yylval.indice = introducir(yytext,&com,&fin);
                  //buscamos es la TS la variable y si no esta la añadimos
                  //introducimos en trad lo que el lex encuentra y aunque variable sea un puntero
                  //la expresion del yacc (el NT) almacena el valor de traduccion

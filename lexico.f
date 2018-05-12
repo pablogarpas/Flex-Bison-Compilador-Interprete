@@ -108,7 +108,7 @@ comentario [^/*\n]*[*/]
 "not"		return TK_NOT;
 "%" return TK_MOD;
 
-{variable}       {yylval.indice = buscar_simbolo(yytext,&com,&fin);
+{variable}       {yylval.indice = introducir(yytext,&com,&fin);
                  //buscamos es la TS la variable y si no esta la añadimos
                  //introducimos en trad lo que el lex encuentra y aunque variable sea un puntero
                  //la expresion del yacc (el NT) almacena el valor de traduccion

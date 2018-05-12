@@ -88,9 +88,9 @@ ARBOL *FINAL;
 //////////////////////////////////////////////////////////////////////////
 
 //Buscar y añadir
-NODO *buscar_simbolo(char *nombre,NODO **com,NODO **fin);
+NODO *introducir(char *nombre,NODO **com,NODO **fin);
 //Buscar y devolver un nodo a esa variable
-NODO **buscar(char *nombre,NODO **com,NODO **fin);
+NODO *buscar(char *nombre,NODO **com,NODO **fin);
 //Ver la tabla de símbolos
 void listar(NODO **com);
 //////////////////////////////////////////////////////////////////////////

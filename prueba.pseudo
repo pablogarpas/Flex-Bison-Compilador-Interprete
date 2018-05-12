@@ -11,8 +11,12 @@ inicio
 /* asd asd  */
 
 	escribir("programa")
+	escribir(aux)
 	llamar(prueba)
 
+	aux=5
+
+	escribir(aux)
 fin
 
 funcion prueba

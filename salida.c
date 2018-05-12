@@ -2,10 +2,10 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>#define var1 "comparando"
-int (int aux2, float a, char *aux){
+int qwer(int aux2, float a, char *aux){
 printf("no funciona\n");
 }
-int (int aux2, float a, char *aux){
+int prueba(int aux2, float a, char *aux){
 printf("funciona\n");
 }
 int main() 
@@ -13,5 +13,8 @@ int main()
 int aux;
 int aux3;
 printf("programa\n");
+printf(" %d \n",aux);
 prueba();
+aux=5;
+printf(" %d \n",aux);
 }

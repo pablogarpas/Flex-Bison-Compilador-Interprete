@@ -101,7 +101,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 28 "trans.y" /* yacc.c:1909  */
+#line 31 "trans.y" /* yacc.c:1909  */
 
 	struct NODO *indice; //puntero a la tabla de simbolos 
 	struct elemento {

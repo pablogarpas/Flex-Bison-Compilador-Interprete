@@ -99,6 +99,8 @@ void revisar(NODO **com);
 NODO *introducir_delim(char *nombre,NODO **com,NODO **fin);
 //Recorrer la tabla de símbolos buscando variables repetidas
 int recorrer(NODO **com,char *nombre);
+//Función para eliminar las variables que sobran de la lista
+void limpiar(NODO **com);
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para pasar del pseudo a C*/
 //////////////////////////////////////////////////////////////////////////

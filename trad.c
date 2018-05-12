@@ -105,7 +105,7 @@ void revisar(NODO **com) {
 	
 	while(*aux!=NULL) {
 		while((*aux)->tipo!=5) {
-			error=recorrer(aux,(*aux)->nombre);
+			error=recorrer(com,(*aux)->nombre);
 			if(error){
 				strcpy(msj,"Error en las variables, la variable ");
 				strcat(msj,(*aux)->nombre);
@@ -124,13 +124,17 @@ int recorrer(NODO **com,char *nombre) {
 	NODO *aux;
 	aux=*com;//comienzo
 	int encontrado;
-
-	while(aux!=NULL && encontrado==0) {
-		if(strcmp(nombre,aux->nombre))
+	aux=aux->sig;
+	
+	while(aux->sig!=NULL) {
+		if(aux->tipo==5)
+			return encontrado;
+		if(strcmp(nombre,aux->nombre)==0) {
 			encontrado=1;
+			return encontrado;
+			}
 		aux=aux->sig;
 	}
-	
 	return encontrado;
 }
 

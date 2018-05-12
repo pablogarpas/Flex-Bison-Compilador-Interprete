@@ -110,6 +110,8 @@ programa:
 		fprintf(salida,intr_cabecera());//Introducir el main después de las constantes
 		fprintf(salida,$4.trad);
 		fprintf(salida,$5.trad);
+		
+		introducir_delim("fin",&com,&fin);
 	};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1307,8 +1309,6 @@ int main(int argc, char **argv)
 	fclose(salida);//se cierra el fichero de salida
 	
 	revisar(&com);
-	
-	//listar(&com);
 	
 	if(INICIO==NULL)
 		printf("\nError, programa vacio.\n");

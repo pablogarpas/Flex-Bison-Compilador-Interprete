@@ -1,14 +1,14 @@
 programa prueba2
 
 const
-	asd "comparando"
+	var1 "comparando"
 
 var
 	aux entero
 	aux3 entero
 
 inicio
-$$ asd $$
+/* asd asd  */
 
 	escribir("programa")
 	llamar(prueba)

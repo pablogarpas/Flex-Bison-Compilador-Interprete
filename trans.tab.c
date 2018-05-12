@@ -3064,6 +3064,10 @@ int main(int argc, char **argv)
 
 	fclose(salida);//se cierra el fichero de salida
 	
+	
+	extern com;
+	listar(&com);
+	
 	if(INICIO==NULL)
 		printf("\nError, programa vacio.\n");
 	else
@@ -3321,8 +3325,6 @@ NODO procesarexp(ARBOL *aux){
 
 	if(aux!=INICIO && aux->izq!=NULL)
 		aux->exp1=procesarexp(aux->izq);
-		
-	printf("asd\n");fflush(stdout);
 	
 	do{
 		printf("%s\n",aux->exp1.nombre);

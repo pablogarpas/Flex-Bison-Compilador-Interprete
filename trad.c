@@ -37,9 +37,10 @@ NODO *buscar_simbolo(char nombre[20],NODO **com,NODO **fin)
 	{
 		if (encontrado==0)
 		{
-			(nuevo->sig)=*com;			
-			*com=nuevo;
-			retorno=*com;
+			(nuevo->sig)=NULL;			
+			(*fin)->sig=nuevo;
+			*fin=nuevo;
+			retorno=*fin;
 			return(retorno);
 		}
 	}
@@ -61,6 +62,19 @@ NODO **buscar(char nombre[20],NODO **com,NODO **fin)
 			return(retorno);//Devolver nodo
 		}
 	 aux=aux->sig;
+	}
+}
+
+void listar(NODO **com) {
+
+	NODO *aux;
+	aux=*com;//comienzo
+	
+	
+	while(aux!=NULL) {
+		if(aux->tipo!=0)
+			printf("%s\t%d\n",aux->nombre,aux->tipo);
+		aux=aux->sig;
 	}
 }
 //////////////////////////////////////////////////////////////////////////

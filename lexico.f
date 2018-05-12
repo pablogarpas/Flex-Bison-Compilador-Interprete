@@ -37,7 +37,7 @@ booleano (true|false)
 variable {letra}({letra}|[0-9]|_)* 
 cadena   \"[^\"\n]*[\"] 
 salto \n
-comentario [^$$\n]*[$$] 
+comentario [^/*\n]*[*/] 
 %%
 {entero}       {yylval.ELEMENTO.valint = atoi(yytext);
 		 yylval.ELEMENTO.tipo=1;
@@ -139,6 +139,25 @@ comentario [^$$\n]*[$$]
 
 
 %%
+
+comment()
+{
+	char c, c1;
+
+loop:
+	while ((c = input()) != '*' && c != 0)
+		putchar(c);
+
+	if ((c1 = input()) != '/' && c != 0)
+	{
+		unput(c1);
+		goto loop;
+	}
+
+	if (c != 0)
+		putchar(c1);
+}
+
 int yywrap(){
 return 1;
 }

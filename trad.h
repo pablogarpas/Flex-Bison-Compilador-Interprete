@@ -91,7 +91,8 @@ ARBOL *FINAL;
 NODO *buscar_simbolo(char *nombre,NODO **com,NODO **fin);
 //Buscar y devolver un nodo a esa variable
 NODO **buscar(char *nombre,NODO **com,NODO **fin);
-
+//Ver la tabla de símbolos
+void listar(NODO **com);
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para pasar del pseudo a C*/
 //////////////////////////////////////////////////////////////////////////

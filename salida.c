@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>#define asd "comparando"
+#include <string.h>#define var1 "comparando"
 int (int aux2, float a, char *aux){
 printf("no funciona\n");
 }

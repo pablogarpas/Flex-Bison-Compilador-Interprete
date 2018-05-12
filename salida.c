@@ -1,9 +1,17 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>int main() 
+#include <string.h>#define asd "comparando"
+int (int aux2, float a, char *aux){
+printf("no funciona\n");
+}
+int (int aux2, float a, char *aux){
+printf("funciona\n");
+}
+int main() 
 {
-int aux2;
-int aux1;
-printf(" %d \n",5 + 6 + 7 - 15 / 2);
+int aux;
+int aux3;
+printf("programa\n");
+prueba();
 }

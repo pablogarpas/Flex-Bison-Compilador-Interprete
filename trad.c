@@ -453,3 +453,38 @@ void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool
 	a->valint = valint;
 	strcpy(a->nombre,nombre);
 }
+
+//Inserta una funcion en el árbol
+int insertar_fun(NODO *var, int ope) { 
+	ARBOL *aux,*aux2;
+	
+	aux= malloc(sizeof(ARBOL));
+	aux2= malloc(sizeof(ARBOL));
+
+	if(aux==NULL||aux2==NULL)	{
+	 printf("Error. No hay memoria para otro ARBOL.");
+	 return 0;
+	}
+	else {
+		strcpy(aux->exp1.nombre,var->nombre);
+		aux->op=ope;
+		
+		if(INICIO==NULL) {
+			INICIO=aux2;
+			FINAL=aux2;
+			aux2->izq=aux;
+		}else if(INICIO->izq!=NULL) {
+			aux2=INICIO;
+			do{
+				aux2=aux2->izq;
+			}while(aux2->izq!=NULL);
+			aux2->izq=aux;
+			FINAL=aux;
+		}else {
+			INICIO->izq=aux;
+			aux->raiz=INICIO;
+			FINAL=aux;
+			aux->der=NULL;
+		}
+	}
+}

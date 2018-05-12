@@ -54,7 +54,6 @@ NODO *auxvar2;
 %token    TK_ENTERO
 %token    TK_REAL
 %token    TK_BOOL
-%token    TK_STRING
 %token		TK_MIENTRAS
 %token		TK_IGU
 %token		TK_HAZ
@@ -81,11 +80,12 @@ NODO *auxvar2;
 %token    TK_CASO
 %token	<ELEMENTO>	TK_COM
 %token  <ELEMENTO> TK_CADENA
+%token  <ELEMENTO> TK_STRING
 %token 	<ELEMENTO> TK_NBOOL
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar control2 decre else control3 control4 control5
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar_fun llamar_arg control2 decre else control3 control4 control5 fun_dec
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -107,7 +107,6 @@ programa:
 		fprintf(salida,intr_cabecera());//Introducir el main después de las constantes
 		fprintf(salida,$4.trad);
 		fprintf(salida,$5.trad);
-		
 	};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -128,6 +127,7 @@ cabecera:
 	TK_PROGRAM TK_VARIABLE salto_lin
 	{
 		$2->tipo=0;  	
+		insertar(auxnodo1,auxnodo2,OP_INICIO,auxvar);
 	};
 //////////////////////////////////////////////////////////////////////////////////////////////////
 librerias:
@@ -358,22 +358,33 @@ funciones:
 		strcat($$.trad,$1.trad);
 	}
 	;
+//////////////////////////////////////////////////////////////////////////////////////////////////
+fun_dec:
+	TK_FUNCION TK_VARIABLE
+	{
+		strcpy($$.trad,$2->valstr);
+		
+		auxvar=$2;
+		insertar_fun(auxvar,OP_FUN);
+	}
+;
+//////////////////////////////////////////////////////////////////////////////////////////////////
 funcion:
-	TK_FUNCION TK_VARIABLE dec_arg_fun dec_vbles TK_RETORNO tipo salto_lin lista_sentencias final
+	fun_dec dec_arg_fun dec_vbles TK_RETORNO tipo salto_lin lista_sentencias final
 	{
 		//printf("%s \n",$6.nombre);
-		if($6.tipo==1)
+		if($5.tipo==1)
 			strcpy($$.trad,"float ");
-		if($6.tipo==6||$6.tipo==3)
+		if($5.tipo==6||$5.tipo==3)
 			strcpy($$.trad,"int ");
-		if($6.tipo==2)
+		if($5.tipo==2)
 			strcpy($$.trad,"char *");
 			
-		strcat($$.trad,$2->nombre);
-		strcat($$.trad,$3.trad);
+		strcat($$.trad,$1.trad);
+		strcat($$.trad,$2.trad);
 		strcat($$.trad,"{\n");
+		strcat($$.trad,$7.trad);
 		strcat($$.trad,$8.trad);
-		strcat($$.trad,$9.trad);
 		
 		//printf("\n%s\n",$$.trad);
 	}
@@ -507,13 +518,20 @@ sentencia:
 		//printf("%s",$1.cad);
 		strcpy($$.trad,"");
 	}
+/************************************************************************************************/	
+	| llamar_fun ')'
+	{
+		strcpy($$.trad,$1.trad);
+		strcat($$.trad,"(");;
+		strcat($$.trad,");\n");
+	}
 /*************************************************************************************************/
 //Llamadas a funciones
-	| TK_LLAMAR '(' TK_VARIABLE ',' llamar ')'
+	| llamar_fun ',' llamar_arg ')'
 	{
-		strcpy($$.trad,$3->nombre);
+		strcpy($$.trad,$1.trad);
 		strcat($$.trad,"(");
-		strcat($$.trad,$5.trad);
+		strcat($$.trad,$3.trad);
 		strcat($$.trad,");\n");
 	}
 /************************************************************************************************/
@@ -522,6 +540,15 @@ sentencia:
 		strcpy($$.trad,$1.trad);
 	}
 	;
+//////////////////////////////////////////////////////////////////////////////////////////////////
+llamar_fun:
+	TK_LLAMAR  '(' TK_VARIABLE
+	{
+		strcpy($$.trad,$3->nombre);
+		strcpy(auxnodo1.nombre,$3->nombre);
+		insertar(auxnodo1,auxnodo2,OP_LLAMAR,auxvar);
+	}
+;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 decre:
 //Postincremento 
@@ -547,12 +574,12 @@ decre:
 	}
 ;
 /////////////////////////////////////////////////////////////////////////////////////////////////	
-llamar:
+llamar_arg:
 	exp
 	{
 		strcpy($$.trad,$1.trad);
 	}
-	| llamar ',' exp
+	| llamar_arg ',' exp
 	{
 		strcat($$.trad,", ");
 		strcat($$.trad,$3.trad);
@@ -1198,6 +1225,14 @@ exp:
 		$$.valint =$1.valint;	
 	}
 /*************************************************************************************************/
+//esto es una cadena
+	|	TK_STRING
+	{
+		$$.tipo=2;
+		$$.escons=1;
+		strcpy($$.valstr,$1.valstr);	
+	}
+/*************************************************************************************************/
 //esto es de tipo booleano aunque internamente la tratamos como un entero
 	|	TK_NBOOL
 	{
@@ -1270,11 +1305,19 @@ int main(int argc, char **argv)
 }
 
 int ejecutar(ARBOL *var,int parar) {
-	ARBOL *aux;
+	ARBOL *aux,*aux2;
 	extern com;
 	extern fin;
 	NODO *variable;
 	int defecto;
+	int encontrada;
+	/*
+	do{
+		printf("%s\n",aux->izq->exp1.nombre);
+		aux=aux->izq;
+	}while(aux->izq!=NULL);
+	*/
+	
 	aux=var;
 	
 	do {
@@ -1469,8 +1512,28 @@ int ejecutar(ARBOL *var,int parar) {
 				scanf("%lf",&(variable->valnum));
 			else
 				yyerror("Error al leer: tipo no reconocido");
-				
-			printf("asd\n");fflush(stdout);	
+			break;
+		case OP_LLAMAR:
+			aux2=INICIO;
+
+			while(aux2->izq!=NULL) {
+					aux2=aux2->izq;
+					
+					if(strcmp(aux2->exp1.nombre,aux->exp1.nombre)==0)
+						encontrada=1;		
+						
+					if(encontrada)
+						break;
+			}
+			
+			
+			
+			if(encontrada)
+				ejecutar(aux2,1);
+			else
+				yyerror("Error al llamar a la función; no se ha encontrado");
+			
+			break;
 		}//switch
 		aux=aux->der;
 	}while(aux!=NULL);
@@ -1489,8 +1552,17 @@ NODO procesarexp(ARBOL *aux){
 	a= malloc(sizeof(NODO));
 	b= malloc(sizeof(NODO));
 
-	if(aux->izq!=NULL) 
+	if(aux!=INICIO && aux->izq!=NULL)
 		aux->exp1=procesarexp(aux->izq);
+		
+	printf("asd\n");fflush(stdout);
+	
+	do{
+		printf("%s\n",aux->exp1.nombre);
+		aux=aux->izq;
+	}while(aux!=NULL);
+	
+	aux=INICIO;
 	
 	switch(aux->op){
 		case OP_IGUALDAD:

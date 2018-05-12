@@ -39,6 +39,9 @@
 #define OP_DEFAULT 27
 #define OP_LEER 28
 #define OP_FIN 30
+#define OP_INICIO 31
+#define OP_FUN 32
+#define OP_LLAMAR 33
 
 
 //tipo de los simbolos
@@ -130,7 +133,7 @@ void vis_exp(int tipo,char *cad);
 void intr_inc(char *nombre,int post);
 
 //////////////////////////////////////////////////////////////////////////
-/*Funciones para la compilación*/
+/*Funciones para el AST*/
 //////////////////////////////////////////////////////////////////////////
 //Pasar de elemento a nodo
 void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool,float valnum,int valint,char *nombre);
@@ -143,3 +146,6 @@ int insertarexp(NODO expre1,NODO expre2, int ope);
 
 //Inserta un nodo para
 int insertar_para(NODO expre1,NODO expre2, int ope, NODO *var);
+
+//Inserta una funcion en el árbol
+int insertar_fun(NODO *var, int ope);

@@ -10,11 +10,15 @@ var
 inicio
 /* asd asd  */
 
+	aux3=5
+
 	escribir("programa")
 
 	llamar(prueba)
 
 	escribir(var1)
+	
+	escribir(aux3)
 
 fin
 

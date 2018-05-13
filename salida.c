@@ -12,7 +12,9 @@ int main()
 {
 int aux;
 int aux3;
+aux3=5;
 printf("programa\n");
 prueba();
 printf("comparando\n");
+printf(" %d \n",aux3);
 }

@@ -86,9 +86,6 @@ ARBOL *FINAL;
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para la busqueda en la tabla de símbolos*/
 //////////////////////////////////////////////////////////////////////////
-
-//añadir
-NODO *introducir(char *nombre,NODO **com,NODO **fin);
 //Buscar y devolver un nodo a esa variable
 NODO *buscar(char *nombre,NODO **com,NODO **fin);
 //Ver la tabla de símbolos

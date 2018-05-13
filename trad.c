@@ -37,44 +37,12 @@ NODO *buscar_simbolo(char nombre[20],NODO **com,NODO **fin)
 	{
 		if (encontrado==0)
 		{
-			(nuevo->sig)=*com;			
-			*com=nuevo;
-			retorno=*com;
+			(nuevo->sig)=NULL;			
+			(*fin)->sig=nuevo;
+			*fin=nuevo;
+			retorno=*fin;
 			return(retorno);
 		}
-	}
-}
-
-//Buscar e introducir en la lista de simbolos
-NODO *introducir(char nombre[20],NODO **com,NODO **fin)
-{
-	//variables
-	NODO *nuevo,*aux, *retorno;
-	aux=*com;//comienzo
-
-	if (!(nuevo=(NODO *)malloc(sizeof (NODO))))
-	{
-		printf("No se ha podido reservar memoria \n");
-		exit(0);
-	}
-    
-	strcpy(nuevo->nombre,nombre);//Nombre
-	nuevo->tipo=0;//Tipo génerico
-	if ((*com==NULL))
-	{
-		(nuevo->sig)=NULL;
-		*com=nuevo;
-		*fin=nuevo;
-		retorno=*com;
-		return (retorno);
-	}
-	else
-	{
-		(nuevo->sig)=NULL;			
-		(*fin)->sig=nuevo;
-		*fin=nuevo;
-		retorno=*fin;
-		return(retorno);
 	}
 }
 

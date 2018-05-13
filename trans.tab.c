@@ -3059,7 +3059,7 @@ int main(int argc, char **argv)
 	
 	//revisar(&com);
 	
-	//listar(&com);
+	listar(&com);
 	
 	if(INICIO==NULL)
 		printf("\nError, programa vacio.\n");

@@ -122,8 +122,6 @@ void revisar(NODO **com) {
 	NODO **aux;
 	char msj[255];
 	
-	limpiar(com);
-	
 	aux=com;//comienzo
 	
 	while(*aux!=NULL) {
@@ -159,28 +157,6 @@ int recorrer(NODO **com,char *nombre) {
 		aux=aux->sig;
 	}
 	return encontrado;
-}
-
-//Función para eliminar las variables que sobran de la lista
-void limpiar(NODO **com) {
-	NODO *aux,*aux2;
-	aux=*com;//comienzo
-
-	while(aux!=NULL) {
-		if((*com)->tipo==0) { 
-			aux2=*com;
-			*com=(*com)->sig;
-			free(aux2);
-			aux=*com;
-		}else if(aux->tipo==0) { 
-			aux2->sig=aux->sig;
-			free(aux);
-			aux=aux2->sig;
-		}else {
-			aux2=aux;
-			aux=aux->sig;
-		}
-	}
 }
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para pasar del pseudo a C*/
@@ -619,8 +595,9 @@ int insertar_var(NODO *var,int ope) {
 	 return 0;
 	}
 	else {
-		aux=var;
 		aux->op=ope;
+		aux->var=var;
+		aux->izq=NULL;
 		
 		if(INICIO==NULL) {
 			INICIO=aux;

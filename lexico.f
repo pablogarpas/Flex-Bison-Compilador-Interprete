@@ -21,8 +21,8 @@ Analizador l�xico para el pseudoc�digo que aceptar� el transpilador.
 #include "trad.c"
 #include <string.h>
 
-struct NODO  *com; //Puntero al comienzo de la TS (tabla de s�mbolos)
-struct NODO  *fin; //Puntero al final de la TS
+NODO  *com; //Puntero al comienzo de la TS (tabla de s�mbolos)
+NODO  *fin; //Puntero al final de la TS
 char *cadaux;//variable auxiliar para eliminar las comillas de yytext
 char i;//variable auxiliar para eliminar las comillas de yytext
 int n_lineas;//contar el numero de lineas
@@ -139,25 +139,6 @@ comentario [^/*\n]*[*/]
 
 
 %%
-
-comment()
-{
-	char c, c1;
-
-loop:
-	while ((c = input()) != '*' && c != 0)
-		putchar(c);
-
-	if ((c1 = input()) != '/' && c != 0)
-	{
-		unput(c1);
-		goto loop;
-	}
-
-	if (c != 0)
-		putchar(c1);
-}
-
 int yywrap(){
 return 1;
 }

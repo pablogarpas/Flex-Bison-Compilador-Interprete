@@ -43,6 +43,7 @@
 #define OP_FUN 32
 #define OP_LLAMAR 33
 #define OP_DECL 34
+#define OP_EXIT 35
 
 
 //tipo de los simbolos

@@ -9,6 +9,8 @@
 #include "comp.c"
 
 //Variables globales
+NODO *com;//Principio de la lista de śimbolos
+NODO *fin;//Final de la lista de śimbolos
 int   auxb;  //variable auxiliar para la lectura de booleanos 
 int   auxint;  //variable auxiliar para la lectura de enteros
 float auxn;  //variable auxiliar para la lectura de numeros
@@ -107,7 +109,7 @@ programa:
 		fprintf(salida,$5.trad);
 		
 		copiardatos(&auxnodo1,5,0,0,"",0,0,0,"final");
-		insertar_var(&auxnodo1,OP_DECL);
+		insertar_var(&auxnodo1,OP_EXIT);
 	};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,7 +131,7 @@ cabecera:
 	{
 		insertar(auxnodo1,auxnodo2,OP_INICIO,auxvar);		
 		
-		copiardatos(&auxnodo1,5,0,0,"",0,0,0,"main");
+		copiardatos(&auxvar,5,0,0,"",0,0,0,"main");
 		insertar_var(&auxnodo1,OP_DECL);
 	};
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1168,12 +1170,6 @@ int main(int argc, char **argv)
 	yyparse();
 
 	fclose(salida);//se cierra el fichero de salida
-	
-	//limpiar(&com);
-	
-	//revisar(&com);
-	
-	//listar(&com);
 	
 	if(INICIO==NULL)
 		printf("\nError, programa vacio.\n");

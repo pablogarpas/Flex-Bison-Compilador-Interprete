@@ -9,13 +9,14 @@ int ejecutar(ARBOL *var,int parar) {
 	NODO *variable;
 	int defecto;
 	int encontrada;
+	
+	aux=var;
 	/*
 	do{
-		printf("%s\n",aux->izq->exp1.nombre);
-		aux=aux->izq;
-	}while(aux->izq!=NULL);
+		printf("%d\n",aux->op);
+		aux=aux->der;
+	}while(aux!=NULL);
 	*/
-	
 	aux=var;
 	
 	do {
@@ -23,7 +24,6 @@ int ejecutar(ARBOL *var,int parar) {
 		case OP_ESCRIBIR:
 			if(aux->izq!=NULL) 
 				aux->exp1=procesarexp(aux->izq);
-			
 			switch (aux->exp1.tipo){
 				case 1:
 					if(aux->exp1.escons) {
@@ -76,8 +76,6 @@ int ejecutar(ARBOL *var,int parar) {
 			}//switch
 			break;
 		case OP_ASIGNAR:		
-			
-			//variable=buscar(aux->var->nombre,&com,&fin);
 		
 			if ((aux->var->tipo==aux->exp1.tipo)&&(aux->var->escons==0)&&(aux->var->espun==0)) {
 				aux->var->tipo=aux->exp1.tipo;
@@ -90,8 +88,10 @@ int ejecutar(ARBOL *var,int parar) {
 				strcpy(aux->var->valstr,aux->exp1.valstr);
 			}
 			else if((aux->var->tipo=1)&&(aux->exp1.tipo==6)&&(aux->var->escons==0)&&(aux->var->espun==0)) {	
-				aux->var->valnum = aux->exp1.valnum;
-				aux->var->valint = aux->exp1.valint;
+				aux->var->valnum = aux->exp1.valint;
+			}
+			else if((aux->var->tipo=6)&&(aux->exp1.tipo==1)&&(aux->var->escons==0)&&(aux->var->espun==0)) {	
+				aux->var->valint = aux->exp1.valnum;
 			}
 			else yyerror("Error en la asignación, no concuerdan los tipos o la variable es constante\n");	
 			break;
@@ -233,15 +233,13 @@ int ejecutar(ARBOL *var,int parar) {
 					if(encontrada)
 						break;
 			}
-			
-			
-			
 			if(encontrada)
 				ejecutar(aux2,1);
 			else
 				yyerror("Error al llamar a la función; no se ha encontrado");
-			
 			break;
+		case OP_DECL:
+		 break;
 		}//switch
 		aux=aux->der;
 	}while(aux!=NULL);

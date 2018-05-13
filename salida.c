@@ -2,14 +2,21 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-int qwer(int aux2, float aux){
-printf(" %f \n",aux);
-printf(" %d \n",aux2);
+int qwer(float aux2, ){
+aux2=7;
+a="qwe";
+printf("qwe\n");
+printf(" %f \n",aux2);
 }
 int main() 
 {
-int aux;
+float aux;
 float aux2;
+int a;
 aux=5;
-printf(" %d \n",aux);
+a=6;
+printf(" %f \n",aux);
+qwer();
+aux2=5.21;
+printf(" %f \n",aux2);
 }

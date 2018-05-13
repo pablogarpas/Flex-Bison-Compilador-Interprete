@@ -14,4 +14,6 @@ int aux;
 int aux3;
 printf("programa\n");
 prueba();
+var1="asd";
+printf("comparando\n");
 }

@@ -204,7 +204,8 @@ constante:
 	| TK_VARIABLE TK_CADENA salto_lin 
 	{//Constante cadena
 		strcpy($$.trad,intr_const_cad($2.cad,$1->nombre)); //Traducción
-		strcpy($$.cad,strcpy($1->cad,$2.cad));    
+		strcpy($1->cad,$2.cad);
+		strcpy($$.cad,$2.cad);    
 		$$.tipo=$1->tipo=$2.tipo;
 		$$.escons=1;
 		$1->escons=1;
@@ -250,7 +251,8 @@ constante:
 	| TK_VARIABLE TK_CADENA salto_lin constante //Varios números
 	{
 		strcpy($$.trad,intr_const_cad($2.cad,$1->nombre));  //Traducción
-		strcpy($$.cad,strcpy($1->cad,$2.cad));
+		strcpy($1->cad,$2.cad);
+		strcpy($$.cad,$2.cad);
 		$$.escons=1;
 		$$.tipo=$1->tipo=$2.tipo;
 		$1->escons=1;
@@ -279,7 +281,12 @@ tipo:
 	|  TK_BOOL 
 	{
 	$$.tipo=3;
-	};
+	}
+	|  TK_CADENA
+	{
+	$$.tipo=4;
+	}
+	;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -902,19 +909,13 @@ exp
 		strcpy($$.trad,"printf(\" %%f \\n\",");
 		strcat($$.trad,$1.trad);
 		strcat($$.trad,");\n");
-		auxnodo1.valnum=$1.valnum;
-		strcpy(auxnodo1.cad,$1.trad);
 		break;
 	case 2:					
 		strcpy($$.trad,"printf(\" %%s \\n\",");
 		strcat($$.trad,$1.trad);
 		strcat($$.trad,");\n");
-		strcpy(auxnodo1.valstr,$1.valstr);
-		strcpy(auxnodo1.cad,$1.trad);
 		break;
 	case 3: 
-		auxnodo1.valbool=$1.valbool;
-		strcpy(auxnodo1.valstr,$1.trad);
 		strcpy($$.trad,"printf(\" %%d \\n\",");
 		strcat($$.trad,$1.trad);
 		strcat($$.trad,");\n");
@@ -923,15 +924,11 @@ exp
 		strcpy($$.trad,"printf(\"");
 		strcat($$.trad,$1.cad);
 		strcat($$.trad,"\\n\");\n");
-		strcpy(auxnodo1.valstr,$1.valstr);
-		strcpy(auxnodo1.cad,$1.trad);
 		break;
 	case 6: 
 		strcpy($$.trad,"printf(\" %%d \\n\",");
 		strcat($$.trad,$1.trad);
 		strcat($$.trad,");\n");
-		auxnodo1.valint=$1.valint;
-		strcpy(auxnodo1.cad,$1.trad);
 		break;
 	default: 
 		yyerror("Error:Imposible visualizar la variable o expresion\n");
@@ -939,7 +936,7 @@ exp
 	}//switch
 	
 
-	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
+	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.cad,$1.valbool,$1.valnum,$1.valint,$1.nombre);
 	
 	insertar(auxnodo1,auxnodo2,OP_ESCRIBIR,auxvar);
 };
@@ -1255,17 +1252,20 @@ exp:
 //estas son las variables que hay de tantas clases como tipos
 	| TK_VARIABLE //copiamos toda la informacion del nodo
 	{
-		strcpy($$.trad,$1->nombre);//copio el nombre de la variable para la traduccion
-		strcpy($$.nombre,$1->nombre);//copio el nombre de la variable para la traduccion
-		strcpy($$.valstr,$1->valstr);//strign
-		strcpy($$.cad,$1->cad);//cadena, esto es por los identificadores de las constantes
-		$$.valnum=$1->valnum;	//variable numerica
-		$$.valbool=$1->valbool;//variable de tipo booleano
-		$$.valint=$1->valint;//variable de tipo entero
-		$$.tipo=$1->tipo;//tipo de la variable
-		$$.escons=$1->escons; //Nos dice si es una cosntante o no                    
-		$$.vis=$1->aux;//para traducir la visualizacion
-		$$.espun= $1->espun;
+		auxvar=buscar($1->nombre,&com,&fin);
+	
+		strcpy($$.trad,auxvar->nombre);//copio el nombre de la variable para la traduccion
+		strcpy($$.nombre,auxvar->nombre);//copio el nombre de la variable para la traduccion
+		strcpy($$.valstr,auxvar->valstr);//strign
+		strcpy($$.cad,auxvar->cad);//cadena, esto es por los identificadores de las constantes		
+		$$.valnum=auxvar->valnum;	//variable numerica
+		$$.valbool=auxvar->valbool;//variable de tipo booleano
+		$$.valint=auxvar->valint;//variable de tipo entero
+		$$.tipo=auxvar->tipo;//tipo de la variable
+		$$.escons=auxvar->escons; //Nos dice si es una cosntante o no                    
+		$$.vis=auxvar->aux;//para traducir la visualizacion
+		$$.espun= auxvar->espun;
+		
 	}
 /*************************************************************************************************/
 //Esto es una cosntante de tipo cadena

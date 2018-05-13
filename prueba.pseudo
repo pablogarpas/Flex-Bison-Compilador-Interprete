@@ -14,7 +14,9 @@ inicio
 
 	llamar(prueba)
 
+	var1="asd"
 
+	escribir(var1)
 
 fin
 

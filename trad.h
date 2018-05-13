@@ -92,13 +92,11 @@ NODO *fin;
 /*Funciones para la busqueda en la tabla de símbolos*/
 //////////////////////////////////////////////////////////////////////////
 //Buscar y devolver un nodo a esa variable
-NODO *buscar(char *nombre,NODO **com,NODO **fin);
+NODO *buscar(char nombre[20],NODO **com,NODO **fin,char funcion[25]);
 //Ver la tabla de símbolos
 void listar(NODO **com);
 //Revisar la tabla de símbolos para buscar fallos
 void revisar(NODO **com);
-//Introducir el delimitador para variables locales
-NODO *introducir_delim(char *nombre,NODO **com,NODO **fin);
 //Recorrer la tabla de símbolos buscando variables repetidas
 int recorrer(NODO **com,char *nombre);
 //Función para eliminar las variables que sobran de la lista

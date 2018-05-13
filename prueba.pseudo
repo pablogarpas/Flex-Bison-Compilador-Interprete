@@ -1,27 +1,22 @@
 programa prueba
 
 var
-	aux real
-	aux2 real
-	a entero
+	aux2 string
 inicio
-	aux=5
-	a=6
-	escribir(aux)
+	aux2= "qwe"
+	
+	escribir(aux2)
 	llamar(probando)
 	
-	aux2= 5.21
 	escribir(aux2)
 fin
 
 funcion probando
-arg
-	aux2 real
-	a string
-
+var
+	aux2 entero
 devolver bool
-	aux2=7
-	a="funcion"
-escribir(a)
+aux2=89
+
 escribir(aux2)
+
 fin

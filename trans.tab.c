@@ -2951,8 +2951,6 @@ int main(int argc, char **argv)
 	if(INICIO==NULL)
 		printf("\nError, programa vacio.\n");
 	else
-		ejecutar(INICIO,0);
-		
-	listar(&com);
+		ejecutar(INICIO,0,"main");
 }
 

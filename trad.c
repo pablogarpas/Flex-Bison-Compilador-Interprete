@@ -52,6 +52,8 @@ NODO *introducir(NODO *var,NODO **com,NODO **fin) {
 	NODO *nuevo,*aux, *retorno;
 	aux=*com;//comienzo
 
+	
+
 	if (!(nuevo=(NODO *)malloc(sizeof (NODO))))
 	{
 		printf("No se ha podido reservar memoria \n");
@@ -79,47 +81,22 @@ NODO *introducir(NODO *var,NODO **com,NODO **fin) {
 	}
 }
 
-NODO *introducir_delim(char *nombre,NODO **com,NODO **fin) {
-	//variables
-	NODO *nuevo,*aux, *retorno;
-	aux=*com;//comienzo
-
-	if (!(nuevo=(NODO *)malloc(sizeof (NODO))))
-	{
-		printf("No se ha podido reservar memoria \n");
-		exit(0);
-	}
-  
-	strcpy(nuevo->nombre,nombre);//Nombre
-	nuevo->tipo=5;//Tipo delimitador
-	if ((*com==NULL))
-	{
-		(nuevo->sig)=NULL;
-		*com=nuevo;
-		*fin=nuevo;
-		retorno=*com;
-		return (retorno);
-	}
-	else
-	{
-		(nuevo->sig)=NULL;			
-		(*fin)->sig=nuevo;
-		*fin=nuevo;
-		retorno=*fin;
-		return(retorno);
-	}
-}
-
-NODO *buscar(char nombre[20],NODO **com,NODO **fin)
-{
+NODO *buscar(char nombre[20],NODO **com,NODO **fin,char funcion[25]) {
 	//variables
 	NODO *nuevo,*aux, *retorno;
 	aux=*com;//comienzo
 	int encontrado=0;
 	char msj[255];
 	
-	while ((aux!=NULL)&&(encontrado==0)) {
+	while(aux!=NULL){
+		if(strcmp(aux->nombre,funcion)==0){
+			aux=aux->sig;
+			break;
+		}
+		aux=aux->sig;
+	}
 	
+	while ((aux!=NULL)&&(encontrado==0)&&(aux->tipo!=5)) {
 		encontrado=(strcmp(aux->nombre,nombre))==0;
 		if(encontrado) {
 			retorno=aux;

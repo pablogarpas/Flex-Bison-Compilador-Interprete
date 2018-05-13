@@ -2,21 +2,15 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-int probando(float aux2, ){
-aux2=7;
-a="funcion";
-printf("funcion\n");
-printf(" %f \n",aux2);
+int probando(){
+aux2=89;
+printf(" %d \n",aux2);
 }
 int main() 
 {
-float aux;
-float aux2;
-int a;
-aux=5;
-a=6;
-printf(" %f \n",aux);
+aux2="qwe";
+printf("qwe\n");
 probando();
-aux2=5.21;
-printf(" %f \n",aux2);
+aux2="asd";
+printf("asd\n");
 }

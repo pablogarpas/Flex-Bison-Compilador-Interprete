@@ -21,9 +21,6 @@ NODO auxnodo1;//Variables para trabajar con la lista
 NODO auxnodo2;
 NODO *auxvar;
 NODO *auxvar2;
-
-extern com;
-extern fin;
 %}
 
 
@@ -111,7 +108,8 @@ programa:
 		fprintf(salida,$4.trad);
 		fprintf(salida,$5.trad);
 		
-		introducir_delim("fin",&com,&fin);
+		copiardatos(&auxnodo1,5,0,0,"",0,0,0,"final");
+		insertar_var(&auxnodo1,OP_DECL);
 	};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -131,15 +129,15 @@ salto_lin_dec:
 cabecera: 			
 	TK_PROGRAM TK_VARIABLE salto_lin
 	{
-		$2->tipo=0;  	
-		insertar(auxnodo1,auxnodo2,OP_INICIO,auxvar);
+		insertar(auxnodo1,auxnodo2,OP_INICIO,auxvar);		
 		
-		introducir_delim("main",&com,&fin);
+		copiardatos(&auxnodo1,5,0,0,"",0,0,0,"main");
+		insertar_var(&auxnodo1,OP_DECL);
 	};
 //////////////////////////////////////////////////////////////////////////////////////////////////
 librerias:
 	{
-		strcpy($$.trad,"#include <stdio.h>\n#include <math.h>\n#include <stdlib.h>\n#include <string.h>");
+		strcpy($$.trad,"#include <stdio.h>\n#include <math.h>\n#include <stdlib.h>\n#include <string.h>\n");
 	}
 	;
 
@@ -150,111 +148,93 @@ dec_constantes:
 	TK_CONST salto_lin constante 
 	{
 		strcpy($$.trad,$3.trad);
-		
-		$$.tipo=$3.tipo;
-		switch ($3.tipo){
-			case 1:$$.valnum=$3.valnum;break;
-			case 2:strcpy($$.cad,$3.cad);break;
-			case 3:$$.valbool=$3.valbool;break;
-			case 6:$$.valint=$3.valint;break;
-		}		
 	}
 	| {		
 	strcpy($$.trad,"");
 	};//Puede o no haber constantes
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
-
 //Se le asigna valor y tipo a las constantes
 constante:
 	TK_VARIABLE TK_NUM salto_lin 
 	{ //Un número
+		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_num($2.valnum,$1->nombre)); //La traducción
-		$$.valnum=$1->valnum=$2.valnum;
-		$$.tipo=$1->tipo=$2.tipo;
-		$$.escons=1;	
-		$1->escons=1;
-		$1->aux=3;//Cualquier número
+		
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
+		insertar_var(&auxnodo1,OP_DECL);
 	}
 	
 /*************************************************************************************************/
  	
 	| TK_VARIABLE TK_ENT salto_lin 
 	{ //Un número
+		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_int($2.valint,$1->nombre)); //La traducción
-		$$.valint=$1->valint=$2.valint;
-		$$.tipo=$1->tipo=$2.tipo;
-		$$.escons=1;	
-		$1->escons=1;
-		$1->aux=3;//Cualquier número
+		
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
+		insertar_var(&auxnodo1,OP_DECL);
 	} 
 /*************************************************************************************************/
  	
 	| TK_VARIABLE TK_NBOOL salto_lin 
 	{ //Un número
+		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_int($2.valbool,$1->nombre)); //La traducción
-		$$.valbool=$1->valbool=$2.valbool;
-		$$.tipo=$1->tipo=$2.tipo;
-		$$.escons=1;	
-		$1->escons=1;
-		$1->aux=3;//Cualquier número
+		
+		
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
+		insertar_var(&auxnodo1,OP_DECL);
 	} 
 /*************************************************************************************************/
 	| TK_VARIABLE TK_CADENA salto_lin 
 	{//Constante cadena
+		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_cad($2.cad,$1->nombre)); //Traducción
-		strcpy($$.cad,strcpy($1->cad,$2.cad));    
-		$$.tipo=$1->tipo=$2.tipo;
-		$$.escons=1;
-		$1->escons=1;
-		$1->aux=3;//Cualquier número
+
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
+		insertar_var(&auxnodo1,OP_DECL);
 	}
 
 /*************************************************************************************************/
 
 	| TK_VARIABLE TK_NUM salto_lin constante //Varias
 	{ 
+		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_num($2.valnum,$1->nombre)); //Traducción
-		$$.valnum=$1->valnum=$2.valnum;
-		$$.tipo=$1->tipo=$2.tipo;
-		$$.escons=1;
-		$1->escons=1;
-		$1->aux=3;//Cualquier número
+		
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
+		insertar_var(&auxnodo1,OP_DECL);
 	}
 
 /*************************************************************************************************/
 	
 	| TK_VARIABLE TK_ENT salto_lin constante
 	{ //Un número
+		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_int($2.valint,$1->nombre)); //La traducción
-		$$.valint=$1->valint=$2.valint;
-		$$.tipo=$1->tipo=$2.tipo;
-		$$.escons=1;	
-		$1->escons=1;
-		$1->aux=3;//Cualquier número
+		
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
+		insertar_var(&auxnodo1,OP_DECL);
 	} 
 /*************************************************************************************************/
 	
 	| TK_VARIABLE TK_NBOOL salto_lin constante
 	{ //Un número
+		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_int($2.valbool,$1->nombre)); //La traducción
-		$$.valbool=$1->valbool=$2.valbool;
-		$$.tipo=$1->tipo=$2.tipo;
-		$$.escons=1;	
-		$1->escons=1;
-		$1->aux=3;//Cualquier número
+		
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
+		insertar_var(&auxnodo1,OP_DECL);
 	} 
 
 /************************************************************************************************/
 	| TK_VARIABLE TK_CADENA salto_lin constante //Varios números
 	{
+		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_cad($2.cad,$1->nombre));  //Traducción
-		strcpy($$.cad,strcpy($1->cad,$2.cad));
-		$$.escons=1;
-		$$.tipo=$1->tipo=$2.tipo;
-		$1->escons=1;
-		$1->aux=3;//Cualquier número
+
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
+		insertar_var(&auxnodo1,OP_DECL);
 	};
 
 
@@ -273,23 +253,23 @@ tipo:
 
 	|  TK_STRING	
 	{
-	$$.tipo=2;
+	$$.tipo=4;
 	}
-	
+	| TK_CADENA
+	{
+	$$.tipo=4;
+	}
 	|  TK_BOOL 
 	{
 	$$.tipo=3;
 	};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-
 //Se declaran variables
 dec_vbles:
 	TK_VAR salto_lin variable 
 	{
 		strcpy($$.trad,$3.trad);
-		
-		$$.tipo=$3.tipo;
 	}
 	| {
 		strcpy($$.trad,"");
@@ -299,33 +279,23 @@ dec_vbles:
 variable:			
 	TK_VARIABLE tipo puntero salto_lin  
 	{
-	
+		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_variable($2.tipo, $1->nombre,$3.espun)); //Traducción
 	
-	if ($1->escons==0) {
-		$$.tipo=$2.tipo;
-		$1->tipo=$2.tipo;
-		strcpy($$.nombre,$1->nombre);
-		$1->espun=$3.espun;
-		}
-	else yyerror("Error: %s ---Variable ya declarada como constante\n",$1->nombre);
+		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
+		insertar_var(&auxnodo1,OP_DECL);
 	}
 
 /*************************************************************************************************/
 	| TK_VARIABLE tipo puntero salto_lin variable	
 	{
-	
+		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_variable($2.tipo, $1->nombre,$3.espun)); //Traducción
 			
 		strcat($$.trad,$5.trad);
 			
-		if ($1->escons==0)	{
-			$$.tipo=$2.tipo;
-			$1->tipo=$2.tipo;
-			strcpy($$.nombre,$1->nombre);
-			$1->espun=$3.espun;
-			}
-		else yyerror("Error: %s ---Variable ya declarada como constante\n",$1->nombre);             
+		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
+		insertar_var(&auxnodo1,OP_DECL);
 	};
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -344,12 +314,8 @@ puntero:
 cuerpo:
 	TK_INICIO salto_lin lista_sentencias TK_FIN
 	{
-		//printf($3.res);
-	
 		strcpy($$.trad,$3.trad);
 		strcat($$.trad,"}\n");
-		
-		//printf("\n%s\n",$$.trad);
 	}
 	;
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -371,7 +337,6 @@ fun_dec:
 	{
 		strcpy($$.trad,$2->nombre);
 		
-		$2->tipo=0;
 		auxvar=$2;
 		insertar_fun(auxvar,OP_FUN);
 		
@@ -396,8 +361,6 @@ funcion:
 		strcat($$.trad,"{\n");
 		strcat($$.trad,$7.trad);
 		strcat($$.trad,$8.trad);
-		
-		//printf("\n%s\n",$$.trad);
 	}
 	|
 	{//Puede no haber funciones
@@ -423,30 +386,22 @@ dec_arg_fun:
 argumento:
 	TK_VARIABLE tipo puntero salto_lin  
 	{
-
-		strcpy($$.trad,intr_argumento($2.tipo, $1->nombre,$3.espun)); //Traducción
-	if ($1->escons==0) {
-		$$.tipo=$2.tipo;
 		$1->tipo=$2.tipo;
-		strcpy($$.nombre,$1->nombre);
-		$1->espun=$3.espun;
-		}
-	else yyerror("Error: %s ---Variable ya declarada como constante\n",$1->nombre);
+		strcpy($$.trad,intr_argumento($2.tipo, $1->nombre,$3.espun)); //Traducción
+
+		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
+		insertar_var(&auxnodo1,OP_DECL);
 	}
 /*************************************************************************************************/
 	| TK_VARIABLE tipo puntero salto_lin argumento
 	{
+		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_argumento($2.tipo, $1->nombre,$3.espun)); //Traducción
 		strcat($$.trad,", ");
 		strcat($$.trad,$5.trad);
 			
-		if ($1->escons==0)	{
-			$$.tipo=$2.tipo;
-			$1->tipo=$2.tipo;
-			strcpy($$.nombre,$1->nombre);
-			$1->espun=$3.espun;
-			}
-		else yyerror("Error: %s ---Variable ya declarada como constante\n",$1->nombre);
+		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
+		insertar_var(&auxnodo1,OP_DECL);
 	};
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Sentencias de aplicación
@@ -454,41 +409,14 @@ argumento:
 lista_sentencias:		
 	sentencia salto_lin 
 	{
-		$$.tipo=$1.tipo;
-		switch ($1.tipo){
-		case 1: $$.valnum = $1.valnum;break;
-		case 2:	strcpy($$.valstr,$1.valstr);break;
-		case 3: $$.valbool = $1.valbool;break;
-		case 4: strcat($$.valstr,$1.cad);
-			//fprintf(salida,"%s",$1.trad);
-			break;
-		case 6: $$.valint = $1.valint;break;
-		}
-		
 		strcpy($$.trad,$1.trad);	
-		
-		strcpy($$.res,$1.res);	
 	}
 
 /*************************************************************************************************/
 
 	| sentencia salto_lin lista_sentencias 
-	{
-		$$.tipo=$1.tipo;
-		
-		switch ($1.tipo){
-			case 1: $$.valnum = $1.valnum;break;
-			case 2:	strcpy($$.valstr,$1.valstr);break;
-			case 3: $$.valbool = $1.valbool;break;
-			case 4: strcat($$.valstr,$1.cad);
-				//fprintf(salida,"%s",$1.trad);
-				break;
-			case 6: $$.valint = $1.valint;break;
-		}	
-				
-		 strcat($$.trad,$3.trad);
-		 
-		 strcat($$.res,$3.res);
+	{		
+		 strcat($$.trad,$3.trad); 
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -497,14 +425,6 @@ lista_sentencias:
 sentencia:			
 	asignacion 
 	{		
-		$$.tipo=$1.tipo;
-		switch ($1.tipo){
-			case 1: $$.valnum = $1.valnum;break;
-			case 2:	strcpy($$.valstr,$1.valstr);break;
-			case 3: $$.valbool = $1.valbool;break;
-			case 4: strcpy($$.valstr,$1.cad);break; 
-			case 6: $$.valint = $1.valint;break;
-		}
 		strcpy($$.trad,$1.trad);//Se limpia .trad
 	}
 /*************************************************************************************************/
@@ -710,14 +630,10 @@ control:
 //while
 	| control2 cont lista_sentencias 
 	{
-	
 		strcpy($$.trad,"while (");
 		strcat($$.trad,$1.trad);
 		strcat($$.trad,") {\n");
 		strcat($$.trad,$3.trad);
-		
-		//while($2.valbool)
-			//strcpy($$.res,$4.res);
 	}
 /*************************************************************************************************/
 //PARA
@@ -793,9 +709,7 @@ cases:
 	}
 	| case cases
 	{
-	
 		$$.tipo+=$2.tipo*auxtip;
-	
 		strcpy($$.trad,$2.trad);
 		strcat($$.trad,$1.trad);
 	}
@@ -935,25 +849,22 @@ exp
 visual:
 	TK_ESCRIBIR '('elemento_mostrar')'
 	{
-	
-	strcpy($$.trad,$3.trad);
+		strcpy($$.trad,$3.trad);
 	} 
 
 /*************************************************************************************************/
 	| TK_ESCRIBIR '(' visual2 ',' elemento_mostrar ')'
 	{
-	strcpy($$.trad,$3.trad);
-	strcat($$.trad,$5.trad);
+		strcpy($$.trad,$3.trad);
+		strcat($$.trad,$5.trad);
 	} 
 
 /*************************************************************************************************/
 
 	|TK_ESCRIBIR'('')'
 	{
-	//strcpy($$.res,"\n");
-	
-	strcpy($$.trad,"printf(\"\\n\");");
-	strcat($$.trad,"\n");
+		strcpy($$.trad,"printf(\"\\n\");");
+		strcat($$.trad,"\n");
 	};//salto de línea
                                 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -961,17 +872,19 @@ visual:
 visual2:			 
 	elemento_mostrar
 	{	
-	strcpy($$.trad,$1.trad);
+		strcpy($$.trad,$1.trad);
 	}
 
 /*************************************************************************************************/
 
 	| visual2 ',' elemento_mostrar  
 	{	
-	strcpy($$.trad,$1.trad);
-	strcat($$.trad,$3.trad);
+		strcpy($$.trad,$1.trad);
+		strcat($$.trad,$3.trad);
 	}
-	|{}
+	|{
+		strcpy($$.trad,"");
+	}
 	;	
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1021,9 +934,9 @@ exp:
 		strcat($$.trad," * ");//Traducción
 		strcat($$.trad,$3.trad);
 		
-	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
-	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre);
-	insertarexp(auxnodo1,auxnodo2,OP_MULT);
+		copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
+		copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre);
+		insertarexp(auxnodo1,auxnodo2,OP_MULT);
 	}
 /*************************************************************************************************/
 //Divisiones
@@ -1032,9 +945,9 @@ exp:
 		strcat($$.trad," / ");//Traducción
 		strcat($$.trad,$3.trad);
 
-	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
-	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre);
-	insertarexp(auxnodo1,auxnodo2,OP_DIV);
+		copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
+		copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre);
+		insertarexp(auxnodo1,auxnodo2,OP_DIV);
 	}
 /*************************************************************************************************/
 //Operación de cambio de signo
@@ -1043,8 +956,8 @@ exp:
 		strcpy($$.trad," -");//introducimos la cadena creada para la traduccion
 		strcat($$.trad,$2.trad);
 
-	copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre);
-	insertarexp(auxnodo1,auxnodo2,OP_CAM);
+		copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre);
+		insertarexp(auxnodo1,auxnodo2,OP_CAM);
 	}
 
 /*************************************************************************************************/
@@ -1101,6 +1014,7 @@ exp:
 	{
 	strcat($$.trad," < ");//Traducción
 	strcat($$.trad,$3.trad);
+	$$.tipo=3;
 
 	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
 	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre);
@@ -1123,6 +1037,7 @@ exp:
 	{
 	strcat($$.trad," >= ");//introducimos la cadena creada para la traduccion
 	strcat($$.trad,$3.trad);
+	$$.tipo=3;
 
 	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
 	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre);
@@ -1146,6 +1061,7 @@ exp:
 	{
 	strcat($$.trad," != ");//introducimos la cadena creada para la traduccion
 	strcat($$.trad,$3.trad);
+	$$.tipo=3;
 	
 	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
 	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre);
@@ -1159,21 +1075,17 @@ exp:
 		strcat($$.trad,$3.trad);
 		$$.tipo=3;
 		
-
 		copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
 		copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre);
 		insertarexp(auxnodo1,auxnodo2,OP_IGUALDAD);
 	}
-
-
-
 /*************************************************************************************************/
 	| exp TK_AND exp
 	//operacion a nivel de booleanos, and true and true devuelve true otro false
-
 	{
 	strcat($$.trad," && ");//introducimos la cadena creada para la traduccion
 	strcat($$.trad,$3.trad);
+	$$.tipo=3;
 	
 	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
 	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre);
@@ -1186,6 +1098,7 @@ exp:
 	{
 	strcat($$.trad," || ");//introducimos la cadena creada para la traduccion
 	strcat($$.trad,$3.trad);
+	$$.tipo=3;
 	
 	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre);
 	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre);
@@ -1200,6 +1113,7 @@ exp:
 	{
 	strcpy($$.trad," !");//introducimos la cadena creada para la traduccion
 	strcat($$.trad,$2.trad);
+	$$.tipo=3;
 
 	
 	copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre);
@@ -1232,19 +1146,10 @@ exp:
 /*************************************************************************************************/
 //estas son las variables que hay de tantas clases como tipos
 	| TK_VARIABLE //copiamos toda la informacion del nodo
-	{
+	{	
 		strcpy($$.trad,$1->nombre);//copio el nombre de la variable para la traduccion
 		strcpy($$.nombre,$1->nombre);//copio el nombre de la variable para la traduccion
-		strcpy($$.valstr,$1->valstr);//strign
-		strcpy($$.cad,$1->cad);//cadena, esto es por los identificadores de las constantes
-		$$.valnum=$1->valnum;	//variable numerica
-		$$.valbool=$1->valbool;//variable de tipo booleano
-		$$.valint=$1->valint;//variable de tipo entero
-		$$.tipo=$1->tipo;//tipo de la variable
-		$$.escons=$1->escons; //Nos dice si es una cosntante o no                    
-		$$.vis=$1->aux;//para traducir la visualizacion
-		$$.espun= $1->espun;
-		
+		$$.tipo=$1->tipo;
 	}
 /*************************************************************************************************/
 //Esto es una cosntante de tipo cadena
@@ -1288,11 +1193,11 @@ int main(int argc, char **argv)
 
 	fclose(salida);//se cierra el fichero de salida
 	
-	limpiar(&com);
+	//limpiar(&com);
 	
 	//revisar(&com);
 	
-	listar(&com);
+	//listar(&com);
 	
 	if(INICIO==NULL)
 		printf("\nError, programa vacio.\n");
@@ -1303,7 +1208,6 @@ int main(int argc, char **argv)
 
 int ejecutar(ARBOL *var,int parar) {
 	ARBOL *aux,*aux2;
-	extern com;	
 	NODO *variable;
 	int defecto;
 	int encontrada;
@@ -1315,8 +1219,6 @@ int ejecutar(ARBOL *var,int parar) {
 	*/
 	
 	aux=var;
-	
-	
 	
 	do {
 		switch(aux->op){

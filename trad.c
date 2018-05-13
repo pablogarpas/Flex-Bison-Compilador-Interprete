@@ -6,7 +6,7 @@ NODO *buscar_simbolo(char nombre[20],NODO **com,NODO **fin)
 	aux=*com;//comienzo
 	int encontrado=0;
 	
-	while ((aux!=NULL)&&(encontrado==0))
+	while ((aux!=NULL)&&(encontrado==0)&&(aux->tipo!=5))
 	{
 		if (strcmp(aux->nombre,nombre)==0)//El símbolo existe
 		{
@@ -24,7 +24,7 @@ NODO *buscar_simbolo(char nombre[20],NODO **com,NODO **fin)
 	}
     
 	strcpy(nuevo->nombre,nombre);//Nombre
-	nuevo->tipo=6;//Tipo génerico
+	nuevo->tipo=0;//Tipo génerico
 	if ((*com==NULL))
 	{
 		(nuevo->sig)=NULL;
@@ -602,6 +602,40 @@ int insertar_fun(NODO *var, int ope) {
 		}else {
 			INICIO->izq=aux;
 			aux->raiz=INICIO;
+			FINAL=aux;
+			aux->der=NULL;
+		}
+	}
+}
+
+//Inserta una funcion en el árbol
+int insertar_var(NODO *var,int ope) { 
+	ARBOL *aux;
+	
+	aux= malloc(sizeof(ARBOL));
+
+	if(aux==NULL)	{
+	 printf("Error. No hay memoria para otro ARBOL.");
+	 return 0;
+	}
+	else {
+		aux=var;
+		aux->op=ope;
+		
+		if(INICIO==NULL) {
+			INICIO=aux;
+			FINAL=aux;
+			aux->der=NULL;
+			aux->raiz=NULL;
+		}
+		else if(FINAL->op==PLACEHOLDER) {
+			aux->izq=FINAL->izq;
+			aux->raiz=FINAL->raiz;
+			*FINAL=*aux;
+		}
+		else {
+			FINAL->der=aux;
+			aux->raiz=FINAL;
 			FINAL=aux;
 			aux->der=NULL;
 		}

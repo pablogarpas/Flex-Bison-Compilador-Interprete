@@ -1,20 +1,15 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>#define var1 "comparando"
-int qwer(int aux2, float a, char *aux){
-printf("no funciona\n");
-}
-int prueba(int aux2, float a, char *aux){
-printf("funciona\n");
+#include <string.h>
+int qwer(int aux2, float aux){
+printf(" %f \n",aux);
+printf(" %d \n",aux2);
 }
 int main() 
 {
 int aux;
-int aux3;
-aux3=5;
-printf("programa\n");
-prueba();
-printf("comparando\n");
-printf(" %d \n",aux3);
+float aux2;
+printf(" %d \n",aux);
+printf(" %f \n",aux2);
 }

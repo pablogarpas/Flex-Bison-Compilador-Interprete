@@ -42,6 +42,7 @@
 #define OP_INICIO 31
 #define OP_FUN 32
 #define OP_LLAMAR 33
+#define OP_DECL 34
 
 
 //tipo de los simbolos
@@ -81,6 +82,9 @@ typedef struct ARBOL{
 
 ARBOL *INICIO;
 ARBOL *FINAL;
+
+NODO *com;
+NODO *fin;
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -155,3 +159,6 @@ int insertar_para(NODO expre1,NODO expre2, int ope, NODO *var);
 
 //Inserta una funcion en el árbol
 int insertar_fun(NODO *var, int ope);
+
+//Insertar variables en la tabla de símbolos
+int insertar_var(NODO *var,int ope);

@@ -1,5 +1,5 @@
 trans: lex.yy.o trans.tab.o
-	gcc -o transpilador lex.yy.o trans.tab.o -lm
+	gcc -o compilador lex.yy.o trans.tab.o -lm
 bison: trans.y
 	bison -d trans.y
 lex : lexico.f

@@ -4,8 +4,8 @@ var
 	aux entero
 	aux2 real
 inicio
-escribir(aux)
-escribir(aux2)
+	aux=5
+	escribir(aux)
 
 fin
 

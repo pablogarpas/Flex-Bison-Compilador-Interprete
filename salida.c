@@ -10,6 +10,6 @@ int main()
 {
 int aux;
 float aux2;
+aux=5;
 printf(" %d \n",aux);
-printf(" %f \n",aux2);
 }

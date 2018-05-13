@@ -3,6 +3,8 @@ int ejecutar(ARBOL *var,int parar,char funcion[25]);
 NODO procesarexp(ARBOL *aux,char funcion[25]);
 //Variables globales
 int nivel;//variable para controlar el nivel en el que parar
+NODO *argini;//Lista de argumentos para pasar a una función
+NODO *argfin;//Lista de argumentos para pasar a una función
 
 int ejecutar(ARBOL *var,int parar,char funcion[25]) {
 	ARBOL *aux,*aux2;
@@ -250,6 +252,11 @@ int ejecutar(ARBOL *var,int parar,char funcion[25]) {
 		case OP_DECL:
 			introducir(&aux->exp1,&com,&fin);
 
+		 break;
+		case OP_DECL_ARG:
+			introducir(&aux->exp1,&argini,&argfin);
+		case OP_ARG:
+			introducir(&aux->exp1,&com,&fin);
 		 break;
 		}//switch
 		aux=aux->der;

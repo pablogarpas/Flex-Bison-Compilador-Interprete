@@ -44,13 +44,15 @@
 #define OP_LLAMAR 33
 #define OP_DECL 34
 #define OP_EXIT 35
-
+#define OP_DECL_ARG 36
+#define OP_ARG 37
 
 //tipo de los simbolos
 typedef struct NODO {
   int tipo; //tipo asociado
 	int escons; //nos dice si es o no constante 1->si 0->no
 	int espun; //nos dice si es o no puntero 1->si 0->no
+	int esarg; //nos dice si es un argumento o no 1->si 0->no
 	char nombre[255]; //nombre de la variable o constante
 	int valbool; //valor que se toma si el tipo es booleano
   double valnum; //valor que se toma si el tipo es numérico
@@ -147,7 +149,7 @@ void intr_inc(char *nombre,int post);
 /*Funciones para el AST*/
 //////////////////////////////////////////////////////////////////////////
 //Pasar de elemento a nodo
-void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool,float valnum,int valint,char *nombre);
+void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool,float valnum,int valint,char *nombre, int esarg);
 
 //Crear el árbol o añadir nodo
 int insertar(NODO expre1,NODO expre2, int ope, NODO *var);

@@ -546,7 +546,7 @@ int insertar_para(NODO expre1,NODO expre2, int ope, NODO *var) {
 }
 
 //Función para copiar los datos de un elemento a un nodo
-void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool,float valnum,int valint,char *nombre) {
+void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool,float valnum,int valint,char *nombre, int esarg) {
 	a->tipo=tipo;
 	a->escons=escons;
 	a->espun=espun;
@@ -555,6 +555,7 @@ void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool
 	a->valnum = valnum;
 	a->valint = valint;
 	strcpy(a->nombre,nombre);
+	a->esarg=esarg;
 }
 
 //Inserta una funcion en el árbol

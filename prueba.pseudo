@@ -2,21 +2,28 @@ programa prueba
 
 var
 	aux2 string
+	aux entero
 inicio
 	aux2= "qwe"
+	aux=15
 	
 	escribir(aux2)
-	llamar(probando)
+	llamar(probando,a,b,c)
 	
 	escribir(aux2)
 fin
 
 funcion probando
 var
-	aux2 entero
+	aux entero
+arg
+	a entero
+	b string
+	c string
+
 devolver bool
-aux2=89
 
 escribir(aux2)
+escribir(b)
 
 fin

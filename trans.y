@@ -64,6 +64,7 @@ extern fin;
 %token		TK_VAL
 %token		TK_RETORNO
 %token    TK_ESCRIBIR
+%token		TK_STRING
 %token		TK_ARG
 %token    TK_LIB
 %token    TK_SWITCH
@@ -83,7 +84,6 @@ extern fin;
 %token    TK_CASO
 %token	<ELEMENTO>	TK_COM
 %token  <ELEMENTO> TK_CADENA
-%token  <ELEMENTO> TK_STRING
 %token 	<ELEMENTO> TK_NBOOL
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
@@ -204,8 +204,7 @@ constante:
 	| TK_VARIABLE TK_CADENA salto_lin 
 	{//Constante cadena
 		strcpy($$.trad,intr_const_cad($2.cad,$1->nombre)); //Traducción
-		strcpy($1->cad,$2.cad);
-		strcpy($$.cad,$2.cad);    
+		strcpy($$.cad,strcpy($1->cad,$2.cad));    
 		$$.tipo=$1->tipo=$2.tipo;
 		$$.escons=1;
 		$1->escons=1;
@@ -251,8 +250,7 @@ constante:
 	| TK_VARIABLE TK_CADENA salto_lin constante //Varios números
 	{
 		strcpy($$.trad,intr_const_cad($2.cad,$1->nombre));  //Traducción
-		strcpy($1->cad,$2.cad);
-		strcpy($$.cad,$2.cad);
+		strcpy($$.cad,strcpy($1->cad,$2.cad));    
 		$$.escons=1;
 		$$.tipo=$1->tipo=$2.tipo;
 		$1->escons=1;
@@ -272,17 +270,16 @@ tipo:
 	|  TK_REAL 
 	{
 	$$.tipo=1;} 
-
-	|  TK_STRING	
-	{
-	$$.tipo=2;
-	}
 	
 	|  TK_BOOL 
 	{
 	$$.tipo=3;
 	}
 	|  TK_CADENA
+	{
+	$$.tipo=4;
+	}
+	|  TK_STRING
 	{
 	$$.tipo=4;
 	}
@@ -306,7 +303,6 @@ dec_vbles:
 variable:			
 	TK_VARIABLE tipo puntero salto_lin  
 	{
-	
 		strcpy($$.trad,intr_variable($2.tipo, $1->nombre,$3.espun)); //Traducción
 	
 	if ($1->escons==0) {
@@ -876,7 +872,6 @@ punteros_asignar TK_VARIABLE TK_ASIG punteros_asignar exp
 	//printf("%s\n",retorno);
 	strcpy($$.trad,retorno);	
 	
-	
 	auxvar=$2;
 	
 	copiardatos(&auxnodo1,$5.tipo,$5.escons,$5.espun,$5.valstr,$5.valbool,$5.valnum,$5.valint,$5.nombre);
@@ -929,9 +924,6 @@ exp
 		strcpy($$.trad,"printf(\" %%d \\n\",");
 		strcat($$.trad,$1.trad);
 		strcat($$.trad,");\n");
-		break;
-	default: 
-		yyerror("Error:Imposible visualizar la variable o expresion\n");
 		break;
 	}//switch
 	
@@ -1233,14 +1225,6 @@ exp:
 		$$.valint =$1.valint;	
 	}
 /*************************************************************************************************/
-//esto es una cadena
-	|	TK_STRING
-	{
-		$$.tipo=2;
-		$$.escons=1;
-		strcpy($$.valstr,$1.valstr);	
-	}
-/*************************************************************************************************/
 //esto es de tipo booleano aunque internamente la tratamos como un entero
 	|	TK_NBOOL
 	{
@@ -1252,19 +1236,17 @@ exp:
 //estas son las variables que hay de tantas clases como tipos
 	| TK_VARIABLE //copiamos toda la informacion del nodo
 	{
-		auxvar=buscar($1->nombre,&com,&fin);
-	
-		strcpy($$.trad,auxvar->nombre);//copio el nombre de la variable para la traduccion
-		strcpy($$.nombre,auxvar->nombre);//copio el nombre de la variable para la traduccion
-		strcpy($$.valstr,auxvar->valstr);//strign
-		strcpy($$.cad,auxvar->cad);//cadena, esto es por los identificadores de las constantes		
-		$$.valnum=auxvar->valnum;	//variable numerica
-		$$.valbool=auxvar->valbool;//variable de tipo booleano
-		$$.valint=auxvar->valint;//variable de tipo entero
-		$$.tipo=auxvar->tipo;//tipo de la variable
-		$$.escons=auxvar->escons; //Nos dice si es una cosntante o no                    
-		$$.vis=auxvar->aux;//para traducir la visualizacion
-		$$.espun= auxvar->espun;
+		strcpy($$.trad,$1->nombre);//copio el nombre de la variable para la traduccion
+		strcpy($$.nombre,$1->nombre);//copio el nombre de la variable para la traduccion
+		strcpy($$.valstr,$1->valstr);//strign
+		strcpy($$.cad,$1->cad);//cadena, esto es por los identificadores de las constantes
+		$$.valnum=$1->valnum;	//variable numerica
+		$$.valbool=$1->valbool;//variable de tipo booleano
+		$$.valint=$1->valint;//variable de tipo entero
+		$$.tipo=$1->tipo;//tipo de la variable
+		$$.escons=$1->escons; //Nos dice si es una cosntante o no                    
+		$$.vis=$1->aux;//para traducir la visualizacion
+		$$.espun= $1->espun;
 		
 	}
 /*************************************************************************************************/
@@ -1273,6 +1255,7 @@ exp:
 	{
 		$$.tipo=$1.tipo;
 		strcpy($$.valstr,$1.cad);
+		strcpy($$.cad,$1.cad);
 		$$.escons=$1.escons;
 	}  		
 /*************************************************************************************************/
@@ -1308,7 +1291,9 @@ int main(int argc, char **argv)
 
 	fclose(salida);//se cierra el fichero de salida
 	
-	revisar(&com);
+	limpiar(&com);
+	
+	//revisar(&com);
 	
 	if(INICIO==NULL)
 		printf("\nError, programa vacio.\n");
@@ -1319,8 +1304,7 @@ int main(int argc, char **argv)
 
 int ejecutar(ARBOL *var,int parar) {
 	ARBOL *aux,*aux2;
-	
-	
+	extern com;	
 	NODO *variable;
 	int defecto;
 	int encontrada;
@@ -1333,11 +1317,20 @@ int ejecutar(ARBOL *var,int parar) {
 	
 	aux=var;
 	
+	
+	
 	do {
 		switch(aux->op){
 		case OP_ESCRIBIR:
 			if(aux->izq!=NULL) 
 				aux->exp1=procesarexp(aux->izq);
+				
+				
+			
+			if(!aux->exp1.escons) {
+				variable=buscar(aux->exp1.nombre,&com,&fin);
+				aux->exp1.tipo=variable->tipo;
+			}
 			
 			switch (aux->exp1.tipo){
 				case 1:
@@ -1347,15 +1340,6 @@ int ejecutar(ARBOL *var,int parar) {
 					else {
 						variable=buscar(aux->exp1.nombre,&com,&fin);
 						printf("%f\n",variable->valnum);
-					}
-					break;
-				case 2:	
-					if(aux->exp1.escons) {
-						printf("%s\n",aux->exp1.valstr);
-					}
-					else {
-						variable=buscar(aux->exp1.nombre,&com,&fin);
-						printf("%s\n",variable->valstr);
 					}
 					break;
 				case 3:
@@ -1369,11 +1353,11 @@ int ejecutar(ARBOL *var,int parar) {
 					break;
 				case 4:	
 					if(aux->exp1.escons) {
-						printf("%s\n",aux->exp1.valstr);
+						printf("%s\n",aux->exp1.cad);
 					}
 					else {
 						variable=buscar(aux->exp1.nombre,&com,&fin);
-						printf("%s\n",variable->valstr);
+						printf("%s\n",variable->cad);
 					}
 					break;
 				case 6: 
@@ -1384,10 +1368,18 @@ int ejecutar(ARBOL *var,int parar) {
 						variable=buscar(aux->exp1.nombre,&com,&fin);
 						printf("%d\n",variable->valint);
 					}
+				default:
+					yyerror("Error al mostrar el elemento");
 					break;
 			}//switch
 			break;
 		case OP_ASIGNAR:		
+			
+			//variable=buscar(aux->var->nombre,&com,&fin);
+			
+			printf("%d\t%d\n",aux->exp1.valint,aux->exp1.tipo);
+			printf("%d\t%d\n",aux->var->valint,aux->var->tipo);
+		
 			if ((aux->var->tipo==aux->exp1.tipo)&&(aux->var->escons==0)&&(aux->var->espun==0)) {
 				aux->var->tipo=aux->exp1.tipo;
 				strcpy(aux->var->valstr,aux->exp1.valstr);
@@ -1397,6 +1389,10 @@ int ejecutar(ARBOL *var,int parar) {
 			}
 			else if((aux->var->tipo=2)&&(aux->exp1.tipo==4)&&(aux->var->escons==0)&&(aux->var->espun==0)) {	
 				strcpy(aux->var->valstr,aux->exp1.valstr);
+			}
+			else if((aux->var->tipo=1)&&(aux->exp1.tipo==6)&&(aux->var->escons==0)&&(aux->var->espun==0)) {	
+				aux->var->valnum = aux->exp1.valnum;
+				aux->var->valint = aux->exp1.valint;
 			}
 			else yyerror("Error en la asignación, no concuerdan los tipos o la variable es constante\n");	
 			break;

@@ -68,16 +68,24 @@ NODO *buscar(char nombre[20],NODO **com,NODO **fin)
 	NODO *nuevo,*aux, *retorno;
 	aux=*com;//comienzo
 	int encontrado=0;
+	char msj[255];
 	
 	while ((aux!=NULL)&&(encontrado==0))
 	{
-		if (strcmp(aux->nombre,nombre)==0)//El símbolo existe
-		{
-      (encontrado=1);
+		encontrado=(strcmp(aux->nombre,nombre))==0;
+		if(encontrado) {
 			retorno=aux;
-			return(retorno);//Devolver nodo
+			return retorno;//Devolver nodo
 		}
-	 aux=aux->sig;
+		aux=aux->sig;
+	}
+
+	if(encontrado==0){
+		strcpy(msj,"Error en las variables, la variable ");
+		strcat(msj,nombre);
+		strcat(msj," no existe");
+
+		yyerror(msj);	
 	}
 }
 
@@ -142,13 +150,14 @@ int recorrer(NODO **com,char *nombre) {
 void limpiar(NODO **com) {
 	NODO *aux,*aux2;
 	aux=*com;//comienzo
-	aux2=aux->sig;
-	aux=aux2->sig;
-	
-	*com=aux2;
 
 	while(aux!=NULL) {
-		if(aux->tipo==0) { 
+		if((*com)->tipo==0) { 
+			aux2=*com;
+			*com=(*com)->sig;
+			free(aux2);
+			aux=*com;
+		}else if(aux->tipo==0) { 
 			aux2->sig=aux->sig;
 			free(aux);
 			aux=aux2->sig;

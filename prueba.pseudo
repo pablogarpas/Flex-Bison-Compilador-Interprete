@@ -1,46 +1,15 @@
-programa prueba
+programa prueba2
 
 const
-	var1 "comparando"
+	asd "comparando"
 
 var
 	aux entero
-	aux3 entero
 
 inicio
-/* asd asd  */
-
-	escribir("programa")
-
-	llamar(prueba)
-
-	var1="asd"
-
-	escribir(var1)
+	aux = 5123
+	
+	escribir(aux)
 
 fin
 
-funcion prueba
-arg
-	aux2 entero
-	a real 
-	aux string
-var
-	i entero
-devolver bool
-
-escribir("funciona")
-fin
-
-
-funcion qwer
-arg
-	aux2 entero
-	a real 
-	aux string
-var
-	i entero
-devolver bool
-
-escribir("no funciona")
-fin

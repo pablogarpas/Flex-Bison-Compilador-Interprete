@@ -1,7 +1,6 @@
 %{
 /****************************************************************************
 ****************************************************************************/
-
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -9,8 +8,8 @@
 #include "comp.c"
 
 //Variables globales
-NODO *com;//Principio de la lista de śimbolos
-NODO *fin;//Final de la lista de śimbolos
+NODO *com;//Principio de la lista de śimbolos para la traducción
+NODO *fin;//Final de la lista de śimbolos para la traducción
 int   auxb;  //variable auxiliar para la lectura de booleanos 
 int   auxint;  //variable auxiliar para la lectura de enteros
 float auxn;  //variable auxiliar para la lectura de numeros
@@ -109,7 +108,7 @@ programa:
 		fprintf(salida,$5.trad);
 		
 		copiardatos(&auxnodo1,5,0,0,"",0,0,0,"final");
-		insertar_var(&auxnodo1,OP_EXIT);
+		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,10 +128,8 @@ salto_lin_dec:
 cabecera: 			
 	TK_PROGRAM TK_VARIABLE salto_lin
 	{
-		insertar(auxnodo1,auxnodo2,OP_INICIO,auxvar);		
-		
-		copiardatos(&auxvar,5,0,0,"",0,0,0,"main");
-		insertar_var(&auxnodo1,OP_DECL);
+		copiardatos(&auxnodo1,5,0,0,"",0,0,0,"main");
+		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	};
 //////////////////////////////////////////////////////////////////////////////////////////////////
 librerias:
@@ -161,7 +158,7 @@ constante:
 		strcpy($$.trad,intr_const_num($2.valnum,$1->nombre)); //La traducción
 		
 		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
-		insertar_var(&auxnodo1,OP_DECL);
+		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	}
 	
 /*************************************************************************************************/
@@ -172,7 +169,7 @@ constante:
 		strcpy($$.trad,intr_const_int($2.valint,$1->nombre)); //La traducción
 		
 		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
-		insertar_var(&auxnodo1,OP_DECL);
+		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	} 
 /*************************************************************************************************/
  	
@@ -183,7 +180,7 @@ constante:
 		
 		
 		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
-		insertar_var(&auxnodo1,OP_DECL);
+		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	} 
 /*************************************************************************************************/
 	| TK_VARIABLE TK_CADENA salto_lin 
@@ -192,7 +189,7 @@ constante:
 		strcpy($$.trad,intr_const_cad($2.cad,$1->nombre)); //Traducción
 
 		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
-		insertar_var(&auxnodo1,OP_DECL);
+		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	}
 
 /*************************************************************************************************/
@@ -203,7 +200,7 @@ constante:
 		strcpy($$.trad,intr_const_num($2.valnum,$1->nombre)); //Traducción
 		
 		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
-		insertar_var(&auxnodo1,OP_DECL);
+		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	}
 
 /*************************************************************************************************/
@@ -214,7 +211,7 @@ constante:
 		strcpy($$.trad,intr_const_int($2.valint,$1->nombre)); //La traducción
 		
 		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
-		insertar_var(&auxnodo1,OP_DECL);
+		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	} 
 /*************************************************************************************************/
 	
@@ -224,7 +221,7 @@ constante:
 		strcpy($$.trad,intr_const_int($2.valbool,$1->nombre)); //La traducción
 		
 		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
-		insertar_var(&auxnodo1,OP_DECL);
+		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	} 
 
 /************************************************************************************************/
@@ -234,7 +231,7 @@ constante:
 		strcpy($$.trad,intr_const_cad($2.cad,$1->nombre));  //Traducción
 
 		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
-		insertar_var(&auxnodo1,OP_DECL);
+		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	};
 
 
@@ -283,7 +280,7 @@ variable:
 		strcpy($$.trad,intr_variable($2.tipo, $1->nombre,$3.espun)); //Traducción
 	
 		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
-		insertar_var(&auxnodo1,OP_DECL);
+		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	}
 
 /*************************************************************************************************/
@@ -295,7 +292,7 @@ variable:
 		strcat($$.trad,$5.trad);
 			
 		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
-		insertar_var(&auxnodo1,OP_DECL);
+		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	};
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -340,8 +337,8 @@ fun_dec:
 		auxvar=$2;
 		insertar_fun(auxvar,OP_FUN);
 		
-		
-		introducir_delim($2->nombre,&com,&fin);
+		copiardatos(&auxnodo1,5,0,0,"",0,0,0,$2->nombre);
+		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	}
 ;
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -390,7 +387,7 @@ argumento:
 		strcpy($$.trad,intr_argumento($2.tipo, $1->nombre,$3.espun)); //Traducción
 
 		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
-		insertar_var(&auxnodo1,OP_DECL);
+		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	}
 /*************************************************************************************************/
 	| TK_VARIABLE tipo puntero salto_lin argumento
@@ -401,7 +398,7 @@ argumento:
 		strcat($$.trad,$5.trad);
 			
 		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre);
-		insertar_var(&auxnodo1,OP_DECL);
+		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	};
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Sentencias de aplicación
@@ -1171,9 +1168,14 @@ int main(int argc, char **argv)
 
 	fclose(salida);//se cierra el fichero de salida
 	
+	com=NULL;
+	fin=NULL;
+	
 	if(INICIO==NULL)
 		printf("\nError, programa vacio.\n");
 	else
 		ejecutar(INICIO,0);
+		
+	listar(&com);
 }
 

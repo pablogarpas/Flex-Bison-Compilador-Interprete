@@ -590,8 +590,8 @@ Analizador l�xico para el pseudoc�digo que aceptar� el transpilador.
 #include "trad.c"
 #include <string.h>
 
-NODO  *com; //Puntero al comienzo de la TS (tabla de s�mbolos)
-NODO  *fin; //Puntero al final de la TS
+NODO  *comi; //Puntero al comienzo de la TS (tabla de s�mbolos)
+NODO  *fina; //Puntero al final de la TS
 char *cadaux;//variable auxiliar para eliminar las comillas de yytext
 char i;//variable auxiliar para eliminar las comillas de yytext
 int n_lineas;//contar el numero de lineas
@@ -1121,7 +1121,7 @@ return TK_MOD;
 case 46:
 YY_RULE_SETUP
 #line 111 "lexico.f"
-{yylval.indice = buscar_simbolo(yytext,&com,&fin);
+{yylval.indice = buscar_simbolo(yytext,&comi,&fina);
                  //buscamos es la TS la variable y si no esta la a�adimos
                  //introducimos en trad lo que el lex encuentra y aunque variable sea un puntero
                  //la expresion del yacc (el NT) almacena el valor de traduccion

@@ -11,19 +11,23 @@ int ejecutar(ARBOL *var,int parar) {
 	int encontrada;
 	
 	aux=var;
+	
 	/*
 	do{
 		printf("%d\n",aux->op);
 		aux=aux->der;
 	}while(aux!=NULL);
-	*/
+	*/	
+	
 	aux=var;
+
 	
 	do {
 		switch(aux->op){
-		case OP_ESCRIBIR:
+		case OP_ESCRIBIR:			
 			if(aux->izq!=NULL) 
 				aux->exp1=procesarexp(aux->izq);
+
 			switch (aux->exp1.tipo){
 				case 1:
 					if(aux->exp1.escons) {
@@ -76,22 +80,24 @@ int ejecutar(ARBOL *var,int parar) {
 			}//switch
 			break;
 		case OP_ASIGNAR:		
-		
+			variable=buscar(aux->var->nombre,&com,&fin);
+				variable->valnum=variable->valnum+1;
+			
 			if ((aux->var->tipo==aux->exp1.tipo)&&(aux->var->escons==0)&&(aux->var->espun==0)) {
-				aux->var->tipo=aux->exp1.tipo;
-				strcpy(aux->var->valstr,aux->exp1.valstr);
-				aux->var->valbool= aux->exp1.valbool;
-				aux->var->valnum = aux->exp1.valnum;
-				aux->var->valint = aux->exp1.valint;
+				variable->tipo=aux->exp1.tipo;
+				strcpy(variable->valstr,aux->exp1.valstr);
+				variable->valbool= aux->exp1.valbool;
+				variable->valnum = aux->exp1.valnum;
+				variable->valint = aux->exp1.valint;
 			}
 			else if((aux->var->tipo=2)&&(aux->exp1.tipo==4)&&(aux->var->escons==0)&&(aux->var->espun==0)) {	
-				strcpy(aux->var->valstr,aux->exp1.valstr);
+				strcpy(variable->valstr,aux->exp1.valstr);
 			}
 			else if((aux->var->tipo=1)&&(aux->exp1.tipo==6)&&(aux->var->escons==0)&&(aux->var->espun==0)) {	
-				aux->var->valnum = aux->exp1.valint;
+				variable->valnum = aux->exp1.valint;
 			}
 			else if((aux->var->tipo=6)&&(aux->exp1.tipo==1)&&(aux->var->escons==0)&&(aux->var->espun==0)) {	
-				aux->var->valint = aux->exp1.valnum;
+				variable->valint = aux->exp1.valnum;
 			}
 			else yyerror("Error en la asignación, no concuerdan los tipos o la variable es constante\n");	
 			break;
@@ -206,8 +212,6 @@ int ejecutar(ARBOL *var,int parar) {
 		case OP_LEER:
 			variable=buscar(aux->var->nombre,&com,&fin);
 			
-			printf("asd\n");fflush(stdout);
-			
 			if(variable->tipo==4 || variable->tipo==2)
 				fgets(variable->valstr,255,stdin);
 			else if(variable->tipo==6) {
@@ -225,13 +229,13 @@ int ejecutar(ARBOL *var,int parar) {
 			aux2=INICIO;
 
 			while(aux2->izq!=NULL) {
-					aux2=aux2->izq;
+				aux2=aux2->izq;
+				
+				if(strcmp(aux2->exp1.nombre,aux->exp1.nombre)==0)
+					encontrada=1;		
 					
-					if(strcmp(aux2->exp1.nombre,aux->exp1.nombre)==0)
-						encontrada=1;		
-						
-					if(encontrada)
-						break;
+				if(encontrada)
+					break;
 			}
 			if(encontrada)
 				ejecutar(aux2,1);
@@ -239,6 +243,7 @@ int ejecutar(ARBOL *var,int parar) {
 				yyerror("Error al llamar a la función; no se ha encontrado");
 			break;
 		case OP_DECL:
+			introducir(&aux->exp1,&com,&fin);
 		 break;
 		}//switch
 		aux=aux->der;

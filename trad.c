@@ -8,15 +8,15 @@ NODO *buscar_simbolo(char nombre[20],NODO **com,NODO **fin)
 	
 	while ((aux!=NULL)&&(encontrado==0)&&(aux->tipo!=5))
 	{
+			
 		if (strcmp(aux->nombre,nombre)==0)//El símbolo existe
 		{
       (encontrado=1);
 			retorno=aux;
-			return(retorno);//Devolver nodo
+			return retorno;//Devolver nodo
 		}
 	 aux=aux->sig;
 	}
-
 	if (!(nuevo=(NODO *)malloc(sizeof (NODO)))&&(encontrado!=1))
 	{
 		printf("No se ha podido reservar memoria \n");
@@ -46,6 +46,39 @@ NODO *buscar_simbolo(char nombre[20],NODO **com,NODO **fin)
 	}
 }
 
+
+NODO *introducir(NODO *var,NODO **com,NODO **fin) {
+	//variables
+	NODO *nuevo,*aux, *retorno;
+	aux=*com;//comienzo
+
+	if (!(nuevo=(NODO *)malloc(sizeof (NODO))))
+	{
+		printf("No se ha podido reservar memoria \n");
+		exit(0);
+	}
+  
+  
+	nuevo=var;
+	
+	if (*com==NULL)
+	{
+		nuevo->sig=NULL;
+		*com=nuevo;
+		*fin=nuevo;
+		retorno=*com;
+		return (retorno);
+	}
+	else
+	{
+		(nuevo->sig)=NULL;			
+		(*fin)->sig=nuevo;
+		*fin=nuevo;
+		retorno=*fin;
+		return(retorno);
+	}
+}
+
 NODO *introducir_delim(char *nombre,NODO **com,NODO **fin) {
 	//variables
 	NODO *nuevo,*aux, *retorno;
@@ -58,7 +91,7 @@ NODO *introducir_delim(char *nombre,NODO **com,NODO **fin) {
 	}
   
 	strcpy(nuevo->nombre,nombre);//Nombre
-	nuevo->tipo=5;//Tipo génerico
+	nuevo->tipo=5;//Tipo delimitador
 	if ((*com==NULL))
 	{
 		(nuevo->sig)=NULL;
@@ -85,8 +118,8 @@ NODO *buscar(char nombre[20],NODO **com,NODO **fin)
 	int encontrado=0;
 	char msj[255];
 	
-	while ((aux!=NULL)&&(encontrado==0))
-	{
+	while ((aux!=NULL)&&(encontrado==0)) {
+	
 		encontrado=(strcmp(aux->nombre,nombre))==0;
 		if(encontrado) {
 			retorno=aux;
@@ -94,7 +127,7 @@ NODO *buscar(char nombre[20],NODO **com,NODO **fin)
 		}
 		aux=aux->sig;
 	}
-
+	
 	if(encontrado==0){
 		strcpy(msj,"Error en las variables, la variable ");
 		strcat(msj,nombre);
@@ -105,10 +138,8 @@ NODO *buscar(char nombre[20],NODO **com,NODO **fin)
 }
 
 void listar(NODO **com) {
-
 	NODO *aux;
 	aux=*com;//comienzo
-	
 	
 	while(aux!=NULL) {
 		//if(aux->tipo!=0)
@@ -578,41 +609,6 @@ int insertar_fun(NODO *var, int ope) {
 		}else {
 			INICIO->izq=aux;
 			aux->raiz=INICIO;
-			FINAL=aux;
-			aux->der=NULL;
-		}
-	}
-}
-
-//Inserta una funcion en el árbol
-int insertar_var(NODO *var,int ope) { 
-	ARBOL *aux;
-	
-	aux= malloc(sizeof(ARBOL));
-
-	if(aux==NULL)	{
-	 printf("Error. No hay memoria para otro ARBOL.");
-	 return 0;
-	}
-	else {
-		aux->op=ope;
-		aux->var=var;
-		aux->izq=NULL;
-		
-		if(INICIO==NULL) {
-			INICIO=aux;
-			FINAL=aux;
-			aux->der=NULL;
-			aux->raiz=NULL;
-		}
-		else if(FINAL->op==PLACEHOLDER) {
-			aux->izq=FINAL->izq;
-			aux->raiz=FINAL->raiz;
-			*FINAL=*aux;
-		}
-		else {
-			FINAL->der=aux;
-			aux->raiz=FINAL;
 			FINAL=aux;
 			aux->der=NULL;
 		}

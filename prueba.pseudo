@@ -8,20 +8,20 @@ inicio
 	aux=5
 	a=6
 	escribir(aux)
-	llamar(qwer)
+	llamar(probando)
 	
 	aux2= 5.21
 	escribir(aux2)
 fin
 
-funcion qwer
+funcion probando
 arg
 	aux2 real
 	a string
 
 devolver bool
 	aux2=7
-	a="qwe"
+	a="funcion"
 escribir(a)
 escribir(aux2)
 fin

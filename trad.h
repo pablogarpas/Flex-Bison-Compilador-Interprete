@@ -103,6 +103,8 @@ NODO *introducir_delim(char *nombre,NODO **com,NODO **fin);
 int recorrer(NODO **com,char *nombre);
 //Función para eliminar las variables que sobran de la lista
 void limpiar(NODO **com);
+//Introducir en la tabla de símbolos
+NODO *introducir(NODO *var,NODO **com,NODO **fin);
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para pasar del pseudo a C*/
 //////////////////////////////////////////////////////////////////////////
@@ -160,6 +162,3 @@ int insertar_para(NODO expre1,NODO expre2, int ope, NODO *var);
 
 //Inserta una funcion en el árbol
 int insertar_fun(NODO *var, int ope);
-
-//Insertar variables en la tabla de símbolos
-int insertar_var(NODO *var,int ope);

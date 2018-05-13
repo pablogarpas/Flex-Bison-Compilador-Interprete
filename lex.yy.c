@@ -571,7 +571,7 @@ char *yytext;
 
 /****************************************************************************
 *****************************************************************************
-Analizador léxico para el pseudocódigo que aceptará el transpilador.
+Analizador lï¿½xico para el pseudocï¿½digo que aceptarï¿½ el transpilador.
 ****************************************************************************
 ****************************************************************************/
 //---------------------- COMENTARIOS AL CODIGO ------------------------------
@@ -590,12 +590,12 @@ Analizador léxico para el pseudocódigo que aceptará el transpilador.
 #include "trad.c"
 #include <string.h>
 
-struct NODO  *com; //Puntero al comienzo de la TS (tabla de símbolos)
+struct NODO  *com; //Puntero al comienzo de la TS (tabla de sï¿½mbolos)
 struct NODO  *fin; //Puntero al final de la TS
 char *cadaux;//variable auxiliar para eliminar las comillas de yytext
 char i;//variable auxiliar para eliminar las comillas de yytext
 int n_lineas;//contar el numero de lineas
-int num_errores;// variable para contar el número de errores
+int num_errores;// variable para contar el nï¿½mero de errores
 #line 600 "lex.yy.c"
 
 #define INITIAL 0
@@ -1121,8 +1121,8 @@ return TK_MOD;
 case 46:
 YY_RULE_SETUP
 #line 111 "lexico.f"
-{yylval.indice = introducir(yytext,&com,&fin);
-                 //buscamos es la TS la variable y si no esta la añadimos
+{yylval.indice = buscar_simbolo(yytext,&com,&fin);
+                 //buscamos es la TS la variable y si no esta la aï¿½adimos
                  //introducimos en trad lo que el lex encuentra y aunque variable sea un puntero
                  //la expresion del yacc (el NT) almacena el valor de traduccion
 									strcpy(yylval.ELEMENTO.trad,yytext);
@@ -1133,7 +1133,7 @@ case 47:
 YY_RULE_SETUP
 #line 119 "lexico.f"
 {cadaux=(char *)malloc(sizeof (char [yyleng]));
-           // Quitamos las comillas de las cadenas y añadimos el valor para la trduccion
+           // Quitamos las comillas de las cadenas y aï¿½adimos el valor para la trduccion
            //damos valor a los campos correspondientes
            strcpy(yylval.ELEMENTO.trad,yytext);
 	   for (i=1;i<yyleng-1;i++)  cadaux[i-1]=yytext[i];
@@ -2168,18 +2168,38 @@ void yyfree (void * ptr )
 #line 141 "lexico.f"
 
 
+
+comment()
+{
+	char c, c1;
+
+loop:
+	while ((c = input()) != '*' && c != 0)
+		putchar(c);
+
+	if ((c1 = input()) != '/' && c != 0)
+	{
+		unput(c1);
+		goto loop;
+	}
+
+	if (c != 0)
+		putchar(c1);
+}
+
 int yywrap(){
 return 1;
 }
 
-//Función para los errores con la línea en la que se encuentran
+//Funciï¿½n para los errores con la lï¿½nea en la que se encuentran
 yyerror(char *s, int salir)
 {
-  printf("%s. En la línea %d.\n",s,n_lineas+1);
+  printf("%s. En la lï¿½nea %d.\n",s,n_lineas+1);
   num_errores++;
   
   if (num_errores>5||salir) {
   exit(0);
   }
 }
+
 

@@ -250,7 +250,7 @@ constante:
 	| TK_VARIABLE TK_CADENA salto_lin constante //Varios números
 	{
 		strcpy($$.trad,intr_const_cad($2.cad,$1->nombre));  //Traducción
-		strcpy($$.cad,strcpy($1->cad,$2.cad));    
+		strcpy($$.cad,strcpy($1->cad,$2.cad));
 		$$.escons=1;
 		$$.tipo=$1->tipo=$2.tipo;
 		$1->escons=1;
@@ -270,20 +270,16 @@ tipo:
 	|  TK_REAL 
 	{
 	$$.tipo=1;} 
+
+	|  TK_STRING	
+	{
+	$$.tipo=2;
+	}
 	
 	|  TK_BOOL 
 	{
 	$$.tipo=3;
-	}
-	|  TK_CADENA
-	{
-	$$.tipo=4;
-	}
-	|  TK_STRING
-	{
-	$$.tipo=4;
-	}
-	;
+	};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -303,6 +299,7 @@ dec_vbles:
 variable:			
 	TK_VARIABLE tipo puntero salto_lin  
 	{
+	
 		strcpy($$.trad,intr_variable($2.tipo, $1->nombre,$3.espun)); //Traducción
 	
 	if ($1->escons==0) {
@@ -1295,6 +1292,8 @@ int main(int argc, char **argv)
 	
 	//revisar(&com);
 	
+	//listar(&com);
+	
 	if(INICIO==NULL)
 		printf("\nError, programa vacio.\n");
 	else
@@ -1324,13 +1323,6 @@ int ejecutar(ARBOL *var,int parar) {
 		case OP_ESCRIBIR:
 			if(aux->izq!=NULL) 
 				aux->exp1=procesarexp(aux->izq);
-				
-				
-			
-			if(!aux->exp1.escons) {
-				variable=buscar(aux->exp1.nombre,&com,&fin);
-				aux->exp1.tipo=variable->tipo;
-			}
 			
 			switch (aux->exp1.tipo){
 				case 1:
@@ -1340,6 +1332,15 @@ int ejecutar(ARBOL *var,int parar) {
 					else {
 						variable=buscar(aux->exp1.nombre,&com,&fin);
 						printf("%f\n",variable->valnum);
+					}
+					break;
+				case 2:	
+					if(aux->exp1.escons) {
+						printf("%s\n",aux->exp1.valstr);
+					}
+					else {
+						variable=buscar(aux->exp1.nombre,&com,&fin);
+						printf("%s\n",variable->valstr);
 					}
 					break;
 				case 3:
@@ -1353,11 +1354,11 @@ int ejecutar(ARBOL *var,int parar) {
 					break;
 				case 4:	
 					if(aux->exp1.escons) {
-						printf("%s\n",aux->exp1.cad);
+						printf("%s\n",aux->exp1.valstr);
 					}
 					else {
 						variable=buscar(aux->exp1.nombre,&com,&fin);
-						printf("%s\n",variable->cad);
+						printf("%s\n",variable->valstr);
 					}
 					break;
 				case 6: 
@@ -1368,6 +1369,7 @@ int ejecutar(ARBOL *var,int parar) {
 						variable=buscar(aux->exp1.nombre,&com,&fin);
 						printf("%d\n",variable->valint);
 					}
+					break;
 				default:
 					yyerror("Error al mostrar el elemento");
 					break;
@@ -1376,9 +1378,6 @@ int ejecutar(ARBOL *var,int parar) {
 		case OP_ASIGNAR:		
 			
 			//variable=buscar(aux->var->nombre,&com,&fin);
-			
-			printf("%d\t%d\n",aux->exp1.valint,aux->exp1.tipo);
-			printf("%d\t%d\n",aux->var->valint,aux->var->tipo);
 		
 			if ((aux->var->tipo==aux->exp1.tipo)&&(aux->var->escons==0)&&(aux->var->espun==0)) {
 				aux->var->tipo=aux->exp1.tipo;

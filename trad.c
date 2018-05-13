@@ -1,4 +1,51 @@
 //Buscar e introducir en la lista de simbolos
+NODO *buscar_simbolo(char nombre[20],NODO **com,NODO **fin)
+{
+	//variables
+	NODO *nuevo,*aux, *retorno;
+	aux=*com;//comienzo
+	int encontrado=0;
+	
+	while ((aux!=NULL)&&(encontrado==0))
+	{
+		if (strcmp(aux->nombre,nombre)==0)//El símbolo existe
+		{
+      (encontrado=1);
+			retorno=aux;
+			return(retorno);//Devolver nodo
+		}
+	 aux=aux->sig;
+	}
+
+	if (!(nuevo=(NODO *)malloc(sizeof (NODO)))&&(encontrado!=1))
+	{
+		printf("No se ha podido reservar memoria \n");
+		exit(0);
+	}
+    
+	strcpy(nuevo->nombre,nombre);//Nombre
+	nuevo->tipo=6;//Tipo génerico
+	if ((*com==NULL))
+	{
+		(nuevo->sig)=NULL;
+		*com=nuevo;
+		*fin=nuevo;
+		retorno=*com;
+		return (retorno);
+	}
+	else
+	{
+		if (encontrado==0)
+		{
+			(nuevo->sig)=*com;			
+			*com=nuevo;
+			retorno=*com;
+			return(retorno);
+		}
+	}
+}
+
+//Buscar e introducir en la lista de simbolos
 NODO *introducir(char nombre[20],NODO **com,NODO **fin)
 {
 	//variables

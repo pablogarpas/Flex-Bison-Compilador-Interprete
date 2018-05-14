@@ -2,19 +2,21 @@ programa prueba2
 
 var
 	aux entero
-	aux3 entero
+	aux3 string
 inicio
 	aux=15
-	aux3=0
+	aux3="qwe"
 	
-	llamar(prueba,aux)
+	llamar(prueba,aux,aux3)
 	
 fin
 
 funcion prueba
 arg
 	aux2 entero
+	aux4 string
 devolver entero
 
 	escribir(aux2)
+	escribir(aux4)
 fin

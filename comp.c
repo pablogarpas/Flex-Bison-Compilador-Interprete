@@ -8,10 +8,10 @@ NODO *argfin=NULL;//Lista de argumentos para pasar a una función
 
 int ejecutar(ARBOL *var,int parar,char funcion[25]) {
 	ARBOL *aux,*aux2;
-	NODO *variable;
+	NODO *variable,*arg1,*arg2;
 	int defecto;
 	int encontrada;
-	int i,k;
+	int i,k,j;
 	char msj[255];
 	
 	aux=var;
@@ -264,7 +264,8 @@ int ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			}
 		 break;
 		case OP_DECL_ARG:
-			introducir(&aux->exp1,&argini,&argfin);
+			strcpy(aux->exp1.cad,funcion);
+			introducir_arg(&aux->exp1,&argini,&argfin);
 			break;
 		case OP_ARG:
 			introducir(&aux->exp1,&com,&fin);
@@ -275,6 +276,25 @@ int ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			k=contar(&argini,&argfin);
 			
 			if(k==i) {
+				variable=buscar_fun(funcion,&com,&fin);
+				
+				while(variable->esarg==0)
+					variable=variable->sig;
+					
+				for(k=0;k<i;k++) {
+					arg1=variable;
+					arg2=argini;
+					for(j=k;j>0;j--){
+						
+						arg1=arg1->sig;
+						arg2=arg2->sig;
+					}
+					if(arg1->tipo==arg2->tipo){
+						arg2=buscar(arg2->nombre,&com,&fin,arg2->cad);
+						copiardatos(arg1,arg2->tipo,arg2->escons,arg2->espun,arg2->valstr,arg2->valbool,arg2->valnum,arg2->valint,arg1->nombre,1);
+					} else	
+					yyerror("Error en los argumentos, tipos diferentes");	
+				}
 			}else {
 				strcpy(msj,"Error al llamar a la función ");
 				strcat(msj,aux->exp1.nombre);

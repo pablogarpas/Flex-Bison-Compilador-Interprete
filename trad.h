@@ -96,6 +96,8 @@ NODO *fin;
 //////////////////////////////////////////////////////////////////////////
 //Buscar y devolver un nodo a esa variable
 NODO *buscar(char nombre[20],NODO **com,NODO **fin,char funcion[25]);
+//Buscar y devolver un nodo a esa funcion
+NODO *buscar_fun(char nombre[20],NODO **com,NODO **fin);
 //Ver la tabla de símbolos
 void listar(NODO **com);
 //Revisar la tabla de símbolos para buscar fallos
@@ -110,6 +112,8 @@ NODO *introducir(NODO *var,NODO **com,NODO **fin);
 int contar_arg(NODO **com,NODO **fin,char funcion[25]);
 //Busca y devuelve el número de elementos de una función
 int contar(NODO **com,NODO **fin);
+//Función para introducir en orden los argumentos
+NODO *introducir_arg(NODO *var,NODO **com,NODO **fin);
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para pasar del pseudo a C*/
 //////////////////////////////////////////////////////////////////////////

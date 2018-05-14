@@ -68,16 +68,39 @@ NODO *introducir(NODO *var,NODO **com,NODO **fin) {
 		nuevo->sig=NULL;
 		*com=nuevo;
 		*fin=nuevo;
-		retorno=*com;
-		return (retorno);
 	}
 	else
 	{
 		(nuevo->sig)=NULL;			
 		(*fin)->sig=nuevo;
 		*fin=nuevo;
-		retorno=*fin;
-		return(retorno);
+	}
+}
+
+NODO *introducir_arg(NODO *var,NODO **com,NODO **fin) {
+	//variables
+	NODO *nuevo,*aux, *retorno;
+	aux=*com;//comienzo
+
+
+	if (!(nuevo=(NODO *)malloc(sizeof (NODO))))
+	{
+		printf("No se ha podido reservar memoria \n");
+		exit(0);
+	}
+  
+	nuevo=var;
+	
+	if (*com==NULL)
+	{
+		nuevo->sig=NULL;
+		*com=nuevo;
+		*fin=nuevo;
+	}
+	else
+	{
+		(nuevo->sig)=*com;
+		*com=nuevo;
 	}
 }
 
@@ -151,6 +174,25 @@ NODO *buscar(char nombre[20],NODO **com,NODO **fin,char funcion[25]) {
 		strcat(msj," no existe");
 
 		yyerror(msj);	
+	}
+}
+
+NODO *buscar_fun(char nombre[20],NODO **com,NODO **fin) {
+	//variables
+	NODO *aux, *retorno;
+	aux=*com;//comienzo
+	int encontrado=0;
+	
+
+	
+	while ((aux!=NULL)&&(encontrado==0)) {
+	
+		encontrado=(strcmp(aux->nombre,nombre))==0;
+		if(encontrado && (aux->tipo==5)) {
+			retorno=aux;
+			return retorno;//Devolver nodo
+		}
+		aux=aux->sig;
 	}
 }
 

@@ -2,14 +2,15 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-int prueba(int aux2, char *aux3){
+int prueba(int aux2, char *aux4){
 printf(" %d \n",aux2);
+printf(" %s \n",aux4);
 }
 int main() 
 {
 int aux;
-int aux3;
+char *aux3;
 aux=15;
-aux3=0;
-prueba(aux);
+aux3="qwe";
+prueba(aux, aux3);
 }

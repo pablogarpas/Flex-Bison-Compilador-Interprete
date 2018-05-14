@@ -134,9 +134,10 @@ int ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			parar++;
 			nivel++;
 			
-			if(aux->izq!=NULL) 
+			if(aux->izq!=NULL) {
 				aux->exp1=procesarexp(aux->izq,funcion);	
-			
+			}
+
 			if(aux->exp1.valbool==0) {
 				while(aux->op!=OP_ELSE||aux->op!=OP_FIN) {
 					aux=aux->der;
@@ -290,7 +291,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 		aux=aux->izq;
 	}while(aux!=NULL);
 	*/
-	aux=INICIO;
+printf("OP:%d\n",aux->op);
 	
 	switch(aux->op){
 		case OP_IGUALDAD:
@@ -604,6 +605,8 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 			return retorno;
 			break;
 		case OP_MAYOR:
+			printf("OP:\n");
+
 			if(aux->exp1.escons) {
 				i=aux->exp1.valint;
 				real1=aux->exp1.valnum;
@@ -629,6 +632,8 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
 			}
+			
+			printf("OP:\n");				
 
 			retorno.tipo=3;//asigno tipo bool
 			if ((aux->exp1.tipo)==(aux->exp2.tipo))

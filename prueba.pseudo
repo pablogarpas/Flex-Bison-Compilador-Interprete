@@ -9,7 +9,7 @@ inicio
 	aux=15
 	numero="funciona"
 	
-	mientras aux>16
+	si aux>16
 		escribir("qweczx")
 	fin
 fin

@@ -10,7 +10,8 @@ char *numero;
 aux2="qwe";
 aux=15;
 numero="funciona";
-while (aux > 16) {
+if (aux > 16)
+{
 printf(" %s \n","qweczx");
 }
 }

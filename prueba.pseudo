@@ -7,33 +7,9 @@ var
 inicio
 	aux2= "qwe"
 	aux=15
-	numero="Jaime comeme los cojones"
+	numero="funciona"
 	
-	si 6>3
-		si 8>5
-			si 9>3
-				escribir(numero)
-			fin
-		fin
+	mientras aux>16
+		escribir("qweczx")
 	fin
-
-	llamar(probando,a,b,z)
-	
-	escribir(aux2)
-fin
-
-funcion probando
-var
-	aux entero
-arg
-	a entero
-	b string
-	c string
-
-devolver bool
-
-	escribir(aux2)
-	escribir("qwe")
-	escribir(b)
-
 fin

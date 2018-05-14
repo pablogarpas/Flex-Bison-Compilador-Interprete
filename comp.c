@@ -27,7 +27,6 @@ int ejecutar(ARBOL *var,int parar,char funcion[25]) {
 	do {
 		switch(aux->op){
 		case OP_ESCRIBIR:			
-		
 			if(aux->izq!=NULL) 
 				aux->exp1=procesarexp(aux->izq,funcion);
 
@@ -139,7 +138,7 @@ int ejecutar(ARBOL *var,int parar,char funcion[25]) {
 				aux->exp1=procesarexp(aux->izq,funcion);	
 			
 			if(aux->exp1.valbool==0) {
-				while(aux->op!=OP_ELSE) {
+				while(aux->op!=OP_ELSE||aux->op!=OP_FIN) {
 					aux=aux->der;
 				}
 			}
@@ -223,7 +222,6 @@ int ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			if(variable->tipo==4 || variable->tipo==2)
 				fgets(variable->valstr,255,stdin);
 			else if(variable->tipo==6) {
-			printf("asd\n");fflush(stdout);
 				scanf("%d",&(variable->valint));
 				}
 			else if(variable->tipo==3)
@@ -286,12 +284,12 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 
 	if(aux!=INICIO && aux->izq!=NULL)
 		aux->exp1=procesarexp(aux->izq,funcion);
-	
+	/*
 	do{
 		printf("%s\n",aux->exp1.nombre);
 		aux=aux->izq;
 	}while(aux!=NULL);
-	
+	*/
 	aux=INICIO;
 	
 	switch(aux->op){

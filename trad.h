@@ -48,6 +48,7 @@
 #define OP_ARG 37
 #define OP_RETURN 38
 #define OP_DEVOLVER 39
+#define OP_ASIG_LLAMAR 40
 
 //tipo de los simbolos
 typedef struct NODO {

@@ -7,7 +7,9 @@ inicio
 	aux=15
 	aux3="qwe"
 	
-	llamar(prueba,aux,aux3)
+	aux=llamar(prueba,aux,aux3)
+	
+	escribir(aux)
 	
 fin
 
@@ -20,5 +22,7 @@ devolver entero
 	escribir(aux2)
 	escribir(aux4)
 	
-	devolver aux2
+	aux2=16
+	
+	devolver 21
 fin

@@ -5,7 +5,8 @@
 int prueba(int aux2, char *aux4){
 printf(" %d \n",aux2);
 printf(" %s \n",aux4);
-return aux2;
+aux2=16;
+return 21;
 }
 int main() 
 {
@@ -13,5 +14,6 @@ int aux;
 char *aux3;
 aux=15;
 aux3="qwe";
-prueba(aux, aux3);
+aux=prueba(aux, aux3);
+printf(" %d \n",aux);
 }

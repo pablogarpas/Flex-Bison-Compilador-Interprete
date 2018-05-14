@@ -84,7 +84,7 @@ NODO *auxvar2;
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar_fun llamar_arg control2 decre else control3 control4 control5 fun_dec devolver
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar_fun llamar_arg control2 decre else control3 control4 control5 fun_dec devolver asig_fun
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -471,7 +471,21 @@ sentencia:
 	}
 /*************************************************************************************************/
 //Llamadas a funciones
-	| TK_LLAMAR  '(' TK_VARIABLE ',' llamar_arg ')'
+	| asig_fun  '(' TK_VARIABLE ',' llamar_arg ')'
+	{
+		strcpy($$.trad,$1.trad);
+		strcat($$.trad,$3->nombre);
+		strcat($$.trad,"(");
+		strcat($$.trad,$5.trad);
+		strcat($$.trad,");\n");
+	
+		strcpy(auxnodo1.nombre,$3->nombre);
+		strcpy(auxnodo2.nombre,$1.nombre);
+
+		insertar(auxnodo1,auxnodo2,OP_ASIG_LLAMAR,auxvar);
+	}
+/************************************************************************************************/
+	| TK_LLAMAR '(' TK_VARIABLE ',' llamar_arg ')'
 	{
 		strcpy($$.trad,$3->nombre);
 		strcat($$.trad,"(");
@@ -487,16 +501,49 @@ sentencia:
 		strcpy($$.trad,$1.trad);
 	}
 /************************************************************************************************/
-	| TK_RETORNO TK_VARIABLE
-	{
-		strcpy($$.trad,"return ");
-		strcat($$.trad,$2->nombre);
-		strcat($$.trad,";\n");
-		
-		strcpy(auxnodo1.nombre,$2->nombre);
+	| TK_RETORNO exp
+	{	
+		if($2.escons)	{
+			strcpy($$.trad,"return ");
+			strcat($$.trad,$2.trad);
+			strcat($$.trad,";\n");
+		}else{
+			strcpy($$.trad,"return ");
+			strcat($$.trad,$2.nombre);
+			strcat($$.trad,";\n");		
+		}
+		copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre,0);
 	
 		insertar(auxnodo1,auxnodo2,OP_DEVOLVER,auxvar);
-	}	
+	}
+/************************************************************************************************/	
+	;
+//////////////////////////////////////////////////////////////////////////////////////////////////
+asig_fun:
+	TK_LLAMAR
+	{
+	strcpy($$.trad,"");
+	}
+	| punteros_asignar TK_VARIABLE TK_ASIG TK_LLAMAR
+	{
+		char signo1[3];
+		char retorno[255];
+		
+		if ($1.vis==0)
+			strcpy(signo1,"");
+		if ($1.vis==2)
+			strcpy(signo1,"*");
+		if ($1.vis==3)
+			strcpy(signo1,"&");
+			
+		strcpy(retorno,signo1);
+		strcat(retorno,$2->nombre);
+		strcat(retorno,"=");
+		
+		//printf("%s\n",retorno);
+		strcpy($$.trad,retorno);	
+		strcpy($$.nombre,$2->nombre);
+	}
 	;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 llamar_fun:

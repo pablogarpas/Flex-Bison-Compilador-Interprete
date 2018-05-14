@@ -1,12 +1,12 @@
 //Prototipos
-int ejecutar(ARBOL *var,int parar,char funcion[25]);
+NODO *ejecutar(ARBOL *var,int parar,char funcion[25]);
 NODO procesarexp(ARBOL *aux,char funcion[25]);
 //Variables globales
 int nivel;//variable para controlar el nivel en el que parar
 NODO *argini=NULL;//Lista de argumentos para pasar a una función
 NODO *argfin=NULL;//Lista de argumentos para pasar a una función
 
-int ejecutar(ARBOL *var,int parar,char funcion[25]) {
+NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 	ARBOL *aux,*aux2;
 	NODO *variable,*arg1,*arg2;
 	int defecto;
@@ -253,6 +253,35 @@ int ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			else
 				yyerror("Error al llamar a la función; no se ha encontrado");
 			break;
+		case OP_ASIG_LLAMAR:
+			aux2=INICIO;
+
+			while(aux2->izq!=NULL) {
+				aux2=aux2->izq;
+				
+				if(strcmp(aux2->exp1.nombre,aux->exp1.nombre)==0)
+					encontrada=1;		
+					
+				if(encontrada)
+					break;
+			}
+			if(encontrada){
+				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+				arg1=ejecutar(aux2,1,aux->exp1.nombre);
+				
+				printf("qwe:%d\t%s\n",arg1->valint,funcion);
+				
+				if(arg1->tipo==variable->tipo) {
+					copiardatos(variable,arg1->tipo,arg1->escons,arg1->espun,arg1->valstr,arg1->valbool,arg1->valnum,arg1->valint,variable->nombre,1);
+				}else{
+					strcpy(msj,"Error en la variable de retorno de ");
+					strcat(msj,aux->exp1.nombre);
+					strcat(msj,", tipos incompatibles.");
+				}
+			}
+			else
+				yyerror("Error al llamar a la función; no se ha encontrado");
+			break;
 		case OP_DECL:
 			if(recorrer(&com,aux->exp1.nombre,funcion)==0) {
 				introducir(&aux->exp1,&com,&fin);
@@ -316,14 +345,26 @@ int ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			arg1->tipo=aux->exp1.tipo;
 		 	break;
 		case OP_DEVOLVER:
-			variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-			if(variable->tipo==argini->tipo)
-				return variable;
-			else {
-				strcpy(msj,"Error al devolver en la funcion ");
-				strcat(msj,funcion);
-				strcat(msj," tipos diferentes");
-				yyerror(msj);	
+			if(aux->exp1.escons==0) {
+				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
+				
+				if(variable->tipo==argini->tipo)
+					return variable;
+				else {
+					strcpy(msj,"Error al devolver en la funcion ");
+					strcat(msj,funcion);
+					strcat(msj," tipos diferentes");
+					yyerror(msj);	
+				}
+			}else{
+				if(aux->exp1.tipo==argini->tipo)
+					return &aux->exp1;
+				else {
+					strcpy(msj,"Error al devolver en la funcion ");
+					strcat(msj,funcion);
+					strcat(msj," tipos diferentes");
+					yyerror(msj);	
+				}
 			}
 			break;
 		}//switch

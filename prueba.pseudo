@@ -6,10 +6,12 @@ var
 	numero string
 inicio
 	aux2= "qwe"
-	aux=15
+	aux=17
 	numero="funciona"
 	
-	si aux>16
-		escribir("qweczx")
+	si aux>5
+		si aux>4
+			escribir("qweczx")
+		fin
 	fin
 fin

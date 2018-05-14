@@ -426,8 +426,9 @@ void intr_inc(char *nombre,int post)
 //Insertar o crear el árbol
 int insertar(NODO expre1,NODO expre2, int ope, NODO *var)
 {
-	ARBOL *aux;
+	ARBOL *aux,*aux2;
 	
+	aux2= malloc(sizeof(ARBOL));
 	aux= malloc(sizeof(ARBOL));
 
 	if(aux==NULL)	{
@@ -451,6 +452,12 @@ int insertar(NODO expre1,NODO expre2, int ope, NODO *var)
 			aux->izq=FINAL->izq;
 			aux->raiz=FINAL->raiz;
 			*FINAL=*aux;
+			
+			aux2->op=PLACEHOLDER;
+			FINAL->der=aux2;
+			aux2->raiz=FINAL;
+			FINAL=aux2;
+			aux2->der=NULL;
 		}
 		else {
 			FINAL->der=aux;
@@ -468,6 +475,7 @@ int insertarexp(NODO expre1,NODO expre2, int ope) {
 	aux= malloc(sizeof(ARBOL));
 	aux2= malloc(sizeof(ARBOL));
 	
+	
 	if(aux2==NULL|| aux==NULL)	{
 	 printf("Error. No hay memoria para otro ARBOL.");
 	 return 0;
@@ -475,15 +483,20 @@ int insertarexp(NODO expre1,NODO expre2, int ope) {
 		INICIO=aux2;
 		FINAL=aux2;
 
-		
+
 		aux->exp1=expre1;
 		aux->exp2=expre2;
 		aux->op=ope;
 		
 		aux2->op=PLACEHOLDER;
 		aux2->izq=aux;
+		
 	}
 	else if(FINAL->izq!=NULL) {
+		if(FINAL->der!=NULL) {
+			printf("%d\n",ope);
+			}
+		
 		aux->exp1=expre1;
 		aux->exp2=expre2;
 		aux->op=ope;

@@ -139,7 +139,7 @@ int ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			}
 
 			if(aux->exp1.valbool==0) {
-				while(aux->op!=OP_ELSE||aux->op!=OP_FIN) {
+				while(aux->op!=OP_ELSE) {
 					aux=aux->der;
 				}
 			}
@@ -283,16 +283,15 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 	a= malloc(sizeof(NODO));
 	b= malloc(sizeof(NODO));
 
-	if(aux!=INICIO && aux->izq!=NULL)
+	if(aux!=INICIO && aux->izq!=NULL) {
 		aux->exp1=procesarexp(aux->izq,funcion);
+		}
 	/*
 	do{
 		printf("%s\n",aux->exp1.nombre);
 		aux=aux->izq;
 	}while(aux!=NULL);
 	*/
-printf("OP:%d\n",aux->op);
-	
 	switch(aux->op){
 		case OP_IGUALDAD:
 			if(aux->exp1.escons) {
@@ -306,6 +305,7 @@ printf("OP:%d\n",aux->op);
 				real1=variable->valnum;
 				bool1=variable->valbool;
 				strcpy(a,variable->valstr);
+				aux->exp1.tipo=variable->tipo;
 			}
 				
 			if(aux->exp2.escons) {
@@ -313,12 +313,13 @@ printf("OP:%d\n",aux->op);
 				real2=aux->exp2.valnum;
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
-			} else {
+			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
+				aux->exp2.tipo=variable->tipo;
 			}
 			
 			retorno.tipo=3;//asigno tipo bool
@@ -451,6 +452,7 @@ printf("OP:%d\n",aux->op);
 				real1=variable->valnum;
 				bool1=variable->valbool;
 				strcpy(a,variable->valstr);
+				aux->exp1.tipo=variable->tipo;
 			}
 				
 			if(aux->exp2.escons) {
@@ -458,12 +460,13 @@ printf("OP:%d\n",aux->op);
 				real2=aux->exp2.valnum;
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
-			} else {
+			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
+				aux->exp2.tipo=variable->tipo;
 			}
 			
 			retorno.tipo=3;//asigno tipo bool
@@ -536,6 +539,7 @@ printf("OP:%d\n",aux->op);
 				real1=variable->valnum;
 				bool1=variable->valbool;
 				strcpy(a,variable->valstr);
+				aux->exp1.tipo=variable->tipo;
 			}
 			
 				if(aux->exp2.escons) {
@@ -549,6 +553,7 @@ printf("OP:%d\n",aux->op);
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
+				aux->exp2.tipo=variable->tipo;
 			}
 			
 			//printf("%d\t%d\n",i,k);
@@ -605,8 +610,7 @@ printf("OP:%d\n",aux->op);
 			return retorno;
 			break;
 		case OP_MAYOR:
-			printf("OP:\n");
-
+		
 			if(aux->exp1.escons) {
 				i=aux->exp1.valint;
 				real1=aux->exp1.valnum;
@@ -618,6 +622,7 @@ printf("OP:%d\n",aux->op);
 				real1=variable->valnum;
 				bool1=variable->valbool;
 				strcpy(a,variable->valstr);
+				aux->exp1.tipo=variable->tipo;
 			}	
 			
 			if(aux->exp2.escons) {
@@ -625,15 +630,14 @@ printf("OP:%d\n",aux->op);
 				real2=aux->exp2.valnum;
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
-			} else {
+			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
+				aux->exp2.tipo=variable->tipo;
 			}
-			
-			printf("OP:\n");				
 
 			retorno.tipo=3;//asigno tipo bool
 			if ((aux->exp1.tipo)==(aux->exp2.tipo))
@@ -680,8 +684,9 @@ printf("OP:%d\n",aux->op);
 				if (real1>k) retorno.valbool =1; 
 				else retorno.valbool=0;
 			}
-
 			else yyerror("Error en el mayor: Operaciones sobre tipos diferentes\n"); 
+			
+			
 			retorno.tipo=3;
 			retorno.escons=1;
 			retorno.espun=0;
@@ -699,6 +704,7 @@ printf("OP:%d\n",aux->op);
 				real1=variable->valnum;
 				bool1=variable->valbool;
 				strcpy(a,variable->valstr);
+				aux->exp1.tipo=variable->tipo;
 			}	
 		
 			if(aux->exp2.escons) {
@@ -706,12 +712,13 @@ printf("OP:%d\n",aux->op);
 				real2=aux->exp2.valnum;
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
-			} else {
+			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
+				aux->exp2.tipo=variable->tipo;
 			}
 
 		retorno.tipo=3;//asigno tipo bool
@@ -857,6 +864,7 @@ printf("OP:%d\n",aux->op);
 				real1=variable->valnum;
 				bool1=variable->valbool;
 				strcpy(a,variable->valstr);
+				aux->exp1.tipo=variable->tipo;
 			}
 				
 			if(aux->exp2.escons) {
@@ -864,12 +872,13 @@ printf("OP:%d\n",aux->op);
 				real2=aux->exp2.valnum;
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
-			} else {
+			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
+				aux->exp2.tipo=variable->tipo;
 			}
 			
 			if ((aux->exp1.tipo==1) && (aux->exp2.tipo==1)){
@@ -923,6 +932,7 @@ printf("OP:%d\n",aux->op);
 				real1=variable->valnum;
 				bool1=variable->valbool;
 				strcpy(a,variable->valstr);
+				aux->exp1.tipo=variable->tipo;
 			}
 				
 			if(aux->exp2.escons) {
@@ -930,12 +940,13 @@ printf("OP:%d\n",aux->op);
 				real2=aux->exp2.valnum;
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
-			} else {
+			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
+				aux->exp2.tipo=variable->tipo;
 			}
 			
 			if ((aux->exp1.tipo==1) && (aux->exp2.tipo==1)) {
@@ -973,6 +984,7 @@ printf("OP:%d\n",aux->op);
 				real1=variable->valnum;
 				bool1=variable->valbool;
 				strcpy(a,variable->valstr);
+				aux->exp1.tipo=variable->tipo;
 			}
 				
 			if(aux->exp2.escons) {
@@ -980,12 +992,13 @@ printf("OP:%d\n",aux->op);
 				real2=aux->exp2.valnum;
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
-			} else {
+			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
+				aux->exp2.tipo=variable->tipo;
 			}
 			
 				if ((aux->exp1.tipo==1) && (aux->exp2.tipo==1))	{
@@ -1023,6 +1036,7 @@ printf("OP:%d\n",aux->op);
 				real1=variable->valnum;
 				bool1=variable->valbool;
 				strcpy(a,variable->valstr);
+				aux->exp1.tipo=variable->tipo;
 			}
 				
 			if(aux->exp2.escons) {
@@ -1030,12 +1044,13 @@ printf("OP:%d\n",aux->op);
 				real2=aux->exp2.valnum;
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
-			} else {
+			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
+				aux->exp2.tipo=variable->tipo;
 			}
 
 			if ((aux->exp1.tipo==1) && (aux->exp2.tipo==1))		{
@@ -1082,6 +1097,7 @@ printf("OP:%d\n",aux->op);
 				real1=variable->valnum;
 				bool1=variable->valbool;
 				strcpy(a,variable->valstr);
+				aux->exp1.tipo=variable->tipo;
 			}
 				
 			if(aux->exp2.escons) {
@@ -1089,12 +1105,13 @@ printf("OP:%d\n",aux->op);
 				real2=aux->exp2.valnum;
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
-			} else {
+			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
+				aux->exp2.tipo=variable->tipo;
 			}
 
 			if ((aux->exp1.tipo==6)&& (aux->exp2.tipo==6)) {
@@ -1120,6 +1137,7 @@ printf("OP:%d\n",aux->op);
 				real1=variable->valnum;
 				bool1=variable->valbool;
 				strcpy(a,variable->valstr);
+				aux->exp1.tipo=variable->tipo;
 			}
 
 			if (aux->exp1.tipo==1)	{
@@ -1149,6 +1167,7 @@ printf("OP:%d\n",aux->op);
 				real1=variable->valnum;
 				bool1=variable->valbool;
 				strcpy(a,variable->valstr);
+				aux->exp1.tipo=variable->tipo;
 			}
 				
 			if(aux->exp2.escons) {
@@ -1156,12 +1175,13 @@ printf("OP:%d\n",aux->op);
 				real2=aux->exp2.valnum;
 				bool2=aux->exp2.valbool;
 				strcpy(b,aux->exp2.valstr);
-			} else {
+			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
+				aux->exp2.tipo=variable->tipo;
 			}
 
 			if ((aux->exp1.tipo==1)&& (aux->exp2.tipo==1))

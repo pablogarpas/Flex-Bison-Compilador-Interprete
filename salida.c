@@ -8,10 +8,13 @@ char *aux2;
 int aux;
 char *numero;
 aux2="qwe";
-aux=15;
+aux=17;
 numero="funciona";
-if (aux > 16)
+if (aux > 5)
+{
+if (aux > 4)
 {
 printf(" %s \n","qweczx");
+}
 }
 }

@@ -24,6 +24,7 @@ arg
 devolver bool
 
 escribir(aux2)
+escribir("qwe")
 escribir(b)
 
 fin

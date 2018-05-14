@@ -11,6 +11,7 @@ int ejecutar(ARBOL *var,int parar,char funcion[25]) {
 	NODO *variable;
 	int defecto;
 	int encontrada;
+	char msj[255];
 	
 	aux=var;
 	
@@ -250,11 +251,18 @@ int ejecutar(ARBOL *var,int parar,char funcion[25]) {
 				yyerror("Error al llamar a la función; no se ha encontrado");
 			break;
 		case OP_DECL:
-			introducir(&aux->exp1,&com,&fin);
-
+			if(recorrer(&com,aux->exp1.nombre,funcion)==0) {
+				introducir(&aux->exp1,&com,&fin);
+			}else {
+				strcpy(msj,"Error en las variables, la variable ");
+				strcat(msj,aux->exp1.nombre);
+				strcat(msj," ya existe.");
+				yyerror(msj);	
+			}
 		 break;
 		case OP_DECL_ARG:
 			introducir(&aux->exp1,&argini,&argfin);
+			break;
 		case OP_ARG:
 			introducir(&aux->exp1,&com,&fin);
 		 break;

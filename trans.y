@@ -346,6 +346,7 @@ funcion:
 	fun_dec dec_vbles dec_arg_fun TK_RETORNO tipo salto_lin lista_sentencias final
 	{
 		//printf("%s \n",$6.nombre);
+		
 		if($5.tipo==1)
 			strcpy($$.trad,"float ");
 		if($5.tipo==6||$5.tipo==3)
@@ -384,6 +385,7 @@ argumento:
 	TK_VARIABLE tipo puntero salto_lin  
 	{
 		$1->tipo=$2.tipo;
+		
 		strcpy($$.trad,intr_argumento($2.tipo, $1->nombre,$3.espun)); //Traducción
 
 		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,1);
@@ -393,6 +395,7 @@ argumento:
 	| TK_VARIABLE tipo puntero salto_lin argumento
 	{
 		$1->tipo=$2.tipo;
+		
 		strcpy($$.trad,intr_argumento($2.tipo, $1->nombre,$3.espun)); //Traducción
 		strcat($$.trad,", ");
 		strcat($$.trad,$5.trad);
@@ -806,9 +809,9 @@ exp
 		strcat($$.trad,");\n");
 		break;
 	case 4: 
-		strcpy($$.trad,"printf(\"");
-		strcat($$.trad,$1.cad);
-		strcat($$.trad,"\\n\");\n");
+		strcpy($$.trad,"printf(\" %%s \\n\",");
+		strcat($$.trad,$1.trad);
+		strcat($$.trad,");\n");
 		break;
 	case 6: 
 		strcpy($$.trad,"printf(\" %%d \\n\",");

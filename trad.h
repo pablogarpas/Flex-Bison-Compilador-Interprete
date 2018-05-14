@@ -100,7 +100,7 @@ void listar(NODO **com);
 //Revisar la tabla de símbolos para buscar fallos
 void revisar(NODO **com);
 //Recorrer la tabla de símbolos buscando variables repetidas
-int recorrer(NODO **com,char *nombre);
+int recorrer(NODO **com,char *nombre,char *funcion);
 //Función para eliminar las variables que sobran de la lista
 void limpiar(NODO **com);
 //Introducir en la tabla de símbolos

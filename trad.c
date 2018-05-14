@@ -125,46 +125,30 @@ void listar(NODO **com) {
 	}
 }
 
-void revisar(NODO **com) {
-	int error=0;
-	NODO **aux;
-	char msj[255];
-	
-	aux=com;//comienzo
-	
-	while(*aux!=NULL) {
-		while((*aux)->tipo!=5) {
-			error=recorrer(com,(*aux)->nombre);
-			if(error){
-				strcpy(msj,"Error en las variables, la variable ");
-				strcat(msj,(*aux)->nombre);
-				strcat(msj," está repetida");
-				
-				yyerror(msj);	
-			}
-			*aux=(*aux)->sig;
-		}
-		*aux=(*aux)->sig;
-	}
-}
-
 //recorre la lista
-int recorrer(NODO **com,char *nombre) {
-	NODO *aux;
+int recorrer(NODO **com,char *nombre,char *funcion) {
+	//variables
+	NODO *nuevo,*aux;
 	aux=*com;//comienzo
-	int encontrado;
-	aux=aux->sig;
+	int encontrado=0;
 	
-	while(aux->sig!=NULL) {
-		if(aux->tipo==5)
-			return encontrado;
-		if(strcmp(nombre,aux->nombre)==0) {
-			encontrado=1;
-			return encontrado;
-			}
+	while(aux!=NULL){
+		if(strcmp(aux->nombre,funcion)==0){
+			aux=aux->sig;
+			break;
+		}
 		aux=aux->sig;
 	}
-	return encontrado;
+	
+	while ((aux!=NULL)&&(encontrado==0)&&(aux->tipo!=5)) {
+		encontrado=(strcmp(aux->nombre,nombre))==0;
+		if(encontrado) {
+			return 1;
+		}
+		aux=aux->sig;
+	}
+	
+	return 0;
 }
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para pasar del pseudo a C*/
@@ -309,6 +293,14 @@ char *intr_argumento(int tipo, char *nombre,int espun)
 				strcat(aux,"*");
 			else
 				strcat(aux,"");
+			strcat(aux,nombre);
+			break;
+		case 4:
+			strcpy(aux,"char ");
+			if(espun) 
+				strcat(aux,"**");
+			else
+				strcat(aux,"*");
 			strcat(aux,nombre);
 			break;
 		case 6:

@@ -251,6 +251,15 @@ char *intr_variable(int tipo, char *nombre,int espun)
 			strcat(aux,nombre);
 			strcat(aux,";\n");
 			break;
+		case 4:
+			strcpy(aux,"char ");
+			if(espun) 
+				strcat(aux,"**");
+			else
+				strcat(aux,"*");
+			strcat(aux,nombre);
+			strcat(aux,";\n");
+			break;
 		case 6:
 			strcpy(aux,"int ");
 			if(espun)
@@ -371,6 +380,11 @@ char *vis_entrada(int tipo,char *cad,int espun)
 			break;
 		case 3:
 			strcat(aux,"%%d \",");
+			if(!espun) 
+				strcat(aux,"&");
+			break;
+		case 4:
+			strcat(aux,"%%s \",");
 			if(!espun) 
 				strcat(aux,"&");
 			break;

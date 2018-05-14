@@ -3,11 +3,20 @@ programa prueba
 var
 	aux2 string
 	aux entero
+	numero string
 inicio
 	aux2= "qwe"
 	aux=15
+	numero="Jaime comeme los cojones"
 	
-	escribir(aux2)
+	si 6>3
+		si 8>5
+			si 9>3
+				escribir(numero)
+			fin
+		fin
+	fin
+
 	llamar(probando,a,b,z)
 	
 	escribir(aux2)

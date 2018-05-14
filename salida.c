@@ -9,10 +9,22 @@ printf(" %s \n",b);
 }
 int main() 
 {
+char *aux2;
 int aux;
+char *numero;
 aux2="qwe";
 aux=15;
-printf(" %s \n",aux2);
+numero="Jaime comeme los cojones";
+if (6 > 3)
+{
+if (8 > 5)
+{
+if (9 > 3)
+{
+printf(" %s \n",numero);
+}
+}
+}
 probando(a, b, z);
 printf(" %s \n",aux2);
 }

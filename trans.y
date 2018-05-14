@@ -287,6 +287,7 @@ variable:
 	| TK_VARIABLE tipo puntero salto_lin variable	
 	{
 		$1->tipo=$2.tipo;
+
 		strcpy($$.trad,intr_variable($2.tipo, $1->nombre,$3.espun)); //Traducción
 			
 		strcat($$.trad,$5.trad);
@@ -1195,9 +1196,6 @@ int main(int argc, char **argv)
 	else
 		ejecutar(INICIO,0,"main");
 	
-	printf("//////////////////////////////////////////////////////////////////////////////\n");	
-	listar(&com);
-	printf("//////////////////////////////////////////////////////////////////////////////\n");
-	listar(&argini);
+
 }
 

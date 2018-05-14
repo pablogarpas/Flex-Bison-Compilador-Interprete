@@ -107,8 +107,10 @@ programa:
 		fprintf(salida,$4.trad);
 		fprintf(salida,$5.trad);
 		
+		/*		
 		copiardatos(&auxnodo1,5,0,0,"",0,0,0,"final",0);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
+		*/
 	};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -372,7 +374,7 @@ devolver:
 	{
 		$$.tipo=$2.tipo;
 		
-		copiardatos(&auxnodo1,$2.tipo,0,0,"",0,0,0,"",0);
+		copiardatos(&auxnodo1,$2.tipo,0,0,"",0,0,0,"devolver",0);
 		insertar(auxnodo1,auxnodo2,OP_RETURN,auxvar);
 	}
 	;
@@ -469,12 +471,15 @@ sentencia:
 	}
 /*************************************************************************************************/
 //Llamadas a funciones
-	| llamar_fun ',' llamar_arg ')'
+	| TK_LLAMAR  '(' TK_VARIABLE ',' llamar_arg ')'
 	{
-		strcpy($$.trad,$1.trad);
+		strcpy($$.trad,$3->nombre);
 		strcat($$.trad,"(");
-		strcat($$.trad,$3.trad);
+		strcat($$.trad,$5.trad);
 		strcat($$.trad,");\n");
+	
+		strcpy(auxnodo1.nombre,$3->nombre);
+		insertar(auxnodo1,auxnodo2,OP_LLAMAR,auxvar);
 	}
 /************************************************************************************************/
 	| decre
@@ -490,7 +495,7 @@ llamar_fun:
 		strcpy(auxnodo1.nombre,$3->nombre);
 		insertar(auxnodo1,auxnodo2,OP_LLAMAR,auxvar);
 	}
-;
+	;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 decre:
 //Postincremento 
@@ -1195,7 +1200,12 @@ int main(int argc, char **argv)
 		printf("\nError, programa vacio.\n");
 	else
 		ejecutar(INICIO,0,"main");
-	
-
+		
+	/*
+	printf("//////////////////\n");
+	listar(&com);
+	printf("//////////////////\n");
+	listar(&argini);
+	*/
 }
 

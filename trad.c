@@ -81,6 +81,46 @@ NODO *introducir(NODO *var,NODO **com,NODO **fin) {
 	}
 }
 
+//Busca y devuelve el número de argumentos de una función
+int contar_arg(NODO **com,NODO **fin,char funcion[25]) {
+	//variables
+	NODO *aux;
+	aux=*com;//comienzo
+	int encontrado=0;
+	
+	while(aux!=NULL){
+		if(strcmp(aux->nombre,funcion)==0){
+			aux=aux->sig;
+			break;
+		}
+		aux=aux->sig;
+	}
+	
+	while ((aux!=NULL)&&(aux->tipo!=5)) {
+		if(aux->esarg)
+			encontrado++;
+
+		aux=aux->sig;
+	}
+	
+	return encontrado;
+}
+
+int contar(NODO **com,NODO **fin) {
+	//variables
+	NODO *aux;
+	aux=*com;//comienzo
+	int encontrado=0;
+	
+	while (aux!=NULL) {
+		encontrado++;
+
+		aux=aux->sig;
+	}
+	
+	return encontrado;
+}
+
 NODO *buscar(char nombre[20],NODO **com,NODO **fin,char funcion[25]) {
 	//variables
 	NODO *nuevo,*aux, *retorno;

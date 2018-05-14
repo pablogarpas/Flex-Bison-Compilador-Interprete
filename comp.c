@@ -3,14 +3,15 @@ int ejecutar(ARBOL *var,int parar,char funcion[25]);
 NODO procesarexp(ARBOL *aux,char funcion[25]);
 //Variables globales
 int nivel;//variable para controlar el nivel en el que parar
-NODO *argini;//Lista de argumentos para pasar a una función
-NODO *argfin;//Lista de argumentos para pasar a una función
+NODO *argini=NULL;//Lista de argumentos para pasar a una función
+NODO *argfin=NULL;//Lista de argumentos para pasar a una función
 
 int ejecutar(ARBOL *var,int parar,char funcion[25]) {
 	ARBOL *aux,*aux2;
 	NODO *variable;
 	int defecto;
 	int encontrada;
+	int i,k;
 	char msj[255];
 	
 	aux=var;
@@ -19,8 +20,10 @@ int ejecutar(ARBOL *var,int parar,char funcion[25]) {
 	do{
 		printf("%d\n",aux->op);
 		aux=aux->der;
+
 	}while(aux!=NULL);
 	*/
+	
 	
 	aux=var;
 	
@@ -244,8 +247,9 @@ int ejecutar(ARBOL *var,int parar,char funcion[25]) {
 				if(encontrada)
 					break;
 			}
-			if(encontrada)
+			if(encontrada){
 				ejecutar(aux2,1,aux->exp1.nombre);
+				}
 			else
 				yyerror("Error al llamar a la función; no se ha encontrado");
 			break;
@@ -264,6 +268,19 @@ int ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			break;
 		case OP_ARG:
 			introducir(&aux->exp1,&com,&fin);
+		 break;
+		case OP_RETURN:
+			introducir(&aux->exp1,&com,&fin);
+			i=contar_arg(&com,&fin,funcion);
+			k=contar(&argini,&argfin);
+			
+			if(k==i) {
+			}else {
+				strcpy(msj,"Error al llamar a la función ");
+				strcat(msj,aux->exp1.nombre);
+				strcat(msj," número de argumentos incorrectos");
+				yyerror(msj);	
+			}
 		 break;
 		}//switch
 		aux=aux->der;

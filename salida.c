@@ -2,19 +2,14 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+int prueba(int aux2, char *aux3){
+printf(" %d \n",aux2);
+}
 int main() 
 {
-char *aux2;
 int aux;
-char *numero;
-aux2="qwe";
-aux=17;
-numero="funciona";
-if (aux > 5)
-{
-if (aux > 4)
-{
-printf(" %s \n","qweczx");
-}
-}
+int aux3;
+aux=15;
+aux3=0;
+prueba(aux);
 }

@@ -106,6 +106,10 @@ int recorrer(NODO **com,char *nombre,char *funcion);
 void limpiar(NODO **com);
 //Introducir en la tabla de símbolos
 NODO *introducir(NODO *var,NODO **com,NODO **fin);
+//Busca y devuelve el número de argumentos de una función
+int contar_arg(NODO **com,NODO **fin,char funcion[25]);
+//Busca y devuelve el número de elementos de una función
+int contar(NODO **com,NODO **fin);
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para pasar del pseudo a C*/
 //////////////////////////////////////////////////////////////////////////

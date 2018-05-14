@@ -1,17 +1,20 @@
-programa prueba
+programa prueba2
 
 var
-	aux2 string
 	aux entero
-	numero string
+	aux3 entero
 inicio
-	aux2= "qwe"
-	aux=17
-	numero="funciona"
+	aux=15
+	aux3=0
 	
-	si aux>5
-		si aux>4
-			escribir("qweczx")
-		fin
-	fin
+	llamar(prueba,aux)
+	
+fin
+
+funcion prueba
+arg
+	aux2 entero
+devolver entero
+
+	escribir(aux2)
 fin

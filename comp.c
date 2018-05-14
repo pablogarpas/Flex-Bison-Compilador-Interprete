@@ -301,7 +301,31 @@ int ejecutar(ARBOL *var,int parar,char funcion[25]) {
 				strcat(msj," número de argumentos incorrectos");
 				yyerror(msj);	
 			}
-		 break;
+			
+			while(argini!=NULL) {
+				//Se limpia la lista de argumentos
+				arg1=argini;
+				argini=argini->sig;
+			}
+			
+			if (!(arg1=(NODO *)malloc(sizeof (NODO)))) {
+				printf("No se ha podido reservar memoria \n");
+				exit(0);
+			}
+			argini=arg1;
+			arg1->tipo=aux->exp1.tipo;
+		 	break;
+		case OP_DEVOLVER:
+			variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
+			if(variable->tipo==argini->tipo)
+				return variable;
+			else {
+				strcpy(msj,"Error al devolver en la funcion ");
+				strcat(msj,funcion);
+				strcat(msj," tipos diferentes");
+				yyerror(msj);	
+			}
+			break;
 		}//switch
 		aux=aux->der;
 	}while(aux!=NULL);

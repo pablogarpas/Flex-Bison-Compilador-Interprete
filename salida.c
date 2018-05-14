@@ -5,6 +5,7 @@
 int prueba(int aux2, char *aux4){
 printf(" %d \n",aux2);
 printf(" %s \n",aux4);
+return aux2;
 }
 int main() 
 {

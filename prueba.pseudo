@@ -19,4 +19,6 @@ devolver entero
 
 	escribir(aux2)
 	escribir(aux4)
+	
+	devolver aux2
 fin

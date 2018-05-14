@@ -486,6 +486,17 @@ sentencia:
 	{
 		strcpy($$.trad,$1.trad);
 	}
+/************************************************************************************************/
+	| TK_RETORNO TK_VARIABLE
+	{
+		strcpy($$.trad,"return ");
+		strcat($$.trad,$2->nombre);
+		strcat($$.trad,";\n");
+		
+		strcpy(auxnodo1.nombre,$2->nombre);
+	
+		insertar(auxnodo1,auxnodo2,OP_DEVOLVER,auxvar);
+	}	
 	;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 llamar_fun:

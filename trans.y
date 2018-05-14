@@ -84,7 +84,7 @@ NODO *auxvar2;
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar_fun llamar_arg control2 decre else control3 control4 control5 fun_dec
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar_fun llamar_arg control2 decre else control3 control4 control5 fun_dec devolver
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -343,26 +343,36 @@ fun_dec:
 ;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 funcion:
-	fun_dec dec_vbles dec_arg_fun TK_RETORNO tipo salto_lin lista_sentencias final
+	fun_dec dec_vbles dec_arg_fun devolver salto_lin lista_sentencias final
 	{
 		//printf("%s \n",$6.nombre);
 		
-		if($5.tipo==1)
+		if($4.tipo==1)
 			strcpy($$.trad,"float ");
-		if($5.tipo==6||$5.tipo==3)
+		if($4.tipo==6||$4.tipo==3)
 			strcpy($$.trad,"int ");
-		if($5.tipo==2)
+		if($4.tipo==2)
 			strcpy($$.trad,"char *");
 			
 		strcat($$.trad,$1.trad);
 		strcat($$.trad,$3.trad);
 		strcat($$.trad,"{\n");
+		strcat($$.trad,$6.trad);
 		strcat($$.trad,$7.trad);
-		strcat($$.trad,$8.trad);
 	}
 	|
 	{//Puede no haber funciones
 		strcpy($$.trad,"");
+	}
+	;
+//////////////////////////////////////////////////////////////////////////////////////////////////
+devolver:	
+	TK_RETORNO tipo
+	{
+		$$.tipo=$2.tipo;
+		
+		copiardatos(&auxnodo1,$2.tipo,0,0,"",0,0,0,"",0);
+		insertar(auxnodo1,auxnodo2,OP_RETURN,auxvar);
 	}
 	;
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -389,7 +399,7 @@ argumento:
 		strcpy($$.trad,intr_argumento($2.tipo, $1->nombre,$3.espun)); //Traducción
 
 		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,1);
-		insertar(auxnodo1,auxnodo2,OP_DECL_ARG,auxvar);
+		insertar(auxnodo1,auxnodo2,OP_ARG,auxvar);
 	}
 /*************************************************************************************************/
 	| TK_VARIABLE tipo puntero salto_lin argumento
@@ -401,7 +411,7 @@ argumento:
 		strcat($$.trad,$5.trad);
 			
 		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$1->valstr,$1->valbool,$1->valnum,$1->valint,$1->nombre,1);
-		insertar(auxnodo1,auxnodo2,OP_DECL_ARG,auxvar);
+		insertar(auxnodo1,auxnodo2,OP_ARG,auxvar);
 	};
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Sentencias de aplicación
@@ -511,13 +521,15 @@ llamar_arg:
 		strcpy($$.trad,$1.trad);
 		
 		copiardatos(&auxnodo1,$1.tipo,0,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0);
-		insertar(auxnodo1,auxnodo2,OP_ARG,auxvar);
-		
+		insertar(auxnodo1,auxnodo2,OP_DECL_ARG,auxvar);
 	}
 	| llamar_arg ',' exp
 	{
 		strcat($$.trad,", ");
 		strcat($$.trad,$3.trad);
+		
+		copiardatos(&auxnodo1,$3.tipo,0,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0);
+		insertar(auxnodo1,auxnodo2,OP_DECL_ARG,auxvar);
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////	

@@ -13,6 +13,6 @@ int aux;
 aux2="qwe";
 aux=15;
 printf(" %s \n",aux2);
-probando(a, b, c);
+probando(a, b, z);
 printf(" %s \n",aux2);
 }

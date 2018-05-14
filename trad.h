@@ -46,6 +46,7 @@
 #define OP_EXIT 35
 #define OP_DECL_ARG 36
 #define OP_ARG 37
+#define OP_RETURN 38
 
 //tipo de los simbolos
 typedef struct NODO {

@@ -8,7 +8,7 @@ inicio
 	aux=15
 	
 	escribir(aux2)
-	llamar(probando,a,b,c)
+	llamar(probando,a,b,z)
 	
 	escribir(aux2)
 fin
@@ -23,8 +23,8 @@ arg
 
 devolver bool
 
-escribir(aux2)
-escribir("qwe")
-escribir(b)
+	escribir(aux2)
+	escribir("qwe")
+	escribir(b)
 
 fin

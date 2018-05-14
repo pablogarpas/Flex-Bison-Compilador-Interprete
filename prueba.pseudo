@@ -5,7 +5,7 @@ var
 	aux3 string
 inicio
 	aux=15
-	aux3="qwe"
+	aux3="holi"
 	
 	aux=llamar(prueba,aux,aux3)
 	
@@ -24,5 +24,5 @@ devolver entero
 	
 	aux2=16
 	
-	devolver 21
+	devolver aux2
 fin

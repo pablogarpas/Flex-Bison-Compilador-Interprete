@@ -525,7 +525,7 @@ static const yytype_uint16 yyrline[] =
      853,   856,   859,   866,   908,   914,   922,   931,   938,   943,
      952,   964,   978,   990,  1001,  1012,  1023,  1039,  1053,  1071,
     1083,  1094,  1107,  1118,  1130,  1141,  1154,  1168,  1182,  1190,
-    1198,  1206,  1214,  1223,  1230
+    1198,  1206,  1215,  1224,  1231
 };
 #endif
 
@@ -2762,41 +2762,42 @@ yyreduce:
 		strcpy((yyval.ELEMENTO).trad,(yyvsp[0].indice)->nombre);//copio el nombre de la variable para la traduccion
 		strcpy((yyval.ELEMENTO).nombre,(yyvsp[0].indice)->nombre);//copio el nombre de la variable para la traduccion
 		(yyval.ELEMENTO).tipo=(yyvsp[0].indice)->tipo;
+		(yyval.ELEMENTO).escons=0;
 	}
-#line 2767 "trans.tab.c" /* yacc.c:1646  */
+#line 2768 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 112:
-#line 1215 "trans.y" /* yacc.c:1646  */
+#line 1216 "trans.y" /* yacc.c:1646  */
     {
 		(yyval.ELEMENTO).tipo=(yyvsp[0].ELEMENTO).tipo;
 		strcpy((yyval.ELEMENTO).valstr,(yyvsp[0].ELEMENTO).cad);
 		strcpy((yyval.ELEMENTO).cad,(yyvsp[0].ELEMENTO).cad);
 		(yyval.ELEMENTO).escons=(yyvsp[0].ELEMENTO).escons;
 	}
-#line 2778 "trans.tab.c" /* yacc.c:1646  */
+#line 2779 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 113:
-#line 1224 "trans.y" /* yacc.c:1646  */
+#line 1225 "trans.y" /* yacc.c:1646  */
     {
 		strcpy((yyval.ELEMENTO).trad,"*");
 		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
 	}
-#line 2787 "trans.tab.c" /* yacc.c:1646  */
+#line 2788 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 114:
-#line 1231 "trans.y" /* yacc.c:1646  */
+#line 1232 "trans.y" /* yacc.c:1646  */
     {
 		strcpy((yyval.ELEMENTO).trad,"&");
 		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
 	}
-#line 2796 "trans.tab.c" /* yacc.c:1646  */
+#line 2797 "trans.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2800 "trans.tab.c" /* yacc.c:1646  */
+#line 2801 "trans.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -3024,7 +3025,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 1236 "trans.y" /* yacc.c:1906  */
+#line 1237 "trans.y" /* yacc.c:1906  */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Main, dónde se genera el fichero

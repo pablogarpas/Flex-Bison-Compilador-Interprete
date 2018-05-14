@@ -200,11 +200,13 @@ void listar(NODO **com) {
 	NODO *aux;
 	aux=*com;//comienzo
 	
+	printf("/////////////////////////////////////////////////////////////////////\n");
 	while(aux!=NULL) {
 		//if(aux->tipo!=0)
-			printf("%s\t%d\n",aux->nombre,aux->tipo);
+			printf("%s\t%d\t%d\n",aux->nombre,aux->tipo,aux->valint);
 		aux=aux->sig;
 	}
+	printf("/////////////////////////////////////////////////////////////////////\n");
 }
 
 //recorre la lista

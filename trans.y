@@ -1208,6 +1208,7 @@ exp:
 		strcpy($$.trad,$1->nombre);//copio el nombre de la variable para la traduccion
 		strcpy($$.nombre,$1->nombre);//copio el nombre de la variable para la traduccion
 		$$.tipo=$1->tipo;
+		$$.escons=0;
 	}
 /*************************************************************************************************/
 //Esto es una cosntante de tipo cadena

@@ -32,7 +32,7 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 		case OP_ESCRIBIR:			
 			if(aux->izq!=NULL) 
 				aux->exp1=procesarexp(aux->izq,funcion);
-
+			
 			switch (aux->exp1.tipo){
 				case 1:
 					if(aux->exp1.escons) {
@@ -269,7 +269,6 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
 				arg1=ejecutar(aux2,1,aux->exp1.nombre);
 				
-				printf("qwe:%d\t%s\n",arg1->valint,funcion);
 				
 				if(arg1->tipo==variable->tipo) {
 					copiardatos(variable,arg1->tipo,arg1->escons,arg1->espun,arg1->valstr,arg1->valbool,arg1->valnum,arg1->valint,variable->nombre,1);

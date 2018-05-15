@@ -7,13 +7,15 @@ inicio
 	aux=15
 	aux3="holi"
 	
-	aux=llamar(prueba,aux,aux3)
+	aux=llamar(qwe)
 	
 	escribir(aux)
 	
 fin
 
 funcion prueba
+var
+	aux6 string
 arg
 	aux2 entero
 	aux4 string
@@ -22,7 +24,18 @@ devolver entero
 	escribir(aux2)
 	escribir(aux4)
 	
-	aux2=16
+	aux2=18
+	
+	llamar(qwe)
 	
 	devolver aux2
+fin
+
+
+funcion qwe
+devolver entero
+
+escribir("asd")
+	devolver 21
+
 fin

@@ -471,6 +471,20 @@ sentencia:
 	}
 /*************************************************************************************************/
 //Llamadas a funciones
+	| asig_fun  '(' TK_VARIABLE ')'
+	{
+		strcpy($$.trad,$1.trad);
+		strcat($$.trad,$3->nombre);
+		strcat($$.trad,"(");
+		strcat($$.trad,");\n");
+	
+		strcpy(auxnodo1.nombre,$3->nombre);
+		strcpy(auxnodo2.nombre,$1.nombre);
+
+		insertar(auxnodo1,auxnodo2,OP_ASIG_LLAMAR,auxvar);
+	}
+/************************************************************************************************/
+//Llamadas a funciones
 	| asig_fun  '(' TK_VARIABLE ',' llamar_arg ')'
 	{
 		strcpy($$.trad,$1.trad);
@@ -490,6 +504,16 @@ sentencia:
 		strcpy($$.trad,$3->nombre);
 		strcat($$.trad,"(");
 		strcat($$.trad,$5.trad);
+		strcat($$.trad,");\n");
+	
+		strcpy(auxnodo1.nombre,$3->nombre);
+		insertar(auxnodo1,auxnodo2,OP_LLAMAR,auxvar);
+	}
+/************************************************************************************************/
+	| TK_LLAMAR '(' TK_VARIABLE ')'
+	{
+		strcpy($$.trad,$3->nombre);
+		strcat($$.trad,"(");
 		strcat($$.trad,");\n");
 	
 		strcpy(auxnodo1.nombre,$3->nombre);
@@ -1261,9 +1285,7 @@ int main(int argc, char **argv)
 		ejecutar(INICIO,0,"main");
 		
 	/*
-	printf("//////////////////\n");
 	listar(&com);
-	printf("//////////////////\n");
 	listar(&argini);
 	*/
 }

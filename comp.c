@@ -5,6 +5,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]);
 int nivel;//variable para controlar el nivel en el que parar
 NODO *argini=NULL;//Lista de argumentos para pasar a una función
 NODO *argfin=NULL;//Lista de argumentos para pasar a una función
+NODO *auxnodo=NULL;
 
 NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 	ARBOL *aux,*aux2;
@@ -303,11 +304,13 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			i=contar_arg(&com,&fin,funcion);
 			k=contar(&argini,&argfin);
 			
+			//printf("%d\t%d\t%s\n",k,i,funcion);
+			
 			if(k==i) {
 				variable=buscar_fun(funcion,&com,&fin);
 				
-				while(variable->esarg==0)
-					variable=variable->sig;
+				while(variable!=NULL&&variable->esarg==0)
+					variable=variable->sig;					
 					
 				for(k=0;k<i;k++) {
 					arg1=variable;
@@ -329,26 +332,23 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 				strcat(msj," número de argumentos incorrectos");
 				yyerror(msj);	
 			}
-			
-			while(argini!=NULL) {
-				//Se limpia la lista de argumentos
-				arg1=argini;
-				argini=argini->sig;
-			}
-			
+
 			if (!(arg1=(NODO *)malloc(sizeof (NODO)))) {
 				printf("No se ha podido reservar memoria \n");
 				exit(0);
 			}
-			argini=arg1;
+			auxnodo=arg1;
+			
 			arg1->tipo=aux->exp1.tipo;
 		 	break;
 		case OP_DEVOLVER:
 			if(aux->exp1.escons==0) {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
 				
-				if(variable->tipo==argini->tipo)
+				if(variable->tipo==auxnodo->tipo) {
 					return variable;
+					
+				}
 				else {
 					strcpy(msj,"Error al devolver en la funcion ");
 					strcat(msj,funcion);
@@ -356,7 +356,7 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 					yyerror(msj);	
 				}
 			}else{
-				if(aux->exp1.tipo==argini->tipo)
+				if(aux->exp1.tipo==auxnodo->tipo)
 					return &aux->exp1;
 				else {
 					strcpy(msj,"Error al devolver en la funcion ");

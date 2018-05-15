@@ -203,7 +203,7 @@ void listar(NODO **com) {
 	printf("/////////////////////////////////////////////////////////////////////\n");
 	while(aux!=NULL) {
 		//if(aux->tipo!=0)
-			printf("%s\t%d\t%d\n",aux->nombre,aux->tipo,aux->valint);
+			printf("%s\t%d\n",aux->nombre,aux->tipo);
 		aux=aux->sig;
 	}
 	printf("/////////////////////////////////////////////////////////////////////\n");

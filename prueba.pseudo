@@ -11,7 +11,6 @@ inicio
 	
 	escribir(aux)
 	
-	llamar(qwe,aux)
 	
 fin
 
@@ -27,6 +26,8 @@ devolver entero
 	escribir(aux4)
 	
 	aux2=18
+	
+		llamar(qwe,aux2)
 	
 	devolver aux2
 fin

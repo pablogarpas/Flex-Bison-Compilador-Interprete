@@ -119,10 +119,10 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			else yyerror("Error en la asignación, no concuerdan los tipos o la variable es constante\n");	
 			break;
 		case OP_INC:
-			if(aux->var->tipo==6) {			
+			if(aux->exp1.tipo==6) {			
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
 				variable->valint=variable->valint+1;				
-			}else if(aux->var->tipo==1) {
+			}else if(aux->exp1.tipo==1) {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
 				variable->valnum=variable->valnum+1;
 			}
@@ -130,15 +130,15 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			yyerror("Error en el incremento: No se puede incrementar una variable no númerica");
 			break;
 		case OP_DEC:			
-			if(aux->var->tipo==6) {			
+			if(aux->exp1.tipo==6) {			
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
 				variable->valint=variable->valint-1;				
-			}else if(aux->var->tipo==1) {
+			}else if(aux->exp1.tipo==1) {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
 				variable->valnum=variable->valnum-1;
 			}
 			else
-			yyerror("Error en el incremento: No se puede incrementar una variable no númerica");
+			yyerror("Error en el decremento: No se puede incrementar una variable no númerica");
 			break;
 		case OP_SI:		
 			parar++;
@@ -211,7 +211,7 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			break;
 		case OP_FIN:
 			if(parar==nivel) {
-				return 1;
+				exit(1);
 				nivel++;
 			}
 			break;
@@ -244,17 +244,18 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			break;
 		case OP_LLAMAR:
 			aux2=INICIO;
-
 			while(aux2->izq!=NULL) {
 				aux2=aux2->izq;
 				
 				if(strcmp(aux2->exp1.nombre,aux->exp1.nombre)==0)
 					encontrada=1;		
 					
-				if(encontrada)
+				if(encontrada==1){
 					break;
+					}
 			}
-			if(encontrada){
+			if(encontrada==1){
+				encontrada=0;
 				ejecutar(aux2,1,aux->exp1.nombre);
 				}
 			else
@@ -262,7 +263,7 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			break;
 		case OP_ASIG_LLAMAR:
 			aux2=INICIO;
-
+			
 			while(aux2->izq!=NULL) {
 				aux2=aux2->izq;
 				
@@ -300,7 +301,7 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			}
 		 break;
 		case OP_DECL_FUN:
-		introducir(&aux->exp1,&com,&fin);
+		
 			if(recorrer(&com,aux->exp1.nombre,funcion)==0) {
 				introducir(&aux->exp1,&com,&fin);
 				
@@ -333,8 +334,8 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 
 			//listar(&argini);
 			//listar(&com);
-
-			//printf("fun:%s\tactual:%s\n",argini->sig->sig->cad,funcion);
+			
+			//printf("%d\t%d\n",i,k);
 			
 			if(k==i) {
 			

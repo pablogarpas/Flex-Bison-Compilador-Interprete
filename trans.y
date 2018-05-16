@@ -587,6 +587,7 @@ decre:
 		strcat($$.trad,"++;\n");
 			
 		strcpy(auxnodo1.nombre,$2.nombre);
+		auxnodo1.tipo=$2.tipo;
 	
 		insertar(auxnodo1,auxnodo2,OP_INC,auxvar);
 	}
@@ -598,6 +599,7 @@ decre:
 		strcat($$.trad,"--;\n");
 	
 		strcpy(auxnodo1.nombre,$2.nombre);
+		auxnodo1.tipo=$2.tipo;
 	
 		insertar(auxnodo1,auxnodo2,OP_DEC,auxvar);
 	}

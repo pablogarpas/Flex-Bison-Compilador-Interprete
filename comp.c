@@ -9,7 +9,7 @@ NODO *auxnodo=NULL;
 
 NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 	ARBOL *aux,*aux2;
-	NODO *variable,*arg1,*arg2;
+	NODO *variable,*variable2,*arg1,*arg2;
 	int defecto;
 	int encontrada;
 	int i,k,j;
@@ -18,17 +18,23 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 	aux=var;
 	
 	/*
+	aux=INICIO;
 	do{
-		printf("%d\n",aux->op);
-		aux=aux->der;
-
+		printf("%s\n",aux->exp1.nombre);
+		aux2=aux;
+		while(aux2!=NULL){
+			printf("\t%d\n",aux2->op);
+			aux2=aux2->der;
+		}
+		aux=aux->izq;
+		
 	}while(aux!=NULL);
 	*/
-	
 	
 	aux=var;
 	
 	do {
+		//printf("%d\n",aux->op);
 		switch(aux->op){
 		case OP_ESCRIBIR:			
 			if(aux->izq!=NULL) 
@@ -267,6 +273,7 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 					break;
 			}
 			if(encontrada){
+				encontrada=0;
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
 				arg1=ejecutar(aux2,1,aux->exp1.nombre);
 				
@@ -292,6 +299,25 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 				yyerror(msj);	
 			}
 		 break;
+		case OP_DECL_FUN:
+		introducir(&aux->exp1,&com,&fin);
+			if(recorrer(&com,aux->exp1.nombre,funcion)==0) {
+				introducir(&aux->exp1,&com,&fin);
+				
+				if (!(arg1=(NODO *)malloc(sizeof (NODO)))) {
+					printf("No se ha podido reservar memoria \n");
+					exit(0);
+				}
+				arg1->tipo=5;
+				strcpy(arg1->nombre,funcion);
+				introducir_arg(arg1,&argini,&argfin);
+			}else {
+				strcpy(msj,"Error en las variables, la variable ");
+				strcat(msj,aux->exp1.nombre);
+				strcat(msj," ya existe.");
+				yyerror(msj);	
+			}
+		 break;
 		case OP_DECL_ARG:
 			strcpy(aux->exp1.cad,funcion);
 			introducir_arg(&aux->exp1,&argini,&argfin);
@@ -300,36 +326,45 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			introducir(&aux->exp1,&com,&fin);
 		 break;
 		case OP_RETURN:
+
 			introducir(&aux->exp1,&com,&fin);
 			i=contar_arg(&com,&fin,funcion);
-			k=contar(&argini,&argfin);
-			
-			//printf("%d\t%d\t%s\n",k,i,funcion);
+			k=contar(&argini,&argfin,funcion);
+
+			//listar(&argini);
+			//listar(&com);
+
+			//printf("fun:%s\tactual:%s\n",argini->sig->sig->cad,funcion);
 			
 			if(k==i) {
+			
 				variable=buscar_fun(funcion,&com,&fin);
+				variable2=buscar_fun(funcion,&argini,&argfin);
 				
 				while(variable!=NULL&&variable->esarg==0)
 					variable=variable->sig;					
+				
+					variable2=variable2->sig;					
 					
 				for(k=0;k<i;k++) {
 					arg1=variable;
-					arg2=argini;
+					arg2=variable2;
 					for(j=k;j>0;j--){
-						
 						arg1=arg1->sig;
 						arg2=arg2->sig;
 					}
+					
 					if(arg1->tipo==arg2->tipo){
-						arg2=buscar(arg2->nombre,&com,&fin,arg2->cad);
+						arg2=buscar(arg2->nombre,&com,&fin,variable2->cad);
+						//printf("fun:%s\n",funcion);
 						copiardatos(arg1,arg2->tipo,arg2->escons,arg2->espun,arg2->valstr,arg2->valbool,arg2->valnum,arg2->valint,arg1->nombre,1);
 					} else	
 					yyerror("Error en los argumentos, tipos diferentes");	
 				}
 			}else {
 				strcpy(msj,"Error al llamar a la función ");
-				strcat(msj,aux->exp1.nombre);
-				strcat(msj," número de argumentos incorrectos");
+				strcat(msj,funcion);
+				strcat(msj,", número de argumentos incorrectos");
 				yyerror(msj);	
 			}
 

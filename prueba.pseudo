@@ -7,9 +7,11 @@ inicio
 	aux=15
 	aux3="holi"
 	
-	aux=llamar(qwe)
+	aux=llamar(prueba,aux,aux3)
 	
 	escribir(aux)
+	
+	llamar(qwe,aux)
 	
 fin
 
@@ -26,16 +28,16 @@ devolver entero
 	
 	aux2=18
 	
-	llamar(qwe)
-	
 	devolver aux2
 fin
 
 
 funcion qwe
+arg
+	aux7 entero
 devolver entero
 
-escribir("asd")
-	devolver 21
+	escribir("qwe")
+	
 
 fin

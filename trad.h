@@ -49,6 +49,7 @@
 #define OP_RETURN 38
 #define OP_DEVOLVER 39
 #define OP_ASIG_LLAMAR 40
+#define OP_DECL_FUN 41
 
 //tipo de los simbolos
 typedef struct NODO {
@@ -113,7 +114,7 @@ NODO *introducir(NODO *var,NODO **com,NODO **fin);
 //Busca y devuelve el número de argumentos de una función
 int contar_arg(NODO **com,NODO **fin,char funcion[25]);
 //Busca y devuelve el número de elementos de una función
-int contar(NODO **com,NODO **fin);
+int contar(NODO **com,NODO **fin,char funcion[25]);
 //Función para introducir en orden los argumentos
 NODO *introducir_arg(NODO *var,NODO **com,NODO **fin);
 //////////////////////////////////////////////////////////////////////////

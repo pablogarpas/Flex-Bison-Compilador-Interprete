@@ -101,6 +101,7 @@ NODO *introducir_arg(NODO *var,NODO **com,NODO **fin) {
 	{
 		(nuevo->sig)=*com;
 		*com=nuevo;
+		
 	}
 }
 
@@ -129,14 +130,22 @@ int contar_arg(NODO **com,NODO **fin,char funcion[25]) {
 	return encontrado;
 }
 
-int contar(NODO **com,NODO **fin) {
+int contar(NODO **com,NODO **fin,char funcion[25]) {
 	//variables
 	NODO *aux;
 	aux=*com;//comienzo
 	int encontrado=0;
+		
+	while(aux!=NULL){
+		if(strcmp(aux->nombre,funcion)==0){
+			aux=aux->sig;
+			break;
+		}
+		aux=aux->sig;
+	}
 	
-	while (aux!=NULL) {
-		encontrado++;
+	while (aux!=NULL&&aux->tipo!=5) {
+			encontrado++;
 
 		aux=aux->sig;
 	}
@@ -203,7 +212,7 @@ void listar(NODO **com) {
 	printf("/////////////////////////////////////////////////////////////////////\n");
 	while(aux!=NULL) {
 		//if(aux->tipo!=0)
-			printf("%s\t%d\n",aux->nombre,aux->tipo);
+			printf("%s\t%d\t%s\n",aux->nombre,aux->tipo,aux->cad);
 		aux=aux->sig;
 	}
 	printf("/////////////////////////////////////////////////////////////////////\n");

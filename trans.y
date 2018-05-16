@@ -8,8 +8,6 @@
 #include "comp.c"
 
 //Variables globales
-NODO *com;//Principio de la lista de śimbolos para el AST
-NODO *fin;//Final de la lista de śimbolos para el AST
 int   auxb;  //variable auxiliar para la lectura de booleanos 
 int   auxint;  //variable auxiliar para la lectura de enteros
 float auxn;  //variable auxiliar para la lectura de numeros
@@ -131,7 +129,8 @@ cabecera:
 	TK_PROGRAM TK_VARIABLE salto_lin
 	{
 		copiardatos(&auxnodo1,5,0,0,"",0,0,0,"main",0);
-		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
+		copiardatos(&auxnodo2,5,0,0,"",0,0,0,"main",0);
+		insertar(auxnodo1,auxnodo2,OP_DECL_FUN,auxvar);
 	};
 //////////////////////////////////////////////////////////////////////////////////////////////////
 librerias:
@@ -341,7 +340,8 @@ fun_dec:
 		insertar_fun(auxvar,OP_FUN);
 		
 		copiardatos(&auxnodo1,5,0,0,"",0,0,0,$2->nombre,0);
-		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
+		copiardatos(&auxnodo2,5,0,0,"",0,0,0,$2->nombre,0);
+		insertar(auxnodo1,auxnodo2,OP_DECL_FUN,auxvar);
 	}
 ;
 //////////////////////////////////////////////////////////////////////////////////////////////////

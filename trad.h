@@ -137,7 +137,7 @@ char *intr_const_int(int num,char *nombre);
 char *intr_const_cad(char *cad,char *nombre);
 
 //Variables
-char *intr_variable(int tipo, char *nombre, int espun); 
+char *intr_variable(int tipo, char *nombre,int espun,char *indice);
 
 //Variables
 char *intr_argumento(int tipo, char *nombre, int espun); 

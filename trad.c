@@ -212,7 +212,7 @@ void listar(NODO **com) {
 	printf("/////////////////////////////////////////////////////////////////////\n");
 	while(aux!=NULL) {
 		//if(aux->tipo!=0)
-			printf("%s\t%d\t%s\n",aux->nombre,aux->tipo,aux->cad);
+			printf("%s\t%d\t%d\n",aux->nombre,aux->tipo,aux->espun);
 		aux=aux->sig;
 	}
 	printf("/////////////////////////////////////////////////////////////////////\n");
@@ -312,54 +312,49 @@ char *intr_const_cad(char *cad,char *nombre)
 }
 
 //Variables
-char *intr_variable(int tipo, char *nombre,int espun)
+char *intr_variable(int tipo, char *nombre,int espun,char *indice)
 {
 	char *aux = malloc(256);
 
 	switch(tipo) {
 		case 1:
 			strcpy(aux,"float ");
-			if(espun) 
-				strcat(aux,"*");
-			else
-				strcat(aux,"");
 			strcat(aux,nombre);
-			strcat(aux,";\n");
-			break;
-		case 2:
-			strcpy(aux,"char ");
-			if(espun) 
-				strcat(aux,"**");
-			else
-				strcat(aux,"*");
-			strcat(aux,nombre);
+			if(espun) {
+				strcat(aux,"[");
+				strcat(aux,indice);
+				strcat(aux,"]");
+			}
 			strcat(aux,";\n");
 			break;
 		case 3:
 			strcpy(aux,"int ");
-			if(espun)
-				strcat(aux,"*");
-			else
-				strcat(aux,"");
 			strcat(aux,nombre);
+			if(espun) {
+				strcat(aux,"[");
+				strcat(aux,indice);
+				strcat(aux,"]");
+			}
 			strcat(aux,";\n");
 			break;
 		case 4:
-			strcpy(aux,"char ");
-			if(espun) 
-				strcat(aux,"**");
-			else
-				strcat(aux,"*");
+			strcpy(aux,"char *");
 			strcat(aux,nombre);
+			if(espun) {
+				strcat(aux,"[");
+				strcat(aux,indice);
+				strcat(aux,"]");
+			}
 			strcat(aux,";\n");
 			break;
 		case 6:
 			strcpy(aux,"int ");
-			if(espun)
-				strcat(aux,"*");
-			else
-				strcat(aux,"");	
 			strcat(aux,nombre);
+			if(espun) {
+				strcat(aux,"[");
+				strcat(aux,indice);
+				strcat(aux,"]");
+			}
 			strcat(aux,";\n");
 			break;
 		}

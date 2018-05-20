@@ -1,70 +1,44 @@
 programa prueba2
 
-const
-	asd "comparando"
-
 var
 	aux entero
-	aux3 entero *
-
+	aux3 string
 inicio
-$$ asd $$
-
-	leer(aux)
-
-	aux=2
-
-	escribir("asd",aux,"qwe")
-	escribir("adios")
+	aux=15
+	aux3="holi"
 	
-	llamar(prueba,arg1,*arg2,aux+5,arg4,arg5,&arg6,arg7)
-
-
-si *aux==2 hacer
-	escribir("dsa")
-	escribir("asd")
-	llamar(prueba,arg1,*arg2,aux+5,arg4,arg5,&arg6,arg7)
-	aux2=aux
-fin
-
+	aux=llamar(prueba,aux,aux3)
+	
+	escribir(aux)
+	
+	
 fin
 
 funcion prueba
+var
+	aux6 string
 arg
 	aux2 entero
-	a real 
-	aux string
-var
-	i entero
-devolver bool
+	aux4 string
+devolver entero
 
-escribir("asd")
-escribir("dsa")
+	escribir(aux2)
+	escribir(aux4)
+	
+	aux2=18
+	
+		llamar(qwe,aux2)
+	
+	devolver aux2
 fin
 
 
-funcion qwer
+funcion qwe
 arg
-	aux2 entero
-	a real 
-	aux string
-var
-	i entero
-devolver bool
+	aux7 entero
+devolver entero
 
-escribir("asd")
-escribir("dsa")
-fin
+	escribir("qwe")
+	
 
-funcion qwe123
-arg
-	aux2 entero
-	a real 
-	aux string
-var
-	i entero
-devolver bool
-
-escribir("asd")
-escribir("dsa")
 fin

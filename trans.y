@@ -82,7 +82,7 @@ NODO *auxvar2;
 %token 	<ELEMENTO>	TK_NUM
 %token 	<ELEMENTO>	TK_ENT
 %token 	<indice>	TK_VARIABLE
-%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break puntero punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar_fun llamar_arg control2 decre else control3 control4 control5 fun_dec devolver asig_fun
+%type   <ELEMENTO>  	cabecera dec_constantes constante exp dec_vbles tipo variable sentencia lista_sentencias  salto_lin salto_lin_dec  asignacion visual elemento_mostrar  visual2 lectura control cont final librerias case cases default break array punteros_asignar funciones funcion dec_arg_fun cuerpo argumento llamar_fun llamar_arg control2 decre else control3 control4 control5 fun_dec devolver asig_fun indice
 %start programa
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -234,10 +234,7 @@ constante:
 		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	};
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
-
 //Diferentes tipos y números correspondientes
 tipo:
 	TK_ENTERO 
@@ -275,21 +272,21 @@ dec_vbles:
 	;			 
 /*************************************************************************************************/
 variable:			
-	TK_VARIABLE tipo puntero salto_lin  
+	TK_VARIABLE tipo array salto_lin  
 	{
 		$1->tipo=$2.tipo;
-		strcpy($$.trad,intr_variable($2.tipo, $1->nombre,$3.espun)); //Traducción
+		strcpy($$.trad,intr_variable($2.tipo, $1->nombre,$3.espun,$3.cad)); //Traducción
 	
 		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	}
 
 /*************************************************************************************************/
-	| TK_VARIABLE tipo puntero salto_lin variable	
+	| TK_VARIABLE tipo array salto_lin variable	
 	{
 		$1->tipo=$2.tipo;
 
-		strcpy($$.trad,intr_variable($2.tipo, $1->nombre,$3.espun)); //Traducción
+		strcpy($$.trad,intr_variable($2.tipo, $1->nombre,$3.espun,$3.cad)); //Traducción
 			
 		strcat($$.trad,$5.trad);
 			
@@ -298,10 +295,14 @@ variable:
 	};
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-puntero:
-	TK_VAL
+array:
+	TK_ENT
 	{
 		$$.espun=1;
+		strcpy($$.cad,$1.trad);
+		strcpy($$.trad,"[");
+		strcpy($$.trad,$1.trad);
+		strcpy($$.trad,"]");
 	}
 	| 
 	{
@@ -395,7 +396,7 @@ dec_arg_fun:
 	;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 argumento:
-	TK_VARIABLE tipo puntero salto_lin  
+	TK_VARIABLE tipo array salto_lin  
 	{
 		$1->tipo=$2.tipo;
 		
@@ -405,7 +406,7 @@ argumento:
 		insertar(auxnodo1,auxnodo2,OP_ARG,auxvar);
 	}
 /*************************************************************************************************/
-	| TK_VARIABLE tipo puntero salto_lin argumento
+	| TK_VARIABLE tipo array salto_lin argumento
 	{
 		$1->tipo=$2.tipo;
 		
@@ -548,25 +549,13 @@ asig_fun:
 	{
 	strcpy($$.trad,"");
 	}
-	| punteros_asignar TK_VARIABLE TK_ASIG TK_LLAMAR
-	{
-		char signo1[3];
-		char retorno[255];
+	| TK_VARIABLE indice TK_ASIG TK_LLAMAR
+	{	
+		strcat($$.trad,$1->nombre);
+		strcat($$.trad,$2.trad);
+		strcat($$.trad,"=");
 		
-		if ($1.vis==0)
-			strcpy(signo1,"");
-		if ($1.vis==2)
-			strcpy(signo1,"*");
-		if ($1.vis==3)
-			strcpy(signo1,"&");
-			
-		strcpy(retorno,signo1);
-		strcat(retorno,$2->nombre);
-		strcat(retorno,"=");
-		
-		//printf("%s\n",retorno);
-		strcpy($$.trad,retorno);	
-		strcpy($$.nombre,$2->nombre);
+		strcpy($$.nombre,$1->nombre);
 	}
 	;
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -791,6 +780,7 @@ case:
 cases:
 	case 
 	{
+		strcpy($$.trad,"");
 	}
 	| case cases
 	{
@@ -837,56 +827,23 @@ final:
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //Asigna a una variable un número o cadena
 asignacion: 			
-punteros_asignar TK_VARIABLE TK_ASIG punteros_asignar exp 
+TK_VARIABLE indice TK_ASIG exp 
 {
-	char signo1[3],signo2[3];
-	char retorno[255];
+	strcpy($$.trad,$1->nombre);
+	strcat($$.trad,$2.trad);
+	strcat($$.trad,"=");
+	strcat($$.trad,$4.trad);
+	strcat($$.trad,";");
+	strcat($$.trad,"\n");
 	
-	if ($1.vis==0)
-		strcpy(signo1,"");
-	if ($1.vis==2)
-		strcpy(signo1,"*");
-	if ($1.vis==3)
-		strcpy(signo1,"&");
+	auxvar=$1;
 	
-	if ($4.vis==0)
-		strcpy(signo2,"");
-	if ($4.vis==2)
-		strcpy(signo2,"*");
-	if ($4.vis==3)
-		strcpy(signo2,"&");
-		
-	strcpy(retorno,signo1);
-	strcat(retorno,$2->nombre);
-	strcat(retorno,"=");
-	strcat(retorno,signo2);
-	strcat(retorno,$5.trad);
-	strcat(retorno,";");
-	strcat(retorno,"\n");
-	
-	//printf("%s\n",retorno);
-	strcpy($$.trad,retorno);	
-	
-	auxvar=$2;
-	
-	copiardatos(&auxnodo1,$5.tipo,$5.escons,$5.espun,$5.valstr,$5.valbool,$5.valnum,$5.valint,$5.nombre,0);
+	copiardatos(&auxnodo1,$4.tipo,$4.escons,$4.espun,$4.valstr,$4.valbool,$4.valnum,$4.valint,$4.nombre,0);
 	
 	insertar(auxnodo1,auxnodo2,OP_ASIGNAR,auxvar);
 	}
 	;
 /////////////////////////////////////////////////////////////////////////////////////////////////
-punteros_asignar:	
-	TK_VAL{ 
-		$$.vis=2;//*
-	}
-	| TK_DIR{ 
-		$$.vis=3;//&
-	}
-	| {
-	}
-	;
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
 //Ver expresiones
 elemento_mostrar:               
 exp 
@@ -958,9 +915,7 @@ visual2:
 	{	
 		strcpy($$.trad,$1.trad);
 	}
-
 /*************************************************************************************************/
-
 	| visual2 ',' elemento_mostrar  
 	{	
 		strcpy($$.trad,$1.trad);
@@ -970,10 +925,8 @@ visual2:
 		strcpy($$.trad,"");
 	}
 	;	
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Se lee una variable o una lista
-
 lectura:			
 	TK_LEER '('TK_VARIABLE')' //aqui leemos una variable
 	{
@@ -982,6 +935,18 @@ lectura:
 		auxvar=$3;
 	
 		insertar(auxnodo1,auxnodo2,OP_LEER,auxvar);
+	}
+	;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+indice:
+	'[' TK_ENT ']' 
+	{
+		strcpy($$.trad,"[");
+		strcat($$.trad,$2.trad);
+		strcat($$.trad,"]");
+	}
+	| {
+		strcpy($$.trad,"");
 	}
 	;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -998,7 +963,6 @@ exp:
 
 	insertarexp(auxnodo1,auxnodo2,OP_SUMA);
 	}
-
 /*************************************************************************************************/
 //Resta, sólo números
 	|	exp '-' exp
@@ -1246,18 +1210,15 @@ exp:
 		$$.escons=$1.escons;
 	}  		
 /*************************************************************************************************/
-//Operaciones con punteros y arrays
-	| TK_VAL exp
+//Array
+	| TK_VARIABLE indice
 	{
-		strcpy($$.trad,"*");
+		strcpy($$.trad,$1->nombre);//copio el nombre de la variable para la traduccion
+		strcpy($$.nombre,$1->nombre);//copio el nombre de la variable para la traduccion
 		strcat($$.trad,$2.trad);
-	}
-/*************************************************************************************************/
-//Dir de memoria 
-	| TK_DIR exp 
-	{
-		strcpy($$.trad,"&");
-		strcat($$.trad,$2.trad);
+		$$.tipo=$1->tipo;
+		$$.escons=0;
+		$$.espun=1;
 	}
 	;		
 %%
@@ -1286,9 +1247,8 @@ int main(int argc, char **argv)
 	else
 		ejecutar(INICIO,0,"main");
 		
-	/*
-	listar(&com);
-	listar(&argini);
-	*/
+	
+	//listar(&com);
+	//listar(&argini);
 }
 

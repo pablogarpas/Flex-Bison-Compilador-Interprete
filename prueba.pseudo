@@ -1,44 +1,16 @@
 programa prueba2
 
 var
-	aux entero
-	aux3 string
+	aux entero 5
+	
+	
 inicio
-	aux=15
-	aux3="holi"
-	
-	aux=llamar(prueba,aux,aux3)
-	
-	escribir(aux)
-	
-	
-fin
 
-funcion prueba
-var
-	aux6 string
-arg
-	aux2 entero
-	aux4 string
-devolver entero
-
-	escribir(aux2)
-	escribir(aux4)
+	aux[0]=7
+	aux[1]=8
 	
-	aux2=18
+	escribir(aux[1])
+	escribir(aux[0])
 	
-		llamar(qwe,aux2)
 	
-	devolver aux2
-fin
-
-
-funcion qwe
-arg
-	aux7 entero
-devolver entero
-
-	escribir("qwe")
-	
-
 fin

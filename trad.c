@@ -46,13 +46,12 @@ NODO *buscar_simbolo(char nombre[20],NODO **com,NODO **fin)
 	}
 }
 
-
 NODO *introducir(NODO *var,NODO **com,NODO **fin) {
 	//variables
-	NODO *nuevo,*aux, *retorno;
+	NODO *nuevo,*aux, *retorno,*nuevo1;
 	aux=*com;//comienzo
 
-	
+	nuevo1=(NODO *)malloc(sizeof (NODO));
 
 	if (!(nuevo=(NODO *)malloc(sizeof (NODO))))
 	{
@@ -60,8 +59,14 @@ NODO *introducir(NODO *var,NODO **com,NODO **fin) {
 		exit(0);
 	}
   
-  
 	nuevo=var;
+	
+	if(nuevo->espun) {
+		nuevo1->tipo=nuevo->tipo;
+		nuevo->tipo=2;
+		nuevo->array=nuevo1;
+	}
+	
 	
 	if (*com==NULL)
 	{
@@ -653,7 +658,7 @@ int insertar_para(NODO expre1,NODO expre2, int ope, NODO *var) {
 }
 
 //Función para copiar los datos de un elemento a un nodo
-void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool,float valnum,int valint,char *nombre, int esarg) {
+void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool,float valnum,int valint,char *nombre, int esarg,int indice) {
 	a->tipo=tipo;
 	a->escons=escons;
 	a->espun=espun;
@@ -663,6 +668,7 @@ void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool
 	a->valint = valint;
 	strcpy(a->nombre,nombre);
 	a->esarg=esarg;
+	a->aux=indice;
 }
 
 //Inserta una funcion en el árbol

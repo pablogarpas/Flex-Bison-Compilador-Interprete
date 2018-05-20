@@ -37,6 +37,7 @@ NODO *auxvar2;
 		char trad[555];//almaceno la cadena de composicion de exp
 		int vis; //variable para visualizar las constantes cadena correctamente	
 		char res[255];//cadena para mostrar por pantalla
+		int aux;//Variable para el índice del array
 		} ELEMENTO;
 }
 
@@ -128,8 +129,8 @@ salto_lin_dec:
 cabecera: 			
 	TK_PROGRAM TK_VARIABLE salto_lin
 	{
-		copiardatos(&auxnodo1,5,0,0,"",0,0,0,"main",0);
-		copiardatos(&auxnodo2,5,0,0,"",0,0,0,"main",0);
+		copiardatos(&auxnodo1,5,0,0,"",0,0,0,"main",0,0);
+		copiardatos(&auxnodo2,5,0,0,"",0,0,0,"main",0,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL_FUN,auxvar);
 	};
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -158,7 +159,7 @@ constante:
 		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_num($2.valnum,$1->nombre)); //La traducción
 		
-		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0);
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	}
 	
@@ -169,7 +170,7 @@ constante:
 		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_int($2.valint,$1->nombre)); //La traducción
 		
-		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0);
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	} 
 /*************************************************************************************************/
@@ -180,7 +181,7 @@ constante:
 		strcpy($$.trad,intr_const_int($2.valbool,$1->nombre)); //La traducción
 		
 		
-		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0);
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	} 
 /*************************************************************************************************/
@@ -189,7 +190,7 @@ constante:
 		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_cad($2.cad,$1->nombre)); //Traducción
 
-		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0);
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	}
 
@@ -200,7 +201,7 @@ constante:
 		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_num($2.valnum,$1->nombre)); //Traducción
 		
-		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0);
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	}
 
@@ -211,7 +212,7 @@ constante:
 		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_int($2.valint,$1->nombre)); //La traducción
 		
-		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0);
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	} 
 /*************************************************************************************************/
@@ -221,7 +222,7 @@ constante:
 		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_int($2.valbool,$1->nombre)); //La traducción
 		
-		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0);
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	} 
 
@@ -231,7 +232,7 @@ constante:
 		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_cad($2.cad,$1->nombre));  //Traducción
 
-		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0);
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	};
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -277,7 +278,7 @@ variable:
 		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_variable($2.tipo, $1->nombre,$3.espun,$3.cad)); //Traducción
 	
-		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0);
+		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,$3.aux);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	}
 
@@ -290,7 +291,7 @@ variable:
 			
 		strcat($$.trad,$5.trad);
 			
-		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0);
+		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,$3.aux);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	};
 
@@ -303,6 +304,7 @@ array:
 		strcpy($$.trad,"[");
 		strcpy($$.trad,$1.trad);
 		strcpy($$.trad,"]");
+		$$.aux=$1.valint;
 	}
 	| 
 	{
@@ -340,8 +342,8 @@ fun_dec:
 		auxvar=$2;
 		insertar_fun(auxvar,OP_FUN);
 		
-		copiardatos(&auxnodo1,5,0,0,"",0,0,0,$2->nombre,0);
-		copiardatos(&auxnodo2,5,0,0,"",0,0,0,$2->nombre,0);
+		copiardatos(&auxnodo1,5,0,0,"",0,0,0,$2->nombre,0,0);
+		copiardatos(&auxnodo2,5,0,0,"",0,0,0,$2->nombre,0,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL_FUN,auxvar);
 	}
 ;
@@ -375,7 +377,7 @@ devolver:
 	{
 		$$.tipo=$2.tipo;
 		
-		copiardatos(&auxnodo1,$2.tipo,0,0,"",0,0,0,"devolver",0);
+		copiardatos(&auxnodo1,$2.tipo,0,0,"",0,0,0,"devolver",0,0);
 		insertar(auxnodo1,auxnodo2,OP_RETURN,auxvar);
 	}
 	;
@@ -402,7 +404,7 @@ argumento:
 		
 		strcpy($$.trad,intr_argumento($2.tipo, $1->nombre,$3.espun)); //Traducción
 
-		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,1);
+		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,1,$3.aux);
 		insertar(auxnodo1,auxnodo2,OP_ARG,auxvar);
 	}
 /*************************************************************************************************/
@@ -414,7 +416,7 @@ argumento:
 		strcat($$.trad,", ");
 		strcat($$.trad,$5.trad);
 			
-		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$1->valstr,$1->valbool,$1->valnum,$1->valint,$1->nombre,1);
+		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$1->valstr,$1->valbool,$1->valnum,$1->valint,$1->nombre,1,$3.aux);
 		insertar(auxnodo1,auxnodo2,OP_ARG,auxvar);
 	};
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -537,7 +539,7 @@ sentencia:
 			strcat($$.trad,$2.nombre);
 			strcat($$.trad,";\n");		
 		}
-		copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre,0);
+		copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre,0,$2.aux);
 	
 		insertar(auxnodo1,auxnodo2,OP_DEVOLVER,auxvar);
 	}
@@ -599,7 +601,7 @@ llamar_arg:
 	{
 		strcpy($$.trad,$1.trad);
 		
-		copiardatos(&auxnodo1,$1.tipo,0,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0);
+		copiardatos(&auxnodo1,$1.tipo,0,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0,$1.aux);
 		insertar(auxnodo1,auxnodo2,OP_DECL_ARG,auxvar);
 	}
 	| llamar_arg ',' exp
@@ -607,7 +609,7 @@ llamar_arg:
 		strcat($$.trad,", ");
 		strcat($$.trad,$3.trad);
 		
-		copiardatos(&auxnodo1,$3.tipo,0,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0);
+		copiardatos(&auxnodo1,$3.tipo,0,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0,$3.aux);
 		insertar(auxnodo1,auxnodo2,OP_DECL_ARG,auxvar);
 	}
 	;
@@ -623,7 +625,7 @@ control3:
 	{
 		strcpy($$.trad,$2.trad);
 			
-		copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre,0);
+		copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre,0,$2.aux);
 	
 		insertar(auxnodo1,auxnodo2,OP_SI,auxvar);
 	}
@@ -635,7 +637,7 @@ control2:
 	
 		strcpy($$.trad,$2.trad);
 		
-		copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre,0);
+		copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre,0,$2.aux);
 	
 		insertar(auxnodo1,auxnodo2,OP_WHILE,auxvar);
 	}
@@ -682,8 +684,8 @@ TK_PARA TK_VARIABLE TK_ASIG TK_ENT TK_HASTA TK_ENT
 		strcat($$.trad,")");
 		
 		auxvar=$2;
-		copiardatos(&auxnodo1,$4.tipo,$4.escons,$4.espun,$4.valstr,$4.valbool,$4.valnum,$4.valint,$4.nombre,0);
-		copiardatos(&auxnodo2,$6.tipo,$6.escons,$6.espun,$6.valstr,$6.valbool,$6.valnum,$6.valint,$6.nombre,0);
+		copiardatos(&auxnodo1,$4.tipo,$4.escons,$4.espun,$4.valstr,$4.valbool,$4.valnum,$4.valint,$4.nombre,0,0);
+		copiardatos(&auxnodo2,$6.tipo,$6.escons,$6.espun,$6.valstr,$6.valbool,$6.valnum,$6.valint,$6.nombre,0,0);
 	
 		insertar_para(auxnodo1,auxnodo2,OP_PARA,auxvar);
 	}
@@ -694,7 +696,7 @@ control5:
 		strcpy($$.nombre,$2->nombre);
 		$$.tipo=$2->tipo;
 		
-		copiardatos(&auxnodo1,$2->tipo,$2->escons,$2->espun,$2->valstr,$2->valbool,$2->valnum,$2->valint,$2->nombre,0);
+		copiardatos(&auxnodo1,$2->tipo,$2->escons,$2->espun,$2->valstr,$2->valbool,$2->valnum,$2->valint,$2->nombre,0,0);
 		
 		insertar(auxnodo1,auxnodo2,OP_SWITCH,auxvar);
 	}
@@ -763,7 +765,7 @@ case:
 		strcat($$.trad,$3.trad);
 		strcat($$.trad,$4.trad);		
 		
-		copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre,0);
+		copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre,0,0);
 	
 		insertar(auxnodo1,auxnodo2,OP_CASE,auxvar);
 	}
@@ -838,7 +840,7 @@ TK_VARIABLE indice TK_ASIG exp
 	
 	auxvar=$1;
 	
-	copiardatos(&auxnodo1,$4.tipo,$4.escons,$4.espun,$4.valstr,$4.valbool,$4.valnum,$4.valint,$4.nombre,0);
+	copiardatos(&auxnodo1,$4.tipo,$4.escons,$2.espun,$4.valstr,$4.valbool,$4.valnum,$4.valint,$4.nombre,0,$2.aux);
 	
 	insertar(auxnodo1,auxnodo2,OP_ASIGNAR,auxvar);
 	}
@@ -851,14 +853,12 @@ exp
 	$$.vis=$1.vis;	
 	$$.tipo=$1.tipo;
 	
+	if($1.tipo==2)
+		printf("nombre:%s\n",$1.nombre);
+	
 	switch ($1.tipo){
 	case 1: 
 		strcpy($$.trad,"printf(\" %%f \\n\",");
-		strcat($$.trad,$1.trad);
-		strcat($$.trad,");\n");
-		break;
-	case 2:					
-		strcpy($$.trad,"printf(\" %%s \\n\",");
 		strcat($$.trad,$1.trad);
 		strcat($$.trad,");\n");
 		break;
@@ -878,9 +878,8 @@ exp
 		strcat($$.trad,");\n");
 		break;
 	}//switch
-	
 
-	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.cad,$1.valbool,$1.valnum,$1.valint,$1.nombre,0);
+	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.cad,$1.valbool,$1.valnum,$1.valint,$1.nombre,0,$1.aux);
 	
 	insertar(auxnodo1,auxnodo2,OP_ESCRIBIR,auxvar);
 };
@@ -944,9 +943,12 @@ indice:
 		strcpy($$.trad,"[");
 		strcat($$.trad,$2.trad);
 		strcat($$.trad,"]");
+		$$.aux=$2.valint;
+		$$.espun=1;
 	}
 	| {
 		strcpy($$.trad,"");
+		$$.espun=0;
 	}
 	;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -958,8 +960,8 @@ exp:
 	strcat($$.trad," + ");//Traducción
 	strcat($$.trad,$3.trad);
 	
-	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0);
-	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0);
+	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0,$1.aux);
+	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0,$3.aux);
 
 	insertarexp(auxnodo1,auxnodo2,OP_SUMA);
 	}
@@ -970,8 +972,8 @@ exp:
 		strcat($$.trad," - ");//introducimos la cadena creada para la traduccion
 		strcat($$.trad,$3.trad);
 		
-		copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0);
-		copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0);
+		copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0,$1.aux);
+		copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0,$3.aux);
 		insertarexp(auxnodo1,auxnodo2,OP_RESTA);
 		
 	}
@@ -982,8 +984,8 @@ exp:
 		strcat($$.trad," * ");//Traducción
 		strcat($$.trad,$3.trad);
 		
-		copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0);
-		copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0);
+		copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0,$1.aux);
+		copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0,$3.aux);
 		insertarexp(auxnodo1,auxnodo2,OP_MULT);
 	}
 /*************************************************************************************************/
@@ -993,8 +995,8 @@ exp:
 		strcat($$.trad," / ");//Traducción
 		strcat($$.trad,$3.trad);
 
-		copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0);
-		copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0);
+		copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0,$1.aux);
+		copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0,$3.aux);
 		insertarexp(auxnodo1,auxnodo2,OP_DIV);
 	}
 /*************************************************************************************************/
@@ -1004,7 +1006,7 @@ exp:
 		strcpy($$.trad," -");//introducimos la cadena creada para la traduccion
 		strcat($$.trad,$2.trad);
 
-		copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre,0);
+		copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre,0,$2.aux);
 		insertarexp(auxnodo1,auxnodo2,OP_CAM);
 	}
 
@@ -1020,8 +1022,8 @@ exp:
 		strcat(auxt,")");
 		strcat($$.trad,auxt);
 
-	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0);
-	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0);
+	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0,$1.aux);
+	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0,$3.aux);
 	insertarexp(auxnodo1,auxnodo2,OP_POW);
 	}
 /*************************************************************************************************/
@@ -1034,8 +1036,8 @@ exp:
 		strcpy($$.trad,auxt);
 
 
-		copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0);
-		copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0);
+		copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0,$1.aux);
+		copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0,$3.aux);
 		insertarexp(auxnodo1,auxnodo2,OP_MOD);
 	}
 /*************************************************************************************************/
@@ -1054,6 +1056,7 @@ exp:
 	$$.valint= $2.valint;
 	$$.espun= $2.espun;
 	$$.escons= $2.escons;
+	$$.aux= $2.aux;
 	}
 
 /*************************************************************************************************/
@@ -1064,8 +1067,8 @@ exp:
 	strcat($$.trad,$3.trad);
 	$$.tipo=3;
 
-	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0);
-	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0);
+	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0,$1.aux);
+	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0,$3.aux);
 	insertarexp(auxnodo1,auxnodo2,OP_MENOR);
 	}
 /*************************************************************************************************/
@@ -1075,8 +1078,8 @@ exp:
 	strcat($$.trad," > ");//introducimos la cadena creada para la traduccion
 	strcat($$.trad,$3.trad);
 
-	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0);
-	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0);
+	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0,$1.aux);
+	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0,$3.aux);
 	insertarexp(auxnodo1,auxnodo2,OP_MAYOR);
 	}
 /*************************************************************************************************/
@@ -1087,8 +1090,8 @@ exp:
 	strcat($$.trad,$3.trad);
 	$$.tipo=3;
 
-	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0);
-	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0);
+	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0,$1.aux);
+	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0,$3.aux);
 	
 	insertarexp(auxnodo1,auxnodo2,OP_MAI);
 	}
@@ -1099,8 +1102,8 @@ exp:
 	strcat($$.trad," <= ");//introducimos la cadena creada para la traduccion
 	strcat($$.trad,$3.trad);
 
-	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0);
-	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0);
+	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0,$1.aux);
+	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0,$3.aux);
 	insertarexp(auxnodo1,auxnodo2,OP_MEI);                                
 }
 /*************************************************************************************************/						
@@ -1111,8 +1114,8 @@ exp:
 	strcat($$.trad,$3.trad);
 	$$.tipo=3;
 	
-	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0);
-	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0);
+	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0,$1.aux);
+	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0,$3.aux);
 	insertarexp(auxnodo1,auxnodo2,OP_DESIGUALDAD);                                 
 	}
 /*************************************************************************************************/						
@@ -1123,8 +1126,8 @@ exp:
 		strcat($$.trad,$3.trad);
 		$$.tipo=3;
 		
-		copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0);
-		copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0);
+		copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0,$1.aux);
+		copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0,$3.aux);
 		insertarexp(auxnodo1,auxnodo2,OP_IGUALDAD);
 	}
 /*************************************************************************************************/
@@ -1135,8 +1138,8 @@ exp:
 	strcat($$.trad,$3.trad);
 	$$.tipo=3;
 	
-	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0);
-	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0);
+	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0,$1.aux);
+	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0,$3.aux);
 	insertarexp(auxnodo1,auxnodo2,OP_AND);
 	}   
 
@@ -1148,8 +1151,8 @@ exp:
 	strcat($$.trad,$3.trad);
 	$$.tipo=3;
 	
-	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0);
-	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0);
+	copiardatos(&auxnodo1,$1.tipo,$1.escons,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0,$1.aux);
+	copiardatos(&auxnodo2,$3.tipo,$3.escons,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0,$3.aux);
 	insertarexp(auxnodo1,auxnodo2,OP_OR);
 	
 	}   
@@ -1164,7 +1167,7 @@ exp:
 	$$.tipo=3;
 
 	
-	copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre,0);
+	copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre,0,$2.aux);
 	insertarexp(auxnodo1,auxnodo2,OP_NOT);	
 	}   
 /*************************************************************************************************/
@@ -1219,6 +1222,7 @@ exp:
 		$$.tipo=$1->tipo;
 		$$.escons=0;
 		$$.espun=1;
+		$$.aux=$2.aux;
 	}
 	;		
 %%

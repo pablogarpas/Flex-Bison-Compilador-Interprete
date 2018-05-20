@@ -3,9 +3,9 @@
 
 //0->id
 //1->real;
-//2->string;
+//2->array;
 //3->bool;
-//4->cadena;
+//4->string;
 //5->delimitador;
 //6->entero;
 
@@ -65,6 +65,7 @@ typedef struct NODO {
   char   valstr[255]; //valor que se toma si el tipo es una cadena de tipo string
 	int aux; //variable para visualizar las constantes cadena correctamente	
   struct NODO *sig; //puntero que a punta al siguiente nodo
+  struct NODO *array; //puntero que apunta a los elementos del array
 }NODO;
 
 //Manejador para el fichero de salida
@@ -161,7 +162,7 @@ void intr_inc(char *nombre,int post);
 /*Funciones para el AST*/
 //////////////////////////////////////////////////////////////////////////
 //Pasar de elemento a nodo
-void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool,float valnum,int valint,char *nombre, int esarg);
+void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool,float valnum,int valint,char *nombre, int esarg,int indice);
 
 //Crear el árbol o añadir nodo
 int insertar(NODO expre1,NODO expre2, int ope, NODO *var);

@@ -117,9 +117,10 @@ union YYSTYPE
 		char trad[555];//almaceno la cadena de composicion de exp
 		int vis; //variable para visualizar las constantes cadena correctamente	
 		char res[255];//cadena para mostrar por pantalla
+		int aux;//Variable para el índice del array
 		} ELEMENTO;
 
-#line 123 "trans.tab.h" /* yacc.c:1909  */
+#line 124 "trans.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

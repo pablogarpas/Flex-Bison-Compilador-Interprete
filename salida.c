@@ -5,8 +5,8 @@
 int main() 
 {
 int aux[5];
-aux[0]=7;
-aux[1]=8;
-printf(" %d \n",aux[1]);
+aux[0]=9;
+aux[4]=3;
+printf(" %d \n",aux[4]);
 printf(" %d \n",aux[0]);
 }

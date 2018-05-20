@@ -39,6 +39,22 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 		case OP_ESCRIBIR:			
 			if(aux->izq!=NULL) 
 				aux->exp1=procesarexp(aux->izq,funcion);
+				
+			if(aux->exp1.espun) {
+			variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
+				for (i=0;i<=aux->exp1.aux;i++) {
+					if(variable->array==NULL) {
+						arg1==(NODO *)malloc(sizeof (NODO));
+						variable->array=arg1;
+					}
+					variable=variable->array;
+				}
+				copiardatos(&aux->exp1,variable->tipo,1,variable->espun,variable->valstr,variable->valbool,variable->valnum,variable->valint,aux->exp1.nombre,0,variable->aux);
+			}
+			
+			//printf("tipo:%d\n",aux->exp1.valint);
+			
+			//printf("val1:%d\n",com->sig->array->valint);
 			
 			switch (aux->exp1.tipo){
 				case 1:
@@ -48,15 +64,6 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 					else {
 						variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
 						printf("%f\n",variable->valnum);
-					}
-					break;
-				case 2:	
-					if(aux->exp1.escons) {
-						printf("%s\n",aux->exp1.valstr);
-					}
-					else {
-						variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-						printf("%s\n",variable->valstr);
 					}
 					break;
 				case 3:
@@ -97,24 +104,40 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			//printf("var:\t%s\t%d\t%s\n",aux->var->nombre,aux->var->tipo,funcion);
 			//listar(&com);
 			
-			if ((aux->var->tipo==aux->exp1.tipo)&&(aux->var->escons==0)&&(aux->var->espun==0)) {
+			if ((aux->var->tipo==aux->exp1.tipo)&&(aux->var->escons==0)&&(aux->exp1.espun==0)) {
 				variable->tipo=aux->exp1.tipo;
 				strcpy(variable->valstr,aux->exp1.valstr);
 				variable->valbool= aux->exp1.valbool;
 				variable->valnum = aux->exp1.valnum;
 				variable->valint = aux->exp1.valint;
 			}
-			else if((aux->var->tipo=2)&&(aux->exp1.tipo==4)&&(aux->var->escons==0)&&(aux->var->espun==0)) {	
-				variable->tipo=4;
-				strcpy(variable->valstr,aux->exp1.valstr);
-			}
-			else if((aux->var->tipo=1)&&(aux->exp1.tipo==6)&&(aux->var->escons==0)&&(aux->var->espun==0)) {	
+			else if((aux->var->tipo=1)&&(aux->exp1.tipo==6)&&(aux->var->escons==0)&&(aux->exp1.espun==0)) {	
 				variable->tipo=1;
 				variable->valnum = aux->exp1.valint;
 			}
-			else if((aux->var->tipo=6)&&(aux->exp1.tipo==1)&&(aux->var->escons==0)&&(aux->var->espun==0)) {	
+			else if((aux->var->tipo=6)&&(aux->exp1.tipo==1)&&(aux->var->escons==0)&&(aux->exp1.espun==0)) {	
 				variable->tipo=6;
 				variable->valint = aux->exp1.valnum;
+			}
+			else if(aux->exp1.espun) {
+				if (aux->var->tipo=aux->exp1.tipo) {
+					for (i=0;i<=aux->exp1.aux;i++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+							arg1->tipo=aux->var->tipo;
+						}
+						variable=variable->array;
+					}
+						strcpy(variable->valstr,aux->exp1.valstr);
+						variable->valbool= aux->exp1.valbool;
+						variable->valnum = aux->exp1.valnum;
+						variable->valint = aux->exp1.valint;
+						//printf("%d\n",aux->exp1->tipo);
+						//printf("%s\n",aux->var->nombre);
+				}
+				else 
+					yyerror("Error en la asignación, no concuerdan los tipos o la variable es constante\n");	
 			}
 			else yyerror("Error en la asignación, no concuerdan los tipos o la variable es constante\n");	
 			break;
@@ -280,7 +303,7 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 				
 				
 				if(arg1->tipo==variable->tipo) {
-					copiardatos(variable,arg1->tipo,arg1->escons,arg1->espun,arg1->valstr,arg1->valbool,arg1->valnum,arg1->valint,variable->nombre,1);
+					copiardatos(variable,arg1->tipo,arg1->escons,arg1->espun,arg1->valstr,arg1->valbool,arg1->valnum,arg1->valint,variable->nombre,1,arg1->aux);
 				}else{
 					strcpy(msj,"Error en la variable de retorno de ");
 					strcat(msj,aux->exp1.nombre);
@@ -293,6 +316,7 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 		case OP_DECL:
 			if(recorrer(&com,aux->exp1.nombre,funcion)==0) {
 				introducir(&aux->exp1,&com,&fin);
+				//listar(&com);
 			}else {
 				strcpy(msj,"Error en las variables, la variable ");
 				strcat(msj,aux->exp1.nombre);
@@ -358,7 +382,7 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 					if(arg1->tipo==arg2->tipo){
 						arg2=buscar(arg2->nombre,&com,&fin,variable2->cad);
 						//printf("fun:%s\n",funcion);
-						copiardatos(arg1,arg2->tipo,arg2->escons,arg2->espun,arg2->valstr,arg2->valbool,arg2->valnum,arg2->valint,arg1->nombre,1);
+						copiardatos(arg1,arg2->tipo,arg2->escons,arg2->espun,arg2->valstr,arg2->valbool,arg2->valnum,arg2->valint,arg1->nombre,1,arg2->aux);
 					} else	
 					yyerror("Error en los argumentos, tipos diferentes");	
 				}

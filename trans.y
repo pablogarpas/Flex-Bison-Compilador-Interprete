@@ -927,11 +927,13 @@ visual2:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Se lee una variable o una lista
 lectura:			
-	TK_LEER '('TK_VARIABLE')' //aqui leemos una variable
+	TK_LEER '('TK_VARIABLE indice')' //aqui leemos una variable
 	{
 		strcpy($$.trad,vis_entrada($3->tipo,$3->nombre,$3->espun));//Traducción
 		
 		auxvar=$3;
+	
+		copiardatos(&auxnodo1,$3->tipo,$3->escons,$4.espun,$3->cad,$3->valbool,$3->valnum,$3->valint,$3->nombre,0,$4.aux);
 	
 		insertar(auxnodo1,auxnodo2,OP_LEER,auxvar);
 	}

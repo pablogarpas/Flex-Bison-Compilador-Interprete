@@ -6,11 +6,9 @@ var
 	
 inicio
 
-	aux[0]=9
-	aux[4]=3
-	
-	escribir(aux[4])
-	escribir(aux[0])
+	leer(aux[1])
+
+	escribir(aux[1])
 	
 	
 fin

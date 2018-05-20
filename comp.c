@@ -253,7 +253,19 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 		case OP_LEER:
 			variable=buscar(aux->var->nombre,&com,&fin,funcion);
 			
-			if(variable->tipo==4 || variable->tipo==2)
+			if(aux->exp1.espun) {
+				printf("%s\n",variable->nombre);
+				for (i=0;i<=aux->exp1.aux;i++) {
+					if(variable->array==NULL) {
+						arg1=(NODO *)malloc(sizeof (NODO));
+						variable->array=arg1;
+						arg1->tipo=aux->var->tipo;
+					}
+					variable=variable->array;
+				}
+			}
+			
+			if(variable->tipo==4)
 				fgets(variable->valstr,255,stdin);
 			else if(variable->tipo==6) {
 				scanf("%d",&(variable->valint));

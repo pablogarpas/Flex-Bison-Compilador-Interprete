@@ -55,8 +55,6 @@ NODO *auxvar2;
 %token		TK_MIENTRAS
 %token		TK_IGU
 %token		TK_HAZ
-%token		TK_DIR
-%token		TK_VAL
 %token		TK_RETORNO
 %token    TK_ESCRIBIR
 %token		TK_STRING
@@ -72,6 +70,7 @@ NODO *auxvar2;
 %token	  TK_DEC
 %token	  TK_FUNCION
 %token	  TK_CONT
+%token		TK_ARRAY
 %token		TK_DEFAULT
 %token		TK_HASTA
 %token		TK_ELSE
@@ -306,7 +305,12 @@ array:
 		strcpy($$.trad,"]");
 		$$.aux=$1.valint;
 	}
-	| 
+	| TK_ARRAY
+	{
+		$$.espun=1;
+		strcpy($$.trad,"*");
+	}
+	|
 	{
 		$$.espun=0;
 	}
@@ -415,7 +419,7 @@ argumento:
 		strcpy($$.trad,intr_argumento($2.tipo, $1->nombre,$3.espun)); //Traducción
 		strcat($$.trad,", ");
 		strcat($$.trad,$5.trad);
-			
+				
 		copiardatos(&auxnodo1,$2.tipo,0,$3.espun,$1->valstr,$1->valbool,$1->valnum,$1->valint,$1->nombre,1,$3.aux);
 		insertar(auxnodo1,auxnodo2,OP_ARG,auxvar);
 	};
@@ -603,6 +607,9 @@ llamar_arg:
 	{
 		strcpy($$.trad,$1.trad);
 		
+		if($1.espun)
+			$1.tipo=2;
+		
 		copiardatos(&auxnodo1,$1.tipo,0,$1.espun,$1.valstr,$1.valbool,$1.valnum,$1.valint,$1.nombre,0,$1.aux);
 		insertar(auxnodo1,auxnodo2,OP_DECL_ARG,auxvar);
 	}
@@ -610,6 +617,9 @@ llamar_arg:
 	{
 		strcat($$.trad,", ");
 		strcat($$.trad,$3.trad);
+		
+		if($3.espun)
+			$3.tipo=2;
 		
 		copiardatos(&auxnodo1,$3.tipo,0,$3.espun,$3.valstr,$3.valbool,$3.valnum,$3.valint,$3.nombre,0,$3.aux);
 		insertar(auxnodo1,auxnodo2,OP_DECL_ARG,auxvar);

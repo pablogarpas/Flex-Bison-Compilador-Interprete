@@ -211,13 +211,20 @@ NODO *buscar_fun(char nombre[20],NODO **com,NODO **fin) {
 }
 
 void listar(NODO **com) {
-	NODO *aux;
+	NODO *aux,*aux2;
 	aux=*com;//comienzo
 	
 	printf("/////////////////////////////////////////////////////////////////////\n");
 	while(aux!=NULL) {
-		//if(aux->tipo!=0)
-			printf("%s\t%d\t%d\n",aux->nombre,aux->tipo,aux->espun);
+		printf("%s\t%d",aux->nombre,aux->tipo);
+		if(aux->espun) {
+			aux2=aux->array;
+			while(aux2!=NULL) {
+				printf("\t%d %d",aux2->tipo);
+				aux2=aux2->array;
+			}
+		}
+		printf("\n");
 		aux=aux->sig;
 	}
 	printf("/////////////////////////////////////////////////////////////////////\n");

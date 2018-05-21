@@ -75,8 +75,7 @@ comentario [^/*\n]*[*/]
 ">="		return TK_MAI;
 "++"		return TK_INC;
 "--"		return TK_DEC;
-"&"		return TK_DIR;
-"#"		return TK_VAL;
+"#"		return TK_ARRAY;
 "default" return TK_DEFAULT;
 "devolver" return TK_RETORNO;
 "caso" return TK_CASO;

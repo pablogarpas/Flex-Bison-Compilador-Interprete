@@ -6,14 +6,21 @@ var
 	
 inicio
 
-	aux[2]=llamar(qwe)
+	aux[0]=2
+	aux[1]=4
+	aux[2]=8
 
-	aux[1]=22
+	aux[2]=llamar(qwe,aux)
 
-	escribir(aux[1]>aux[2])
 fin
 
 funcion qwe
+arg
+	auxi entero #
 devolver entero
-devolver 8
+
+
+	escribir(auxi[2])
+	
+	devolver 5
 fin

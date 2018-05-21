@@ -403,9 +403,21 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 					}
 					
 					if(arg1->tipo==arg2->tipo){
+						if(arg1->tipo!=2){
 						arg2=buscar(arg2->nombre,&com,&fin,variable2->cad);
-						//printf("fun:%s\n",funcion);
+						
 						copiardatos(arg1,arg2->tipo,arg2->escons,arg2->espun,arg2->valstr,arg2->valbool,arg2->valnum,arg2->valint,arg1->nombre,1,arg2->aux);
+						}else{
+							arg2=buscar(arg2->nombre,&com,&fin,variable2->cad);
+							arg2=arg2->array;
+							while(arg2!=NULL) {
+								variable2=(NODO *)malloc(sizeof (NODO));
+								copiardatos(variable2,arg2->tipo,arg2->escons,arg2->espun,arg2->valstr,arg2->valbool,arg2->valnum,arg2->valint,"",1,0);
+								arg1->array=variable2;
+								arg1=variable2;
+								arg2=arg2->array;
+							}
+						}
 					} else	
 					yyerror("Error en los argumentos, tipos diferentes");	
 				}

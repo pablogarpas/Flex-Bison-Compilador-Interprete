@@ -929,7 +929,7 @@ visual2:
 lectura:			
 	TK_LEER '('TK_VARIABLE indice')' //aqui leemos una variable
 	{
-		strcpy($$.trad,vis_entrada($3->tipo,$3->nombre,$3->espun));//Traducción
+		strcpy($$.trad,vis_entrada($3->tipo,$3->nombre,$4.espun,$4.cad));//Traducción
 		
 		auxvar=$3;
 	
@@ -947,6 +947,7 @@ indice:
 		strcat($$.trad,"]");
 		$$.aux=$2.valint;
 		$$.espun=1;
+		strcpy($$.cad,$2.trad);
 	}
 	| {
 		strcpy($$.trad,"");

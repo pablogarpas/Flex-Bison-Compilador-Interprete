@@ -453,7 +453,7 @@ void vis_salida_sl(int tipo,char *cad, int vis)
 
 
 //Entrada por teclado
-char *vis_entrada(int tipo,char *cad,int espun)
+char *vis_entrada(int tipo,char *cad,int espun,char *indice)
 {
 	
 	char *aux = malloc(256);
@@ -463,36 +463,74 @@ char *vis_entrada(int tipo,char *cad,int espun)
 	switch(tipo) {
 		case 1:
 			strcat(aux,"%%f \",");
-			if(!espun) 
+			if(!espun) {
 				strcat(aux,"&");
-			break;
-		case 2:
-			strcat(aux,"%%s \",");
-			if(!espun) 
+				strcat(aux,cad);	
+				strcat(aux,");\n");	
+			}
+			else {
 				strcat(aux,"&");
+				strcat(aux,cad);	
+				strcat(aux,"[");	
+				strcat(aux,indice);	
+				strcat(aux,"]");	
+				strcat(aux,");\n");	
+			}
 			break;
 		case 3:
 			strcat(aux,"%%d \",");
-			if(!espun) 
+			if(!espun) {
 				strcat(aux,"&");
+				strcat(aux,cad);	
+				strcat(aux,");\n");	
+			}
+			else {
+				strcat(aux,"&");
+				strcat(aux,cad);	
+				strcat(aux,"[");	
+				strcat(aux,indice);	
+				strcat(aux,"]");	
+				strcat(aux,");\n");	
+			}
 			break;
 		case 4:
 			strcat(aux,"%%s \",");
-			if(!espun) 
+			if(!espun) {
 				strcat(aux,"&");
+				strcat(aux,cad);	
+				strcat(aux,");\n");	
+			}
+			else {
+				strcat(aux,"&");
+				strcat(aux,cad);	
+				strcat(aux,"[");	
+				strcat(aux,indice);	
+				strcat(aux,"]");	
+				strcat(aux,");\n");	
+			}
 			break;
 		case 6:
-			strcat(aux,"%%f \",");
-			if(!espun) 
+			strcat(aux,"%%d \",");
+			if(!espun) {
 				strcat(aux,"&");
+				strcat(aux,cad);	
+				strcat(aux,");\n");	
+			}
+			else {
+				strcat(aux,"&");
+				strcat(aux,cad);	
+				strcat(aux,"[");	
+				strcat(aux,indice);	
+				strcat(aux,"]");	
+				strcat(aux,");\n");	
+			}
 			break;
 		default:
 			yyerror("variable a leer no declarada");
 			break;
 		}
 	
-	strcat(aux,cad);	
-	strcat(aux,");\n");	
+
 		
 	return aux;
 	

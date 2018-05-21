@@ -5,6 +5,6 @@
 int main() 
 {
 int aux[5];
-scanf("%f ",&aux);
+scanf("%d ",&aux[1]);
 printf(" %d \n",aux[1]);
 }

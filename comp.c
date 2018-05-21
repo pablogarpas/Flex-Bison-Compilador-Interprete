@@ -456,10 +456,10 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 
 NODO procesarexp(ARBOL *aux,char funcion[25]){
 	NODO retorno;
-	NODO *variable;
+	NODO *variable,*arg1;
 	
 	
-	int i,k;
+	int i,k,j;
 	char *a,*b;
 	float real1,real2;
 	int bool1,bool2;
@@ -485,11 +485,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				i=variable->valint;
-				real1=variable->valnum;
-				bool1=variable->valbool;
-				strcpy(a,variable->valstr);
-				aux->exp1.tipo=variable->tipo;
+				if(variable->espun) {
+					for (i=0;i<=aux->exp1.aux;i++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				}
 			}
 				
 			if(aux->exp2.escons) {
@@ -499,11 +515,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(b,aux->exp2.valstr);
 			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+				if(variable->espun) {
+					for (j=0;j<=aux->exp2.aux;j++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
 				aux->exp2.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+					k=variable->valint;
+					real2=variable->valnum;
+					bool2=variable->valbool;
+					strcpy(b,variable->valstr);
+					aux->exp2.tipo=variable->tipo;
+				}
 			}
 			
 			retorno.tipo=3;//asigno tipo bool
@@ -632,11 +664,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				i=variable->valint;
-				real1=variable->valnum;
-				bool1=variable->valbool;
-				strcpy(a,variable->valstr);
-				aux->exp1.tipo=variable->tipo;
+				if(variable->espun) {
+					for (i=0;i<=aux->exp1.aux;i++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				}
 			}
 				
 			if(aux->exp2.escons) {
@@ -646,11 +694,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(b,aux->exp2.valstr);
 			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+				if(variable->espun) {
+					for (j=0;j<=aux->exp2.aux;j++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
 				aux->exp2.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+					k=variable->valint;
+					real2=variable->valnum;
+					bool2=variable->valbool;
+					strcpy(b,variable->valstr);
+					aux->exp2.tipo=variable->tipo;
+				}
 			}
 			
 			retorno.tipo=3;//asigno tipo bool
@@ -719,11 +783,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				i=variable->valint;
-				real1=variable->valnum;
-				bool1=variable->valbool;
-				strcpy(a,variable->valstr);
-				aux->exp1.tipo=variable->tipo;
+				if(variable->espun) {
+					for (i=0;i<=aux->exp1.aux;i++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				}
 			}
 			
 				if(aux->exp2.escons) {
@@ -802,11 +882,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				i=variable->valint;
-				real1=variable->valnum;
-				bool1=variable->valbool;
-				strcpy(a,variable->valstr);
-				aux->exp1.tipo=variable->tipo;
+				if(variable->espun) {
+					for (i=0;i<=aux->exp1.aux;i++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				}
 			}	
 			
 			if(aux->exp2.escons) {
@@ -816,11 +912,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(b,aux->exp2.valstr);
 			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+				if(variable->espun) {
+					for (j=0;j<=aux->exp2.aux;j++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
 				aux->exp2.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+					k=variable->valint;
+					real2=variable->valnum;
+					bool2=variable->valbool;
+					strcpy(b,variable->valstr);
+					aux->exp2.tipo=variable->tipo;
+				}
 			}
 
 			retorno.tipo=3;//asigno tipo bool
@@ -884,11 +996,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				i=variable->valint;
-				real1=variable->valnum;
-				bool1=variable->valbool;
-				strcpy(a,variable->valstr);
-				aux->exp1.tipo=variable->tipo;
+				if(variable->espun) {
+					for (i=0;i<=aux->exp1.aux;i++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				}
 			}	
 		
 			if(aux->exp2.escons) {
@@ -898,11 +1026,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(b,aux->exp2.valstr);
 			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+				if(variable->espun) {
+					for (j=0;j<=aux->exp2.aux;j++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
 				aux->exp2.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+					k=variable->valint;
+					real2=variable->valnum;
+					bool2=variable->valbool;
+					strcpy(b,variable->valstr);
+					aux->exp2.tipo=variable->tipo;
+				}
 			}
 
 		retorno.tipo=3;//asigno tipo bool
@@ -1044,11 +1188,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				i=variable->valint;
-				real1=variable->valnum;
-				bool1=variable->valbool;
-				strcpy(a,variable->valstr);
-				aux->exp1.tipo=variable->tipo;
+				if(variable->espun) {
+					for (i=0;i<=aux->exp1.aux;i++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				}
 			}
 				
 			if(aux->exp2.escons) {
@@ -1058,11 +1218,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(b,aux->exp2.valstr);
 			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+				if(variable->espun) {
+					for (j=0;j<=aux->exp2.aux;j++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
 				aux->exp2.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+					k=variable->valint;
+					real2=variable->valnum;
+					bool2=variable->valbool;
+					strcpy(b,variable->valstr);
+					aux->exp2.tipo=variable->tipo;
+				}
 			}
 			
 			if ((aux->exp1.tipo==1) && (aux->exp2.tipo==1)){
@@ -1112,11 +1288,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				i=variable->valint;
-				real1=variable->valnum;
-				bool1=variable->valbool;
-				strcpy(a,variable->valstr);
-				aux->exp1.tipo=variable->tipo;
+				if(variable->espun) {
+					for (i=0;i<=aux->exp1.aux;i++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				}
 			}
 				
 			if(aux->exp2.escons) {
@@ -1126,11 +1318,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(b,aux->exp2.valstr);
 			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+				if(variable->espun) {
+					for (j=0;j<=aux->exp2.aux;j++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
 				aux->exp2.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+					k=variable->valint;
+					real2=variable->valnum;
+					bool2=variable->valbool;
+					strcpy(b,variable->valstr);
+					aux->exp2.tipo=variable->tipo;
+				}
 			}
 			
 			if ((aux->exp1.tipo==1) && (aux->exp2.tipo==1)) {
@@ -1164,11 +1372,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				i=variable->valint;
-				real1=variable->valnum;
-				bool1=variable->valbool;
-				strcpy(a,variable->valstr);
-				aux->exp1.tipo=variable->tipo;
+				if(variable->espun) {
+					for (i=0;i<=aux->exp1.aux;i++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				}
 			}
 				
 			if(aux->exp2.escons) {
@@ -1178,11 +1402,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(b,aux->exp2.valstr);
 			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+				if(variable->espun) {
+					for (j=0;j<=aux->exp2.aux;j++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
 				aux->exp2.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+					k=variable->valint;
+					real2=variable->valnum;
+					bool2=variable->valbool;
+					strcpy(b,variable->valstr);
+					aux->exp2.tipo=variable->tipo;
+				}
 			}
 			
 				if ((aux->exp1.tipo==1) && (aux->exp2.tipo==1))	{
@@ -1216,11 +1456,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				i=variable->valint;
-				real1=variable->valnum;
-				bool1=variable->valbool;
-				strcpy(a,variable->valstr);
-				aux->exp1.tipo=variable->tipo;
+				if(variable->espun) {
+					for (i=0;i<=aux->exp1.aux;i++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				}
 			}
 				
 			if(aux->exp2.escons) {
@@ -1230,11 +1486,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(b,aux->exp2.valstr);
 			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+				if(variable->espun) {
+					for (j=0;j<=aux->exp2.aux;j++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
 				aux->exp2.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+					k=variable->valint;
+					real2=variable->valnum;
+					bool2=variable->valbool;
+					strcpy(b,variable->valstr);
+					aux->exp2.tipo=variable->tipo;
+				}
 			}
 
 			if ((aux->exp1.tipo==1) && (aux->exp2.tipo==1))		{
@@ -1277,11 +1549,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				i=variable->valint;
-				real1=variable->valnum;
-				bool1=variable->valbool;
-				strcpy(a,variable->valstr);
-				aux->exp1.tipo=variable->tipo;
+				if(variable->espun) {
+					for (i=0;i<=aux->exp1.aux;i++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				}
 			}
 				
 			if(aux->exp2.escons) {
@@ -1291,11 +1579,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(b,aux->exp2.valstr);
 			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+				if(variable->espun) {
+					for (i=0;i<=aux->exp2.aux;i++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
 				aux->exp2.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+					k=variable->valint;
+					real2=variable->valnum;
+					bool2=variable->valbool;
+					strcpy(b,variable->valstr);
+					aux->exp2.tipo=variable->tipo;
+				}
 			}
 
 			if ((aux->exp1.tipo==6)&& (aux->exp2.tipo==6)) {
@@ -1317,11 +1621,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				i=variable->valint;
-				real1=variable->valnum;
-				bool1=variable->valbool;
-				strcpy(a,variable->valstr);
-				aux->exp1.tipo=variable->tipo;
+				if(variable->espun) {
+					for (i=0;i<=aux->exp1.aux;i++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				}
 			}
 
 			if (aux->exp1.tipo==1)	{
@@ -1347,11 +1667,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				i=variable->valint;
-				real1=variable->valnum;
-				bool1=variable->valbool;
-				strcpy(a,variable->valstr);
-				aux->exp1.tipo=variable->tipo;
+				if(variable->espun) {
+					for (i=0;i<=aux->exp1.aux;i++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
+					i=variable->valint;
+					real1=variable->valnum;
+					bool1=variable->valbool;
+					strcpy(a,variable->valstr);
+					aux->exp1.tipo=variable->tipo;
+				}
 			}
 				
 			if(aux->exp2.escons) {
@@ -1361,11 +1697,27 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(b,aux->exp2.valstr);
 			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+				if(variable->espun) {
+					for (j=0;j<=aux->exp2.aux;j++) {
+						if(variable->array==NULL) {
+							arg1=(NODO *)malloc(sizeof (NODO));
+							variable->array=arg1;
+						}
+						variable=variable->array;
+					}
 				k=variable->valint;
 				real2=variable->valnum;
 				bool2=variable->valbool;
 				strcpy(b,variable->valstr);
 				aux->exp2.tipo=variable->tipo;
+				} else {
+					variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
+					k=variable->valint;
+					real2=variable->valnum;
+					bool2=variable->valbool;
+					strcpy(b,variable->valstr);
+					aux->exp2.tipo=variable->tipo;
+				}
 			}
 
 			if ((aux->exp1.tipo==1)&& (aux->exp2.tipo==1))

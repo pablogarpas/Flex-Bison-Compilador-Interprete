@@ -6,9 +6,15 @@ var
 	
 inicio
 
-	leer(aux[1])
+	aux[2]=llamar(qwe)
 
+	aux[1]=10
+	escribir(aux[2])
 	escribir(aux[1])
 	
-	
+fin
+
+funcion qwe
+devolver entero
+devolver 7
 fin

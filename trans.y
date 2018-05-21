@@ -483,6 +483,7 @@ sentencia:
 	
 		strcpy(auxnodo1.nombre,$3->nombre);
 		strcpy(auxnodo2.nombre,$1.nombre);
+		auxnodo1.aux=$1.aux;
 
 		insertar(auxnodo1,auxnodo2,OP_ASIG_LLAMAR,auxvar);
 	}
@@ -498,6 +499,7 @@ sentencia:
 	
 		strcpy(auxnodo1.nombre,$3->nombre);
 		strcpy(auxnodo2.nombre,$1.nombre);
+		auxnodo1.aux=$1.aux;
 
 		insertar(auxnodo1,auxnodo2,OP_ASIG_LLAMAR,auxvar);
 	}
@@ -553,10 +555,10 @@ asig_fun:
 	}
 	| TK_VARIABLE indice TK_ASIG TK_LLAMAR
 	{	
-		strcat($$.trad,$1->nombre);
+		strcpy($$.trad,$1->nombre);
 		strcat($$.trad,$2.trad);
 		strcat($$.trad,"=");
-		
+		$$.aux=$2.aux;
 		strcpy($$.nombre,$1->nombre);
 	}
 	;

@@ -313,6 +313,17 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
 				arg1=ejecutar(aux2,1,aux->exp1.nombre);
 				
+				if(aux->exp1.espun) {
+					for (i=0;i<=aux->exp1.aux;i++) {
+						if(variable->array==NULL) {
+							variable2=(NODO *)malloc(sizeof (NODO));
+							variable->array=variable2;
+							variable2->tipo=variable->tipo;
+						}
+						variable=variable->array;
+					}
+				}
+				
 				
 				if(arg1->tipo==variable->tipo) {
 					copiardatos(variable,arg1->tipo,arg1->escons,arg1->espun,arg1->valstr,arg1->valbool,arg1->valnum,arg1->valint,variable->nombre,1,arg1->aux);

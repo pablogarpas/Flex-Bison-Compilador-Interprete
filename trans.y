@@ -46,6 +46,8 @@ NODO *auxvar2;
 //Definicion de los tokens, terminales y no terminales
 %token    TK_PROGRAM
 %token    TK_CONST
+%token		TK_MUL
+%token		TK_DIV
 %token    TK_VAR
 %token	  TK_SI
 %token    TK_INICIO
@@ -88,7 +90,7 @@ NODO *auxvar2;
 
 %right '=' TK_MEI TK_MAI TK_DIS '<' '>' TK_ASIG
 %left '+' '-' TK_OR
-%left '*' '/' TK_AND TK_NOT
+%left TK_MUL TK_DIV TK_AND TK_NOT
 %nonassoc MENOSUNARIO
 %right TK_POW
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -994,7 +996,7 @@ exp:
 	}
 /*************************************************************************************************/
 //Multiplicación, sólo números
-	|	exp '*' exp
+	|	exp TK_MUL exp
 	{
 		strcat($$.trad," * ");//Traducción
 		strcat($$.trad,$3.trad);
@@ -1005,7 +1007,7 @@ exp:
 	}
 /*************************************************************************************************/
 //Divisiones
-	|	exp '/' exp
+	|	exp TK_DIV exp
 	{
 		strcat($$.trad," / ");//Traducción
 		strcat($$.trad,$3.trad);

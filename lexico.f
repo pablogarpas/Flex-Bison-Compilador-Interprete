@@ -66,7 +66,8 @@ comentario [^/*\n]*[*/]
 
 {blancos}  ;//no hace nada
 {salto}		{n_lineas++;} // Incrementa una variable con el numero de linea
-
+"mul"		return TK_MUL;
+"div"		return TK_DIV;
 "="			return TK_ASIG;
 "=="		return TK_IGU;
 "<>"		return TK_DIS;

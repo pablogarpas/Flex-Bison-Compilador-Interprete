@@ -13,4 +13,5 @@ aux[0]=2;
 aux[1]=4;
 aux[2]=8;
 aux[2]=qwe(aux);
+printf(" %d \n",aux[2] * 2);
 }

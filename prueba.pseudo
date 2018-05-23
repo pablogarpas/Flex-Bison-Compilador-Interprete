@@ -12,6 +12,7 @@ inicio
 
 	aux[2]=llamar(qwe,aux)
 
+	escribir(aux[2] mul 2)
 fin
 
 funcion qwe

@@ -155,31 +155,71 @@ dec_constantes:
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Se le asigna valor y tipo a las constantes
 constante:
-	TK_VARIABLE TK_NUM salto_lin 
+	 TK_VARIABLE TK_NUM salto_lin constante //Varias
+	{ 
+		$1->tipo=$2.tipo;
+		strcpy($$.trad,intr_const_cad($2.trad,$1->nombre)); //Traducción
+		strcat($$.trad,$4.trad);
+		
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
+		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
+	}
+/*************************************************************************************************/
+	| TK_VARIABLE TK_ENT salto_lin constante
+	{ //Un número
+		$1->tipo=$2.tipo;
+		strcpy($$.trad,intr_const_cad($2.trad,$1->nombre)); //La traducción
+		strcat($$.trad,$4.trad);
+		
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
+		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
+	} 
+/*************************************************************************************************/
+	
+	| TK_VARIABLE TK_NBOOL salto_lin constante
+	{ //Un número
+		$1->tipo=$2.tipo;
+		strcpy($$.trad,intr_const_cad($2.trad,$1->nombre)); //La traducción
+		strcat($$.trad,$4.trad);
+		
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
+		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
+	} 
+
+/************************************************************************************************/
+	| TK_VARIABLE TK_CADENA salto_lin constante //Varios números
+	{
+		$1->tipo=$2.tipo;
+		strcpy($$.trad,intr_const_cad($2.cad,$1->nombre));  //Traducción
+		strcat($$.trad,$4.trad);
+
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.cad,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
+		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
+	}
+/*************************************************************************************************/
+	| TK_VARIABLE TK_ENT salto_lin 
+	{ //Un número
+		$1->tipo=$2.tipo;
+		strcpy($$.trad,intr_const_cad($2.trad,$1->nombre)); //La traducción
+		
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valint,$2.valint,$1->nombre,0,0);
+		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
+	} 
+/*************************************************************************************************/
+	| TK_VARIABLE TK_NUM salto_lin 
 	{ //Un número
 		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_num($2.valnum,$1->nombre)); //La traducción
 		
 		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
-	}
-	
-/*************************************************************************************************/
- 	
-	| TK_VARIABLE TK_ENT salto_lin 
-	{ //Un número
-		$1->tipo=$2.tipo;
-		strcpy($$.trad,intr_const_int($2.valint,$1->nombre)); //La traducción
-		
-		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
-		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
-	} 
+	}	
 /*************************************************************************************************/
  	
 	| TK_VARIABLE TK_NBOOL salto_lin 
 	{ //Un número
 		$1->tipo=$2.tipo;
-		strcpy($$.trad,intr_const_int($2.valbool,$1->nombre)); //La traducción
+		strcpy($$.trad,intr_const_cad($2.trad,$1->nombre)); //La traducción
 		
 		
 		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
@@ -191,51 +231,10 @@ constante:
 		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_cad($2.cad,$1->nombre)); //Traducción
 
-		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
+		copiardatos(&auxnodo1,$2.tipo,1,0,$2.cad,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	}
-
-/*************************************************************************************************/
-
-	| TK_VARIABLE TK_NUM salto_lin constante //Varias
-	{ 
-		$1->tipo=$2.tipo;
-		strcpy($$.trad,intr_const_num($2.valnum,$1->nombre)); //Traducción
-		
-		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
-		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
-	}
-
-/*************************************************************************************************/
-	
-	| TK_VARIABLE TK_ENT salto_lin constante
-	{ //Un número
-		$1->tipo=$2.tipo;
-		strcpy($$.trad,intr_const_int($2.valint,$1->nombre)); //La traducción
-		
-		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
-		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
-	} 
-/*************************************************************************************************/
-	
-	| TK_VARIABLE TK_NBOOL salto_lin constante
-	{ //Un número
-		$1->tipo=$2.tipo;
-		strcpy($$.trad,intr_const_int($2.valbool,$1->nombre)); //La traducción
-		
-		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
-		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
-	} 
-
-/************************************************************************************************/
-	| TK_VARIABLE TK_CADENA salto_lin constante //Varios números
-	{
-		$1->tipo=$2.tipo;
-		strcpy($$.trad,intr_const_cad($2.cad,$1->nombre));  //Traducción
-
-		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
-		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
-	};
+	;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Diferentes tipos y números correspondientes
 tipo:
@@ -1186,15 +1185,6 @@ exp:
 	
 	copiardatos(&auxnodo1,$2.tipo,$2.escons,$2.espun,$2.valstr,$2.valbool,$2.valnum,$2.valint,$2.nombre,0,$2.aux);
 	insertarexp(auxnodo1,auxnodo2,OP_NOT);	
-	}   
-/*************************************************************************************************/
-//esto es un número real
-	|	TK_NUM
-	{
-		$$.espun=0;
-		$$.tipo=1;
-		$$.escons=1;
-		$$.valnum =$1.valnum;	  
 	}
 /*************************************************************************************************/
 //esto es un número entero
@@ -1204,6 +1194,15 @@ exp:
 		$$.escons=1;
 		$$.espun=0;
 		$$.valint =$1.valint;	
+	}   
+/*************************************************************************************************/
+//esto es un número real
+	|	TK_NUM
+	{
+		$$.espun=0;
+		$$.tipo=1;
+		$$.escons=1;
+		$$.valnum =$1.valnum;	  
 	}
 /*************************************************************************************************/
 //esto es de tipo booleano aunque internamente la tratamos como un entero

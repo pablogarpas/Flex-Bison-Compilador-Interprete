@@ -1,11 +1,8 @@
-programa prueba2
+programa prueba4
 
-var
-	aux entero 
+const
+	resultado 5
 	
 inicio
-	aux=5
-
-	escribir(aux mul 2)
+	escribir(resultado)
 fin
-

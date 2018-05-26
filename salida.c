@@ -2,9 +2,8 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#define resultado "5"
 int main() 
 {
-int aux;
-aux=5;
-printf(" %d \n",aux * 2);
+printf(" %f \n",resultado);
 }

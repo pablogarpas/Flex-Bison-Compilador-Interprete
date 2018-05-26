@@ -177,7 +177,6 @@ NODO *buscar(char nombre[20],NODO **com,NODO **fin,char funcion[25]) {
 		encontrado=(strcmp(aux->nombre,nombre))==0;
 		if(encontrado) {
 			retorno=aux;
-			printf("n:%d\n",retorno->tipo);
 			return retorno;//Devolver nodo
 		}
 		aux=aux->sig;
@@ -219,7 +218,7 @@ void listar(NODO **com) {
 	
 	printf("/////////////////////////////////////////////////////////////////////\n");
 	while(aux!=NULL) {
-		printf("%s\t%d\t%d",aux->nombre,aux->tipo,aux->espun);
+		printf("%s\t%d",aux->nombre,aux->tipo);
 		if(aux->espun) {
 			aux2=aux->array;
 			while(aux2!=NULL) {

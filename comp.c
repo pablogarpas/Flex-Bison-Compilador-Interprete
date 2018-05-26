@@ -42,7 +42,6 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 				
 			if(aux->exp1.espun) {
 			variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-			printf("e:%d\n",variable->tipo);
 				for (i=0;i<=aux->exp1.aux;i++) {
 					if(variable->array==NULL) {
 						arg1==(NODO *)malloc(sizeof (NODO));
@@ -257,7 +256,7 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			variable=buscar(aux->var->nombre,&com,&fin,funcion);
 			
 			if(aux->exp1.espun) {
-				printf("%s\n",variable->nombre);
+				printf("Valor para la variable: %s\n",variable->nombre);
 				for (i=0;i<=aux->exp1.aux;i++) {
 					if(variable->array==NULL) {
 						arg1=(NODO *)malloc(sizeof (NODO));

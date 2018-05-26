@@ -1,0 +1,12 @@
+programa prueba2
+
+var
+	aux1 real
+	aux2 string
+
+inicio
+	aux1=5.12
+	aux2="Prueba de salida de variable"
+
+	escribir(aux1,aux2)
+fin

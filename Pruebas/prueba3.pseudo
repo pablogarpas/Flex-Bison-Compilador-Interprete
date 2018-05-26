@@ -1,0 +1,11 @@
+programa prueba3
+
+var
+	aux1 real 5
+	aux2 string 5
+
+inicio
+	leer(aux1[4])
+
+	escribir(aux1[4])
+fin

@@ -1,0 +1,28 @@
+programa prueba9
+
+var
+	aux entero
+	retorno string
+
+inicio
+	
+	aux=0
+
+	llamar(prueba,aux)
+
+	escribir("Fin recursividad")
+fin
+
+funcion prueba
+arg
+	aux1 entero
+devolver entero
+	escribir(aux1)
+
+	si aux1<> 20
+		++ aux1
+		llamar(prueba,aux1)
+	sino
+		devolver 1
+	fin
+fin

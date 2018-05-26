@@ -1,0 +1,25 @@
+programa prueba5
+
+var
+	aux entero
+	
+inicio
+	aux=0
+
+	mientras aux<50
+		switch aux
+			caso 0
+				aux=10
+			caso 10
+				escribir("aux es 10")
+				aux=5
+			caso 5
+				escribir("aux es 5")
+				aux=6
+			default
+				escribir("Se acaba el bucle")
+				aux=60
+		fin
+	fin
+
+fin

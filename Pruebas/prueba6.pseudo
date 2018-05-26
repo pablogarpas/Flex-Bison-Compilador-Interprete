@@ -1,0 +1,21 @@
+programa prueba6
+
+var
+	aux entero
+	
+inicio
+	
+	aux=0
+	
+	escribir(aux)
+
+	aux=llamar(prueba)
+	
+	escribir(aux)
+fin
+
+funcion prueba
+devolver entero
+
+	devolver 5
+fin

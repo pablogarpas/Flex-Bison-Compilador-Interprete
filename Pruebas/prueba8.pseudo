@@ -1,0 +1,32 @@
+programa prueba8
+
+var
+	aux entero
+	retorno string
+
+inicio
+	
+	aux=0
+
+	retorno=llamar(prueba,aux)
+
+	escribir(retorno)
+fin
+
+funcion prueba
+var
+	aux2 string
+arg
+	aux1 entero
+devolver string
+
+	mientras aux1<50
+		aux1= aux1 + 1
+	fin
+	
+	escribir(aux1)
+	
+	aux2= "Cadena prueba"
+	
+	devolver aux2
+fin

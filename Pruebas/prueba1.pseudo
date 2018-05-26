@@ -1,0 +1,6 @@
+programa prueba1
+
+inicio
+	escribir("Ejemplo de salida por pantalla")
+fin
+

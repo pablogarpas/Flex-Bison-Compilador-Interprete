@@ -1,0 +1,25 @@
+programa prueba7
+
+var
+	aux entero
+	aux1 entero
+	
+inicio
+	
+	aux=0
+	aux1=5123
+	
+	escribir(aux)
+
+	aux=llamar(prueba,aux1)
+	
+	escribir(aux)
+fin
+
+funcion prueba
+arg
+	argu entero
+devolver entero
+
+	devolver argu
+fin

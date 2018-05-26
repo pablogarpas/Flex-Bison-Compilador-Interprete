@@ -795,7 +795,7 @@ case:
 cases:
 	case 
 	{
-		strcpy($$.trad,"");
+		strcpy($$.trad,$1.trad);
 	}
 	| case cases
 	{

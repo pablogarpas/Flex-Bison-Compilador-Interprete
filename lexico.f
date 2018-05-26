@@ -146,8 +146,8 @@ return 1;
 //Funci�n para los errores con la l�nea en la que se encuentran
 yyerror(char *s, int salir)
 {
-  //printf("%s. En la l�nea %d.\n",s,n_lineas+1);
-  printf("%s.\n",s);
+  printf("%s. En la l�nea %d.\n",s,n_lineas+1);
+  //printf("%s.\n",s);
   num_errores++;
   
   if (num_errores>5||salir) {

@@ -16,9 +16,9 @@ Analizador l�xico para el pseudoc�digo que aceptar� el transpilador.
 //cadena-> reconoce una constante de tipo cadena                           --
 //---------------------------------------------------------------------------
 
-#include "trans.tab.h"
-#include "trad.h"
-#include "trad.c"
+#include "parser.tab.h"
+#include "funciones.h"
+#include "funciones.c"
 #include <string.h>
 
 NODO  *comi; //Puntero al comienzo de la TS (tabla de s�mbolos)

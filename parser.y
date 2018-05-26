@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "trad.h"
-#include "comp.c"
+#include "funciones.h"
+#include "interprete.c"
 
 //Variables globales
 int   auxb;  //variable auxiliar para la lectura de booleanos 

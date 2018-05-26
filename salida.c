@@ -15,5 +15,4 @@ printf(" %s \n",resultado);
 printf(" %s \n",resultado1);
 }
 }
-printf(" %d \n",aux);
 }

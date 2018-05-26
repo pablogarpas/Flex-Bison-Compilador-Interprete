@@ -7,6 +7,7 @@ NODO *argini=NULL;//Lista de argumentos para pasar a una función
 NODO *argfin=NULL;//Lista de argumentos para pasar a una función
 NODO *auxnodo=NULL;
 
+//Funcion que recorre el arbol ejecutando cada nodo
 NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 	ARBOL *aux,*aux2;
 	NODO *variable,*variable2,*arg1,*arg2;
@@ -33,14 +34,17 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 	
 	aux=var;
 	
+	//Recorre el nodo buscando la operacion a realizar
 	do {
 		//printf("%d\n",aux->op);
 		switch(aux->op){
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion escribir
 		case OP_ESCRIBIR:			
 			if(aux->izq!=NULL) 
 				aux->exp1=procesarexp(aux->izq,funcion);
 				
-			if(aux->exp1.espun) {
+			if(aux->exp1.esarray) {
 			variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
 				for (i=0;i<=aux->exp1.aux;i++) {
 					if(variable->array==NULL) {
@@ -49,7 +53,7 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 					}
 					variable=variable->array;
 				}		
-				copiardatos(&aux->exp1,variable->tipo,1,variable->espun,variable->valstr,variable->valbool,variable->valnum,variable->valint,aux->exp1.nombre,0,variable->aux);
+				copiardatos(&aux->exp1,variable->tipo,1,variable->esarray,variable->valstr,variable->valbool,variable->valnum,variable->valint,aux->exp1.nombre,0,variable->aux);
 			}
 			
 			//printf("tipo:%d\n",aux->exp1.valint);
@@ -100,28 +104,30 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 					break;
 			}//switch
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion asignar		
 		case OP_ASIGNAR:		
 			variable=buscar(aux->var->nombre,&com,&fin,funcion);
 			
 			//printf("var:\t%s\t%d\t%s\n",aux->var->nombre,aux->var->tipo,funcion);
 			//listar(&com);
 			
-			if ((aux->var->tipo==aux->exp1.tipo)&&(aux->var->escons==0)&&(aux->exp1.espun==0)) {
+			if ((aux->var->tipo==aux->exp1.tipo)&&(aux->var->escons==0)&&(aux->exp1.esarray==0)) {
 				variable->tipo=aux->exp1.tipo;
 				strcpy(variable->valstr,aux->exp1.valstr);
 				variable->valbool= aux->exp1.valbool;
 				variable->valnum = aux->exp1.valnum;
 				variable->valint = aux->exp1.valint;
 			}
-			else if((aux->var->tipo=1)&&(aux->exp1.tipo==6)&&(aux->var->escons==0)&&(aux->exp1.espun==0)) {	
+			else if((aux->var->tipo=1)&&(aux->exp1.tipo==6)&&(aux->var->escons==0)&&(aux->exp1.esarray==0)) {	
 				variable->tipo=1;
 				variable->valnum = aux->exp1.valint;
 			}
-			else if((aux->var->tipo=6)&&(aux->exp1.tipo==1)&&(aux->var->escons==0)&&(aux->exp1.espun==0)) {	
+			else if((aux->var->tipo=6)&&(aux->exp1.tipo==1)&&(aux->var->escons==0)&&(aux->exp1.esarray==0)) {	
 				variable->tipo=6;
 				variable->valint = aux->exp1.valnum;
 			}
-			else if(aux->exp1.espun) {
+			else if(aux->exp1.esarray) {
 				if (aux->var->tipo=aux->exp1.tipo) {
 					for (i=0;i<=aux->exp1.aux;i++) {
 						if(variable->array==NULL) {
@@ -143,6 +149,8 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			}
 			else yyerror("Error en la asignación, no concuerdan los tipos o la variable es constante\n");	
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion incrementar			
 		case OP_INC:
 			if(aux->exp1.tipo==6) {			
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
@@ -154,6 +162,8 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			else
 			yyerror("Error en el incremento: No se puede incrementar una variable no númerica");
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion declarar una variabble			
 		case OP_DEC:			
 			if(aux->exp1.tipo==6) {			
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
@@ -165,6 +175,8 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			else
 			yyerror("Error en el decremento: No se puede incrementar una variable no númerica");
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion si			
 		case OP_SI:		
 			parar++;
 			nivel++;
@@ -179,11 +191,15 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 				}
 			}
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion else			
 		case OP_ELSE:
 			while(aux->der->op!=OP_FIN) {
 					aux=aux->der;
 				}
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion while			
 		case OP_WHILE:		
 			parar++;
 			nivel++;
@@ -196,6 +212,8 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 				aux->exp1=procesarexp(aux->izq,funcion);
 				}
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion para			
 		case OP_PARA:
 			parar++;
 			nivel++;
@@ -213,6 +231,8 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 					variable->valint--;
 			}
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion switch			
 		case OP_SWITCH:
 			parar++;
 			nivel++;
@@ -234,6 +254,8 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			}
 			defecto=0;
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion fin			
 		case OP_FIN:
 			if(parar==nivel) {
 				return ;
@@ -246,16 +268,20 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 				nivel++;
 			}
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion default
 		case OP_DEFAULT:
 			if(parar==nivel) {
 				return 1;
 				nivel++;
 			}
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion leer			
 		case OP_LEER:
 			variable=buscar(aux->var->nombre,&com,&fin,funcion);
 			
-			if(aux->exp1.espun) {
+			if(aux->exp1.esarray) {
 				printf("Valor para la variable: %s\n",variable->nombre);
 				for (i=0;i<=aux->exp1.aux;i++) {
 					if(variable->array==NULL) {
@@ -279,6 +305,8 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			else
 				yyerror("Error al leer: tipo no reconocido");
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion llamar funcion			
 		case OP_LLAMAR:
 			aux2=INICIO;
 			while(aux2->izq!=NULL) {
@@ -298,6 +326,8 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			else
 				yyerror("Error al llamar a la función; no se ha encontrado");
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion llamar funcion asignando su retorno a una variable			
 		case OP_ASIG_LLAMAR:
 			aux2=INICIO;
 			
@@ -315,7 +345,7 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
 				arg1=ejecutar(aux2,1,aux->exp1.nombre);
 				
-				if(aux->exp1.espun) {
+				if(aux->exp1.esarray) {
 					for (i=0;i<=aux->exp1.aux;i++) {
 						if(variable->array==NULL) {
 							variable2=(NODO *)malloc(sizeof (NODO));
@@ -328,7 +358,7 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 				
 				
 				if(arg1->tipo==variable->tipo) {
-					copiardatos(variable,arg1->tipo,arg1->escons,arg1->espun,arg1->valstr,arg1->valbool,arg1->valnum,arg1->valint,variable->nombre,1,arg1->aux);
+					copiardatos(variable,arg1->tipo,arg1->escons,arg1->esarray,arg1->valstr,arg1->valbool,arg1->valnum,arg1->valint,variable->nombre,1,arg1->aux);
 				}else{
 					strcpy(msj,"Error en la variable de retorno de ");
 					strcat(msj,aux->exp1.nombre);
@@ -349,6 +379,8 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 				yyerror(msj);	
 			}
 		 break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion declaracion de una funcion		 
 		case OP_DECL_FUN:
 		
 			if(recorrer(&com,aux->exp1.nombre,funcion)==0) {
@@ -368,13 +400,19 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 				yyerror(msj);	
 			}
 		 break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion declarar argumentos		 
 		case OP_DECL_ARG:
 			strcpy(aux->exp1.cad,funcion);
 			introducir_arg(&aux->exp1,&argini,&argfin);
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion pasar argumentos			
 		case OP_ARG:
 			introducir(&aux->exp1,&com,&fin);
 		 break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion devolverun valor		 
 		case OP_RETURN:
 
 			introducir(&aux->exp1,&com,&fin);
@@ -408,13 +446,13 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 						if(arg1->tipo!=2){
 						arg2=buscar(arg2->nombre,&com,&fin,variable2->cad);
 						
-						copiardatos(arg1,arg2->tipo,arg2->escons,arg2->espun,arg2->valstr,arg2->valbool,arg2->valnum,arg2->valint,arg1->nombre,1,arg2->aux);
+						copiardatos(arg1,arg2->tipo,arg2->escons,arg2->esarray,arg2->valstr,arg2->valbool,arg2->valnum,arg2->valint,arg1->nombre,1,arg2->aux);
 						}else{
 							arg2=buscar(arg2->nombre,&com,&fin,variable2->cad);
 							arg2=arg2->array;
 							while(arg2!=NULL) {
 								variable2=(NODO *)malloc(sizeof (NODO));
-								copiardatos(variable2,arg2->tipo,arg2->escons,arg2->espun,arg2->valstr,arg2->valbool,arg2->valnum,arg2->valint,"",1,0);
+								copiardatos(variable2,arg2->tipo,arg2->escons,arg2->esarray,arg2->valstr,arg2->valbool,arg2->valnum,arg2->valint,"",1,0);
 								arg1->array=variable2;
 								arg1=variable2;
 								arg2=arg2->array;
@@ -490,7 +528,10 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 		aux=aux->izq;
 	}while(aux!=NULL);
 	*/
+	
 	switch(aux->op){
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion comparar	
 		case OP_IGUALDAD:
 			if(aux->exp1.escons) {
 				i=aux->exp1.valint;
@@ -499,7 +540,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (i=0;i<=aux->exp1.aux;i++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -529,7 +570,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(b,aux->exp2.valstr);
 			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (j=0;j<=aux->exp2.aux;j++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -605,9 +646,11 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 			}
 			else yyerror("Error en la desigualdad: Operaciones sobre tipos diferentes \n");                                                            
 			retorno.escons=1;
-			retorno.espun=0;
+			retorno.esarray=0;
 			return retorno;
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion negacion			
 		case OP_NOT:
 			if (aux->exp1.tipo==3) 
 			{
@@ -621,9 +664,11 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 			}
 			else yyerror("Error en la negación: Operaciones sobre tipos incorrectos\n");
 			retorno.escons=1;
-			retorno.espun=0;
+			retorno.esarray=0;
 			return retorno;
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion OR			
 		case OP_OR:
 			if ((aux->exp2.tipo==3) && (aux->exp2.tipo==3)) {
 				retorno.tipo=3;
@@ -644,7 +689,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 			else yyerror("Error en el OR: Operación sobre tipos diferentes\n");
 			
 			retorno.escons=1;
-			retorno.espun=0;
+			retorno.esarray=0;
 			return retorno;
 			break;
 		case OP_AND:
@@ -667,9 +712,11 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 			else yyerror("Error en el AND: Operación sobre tipos diferentes\n");
 			
 			retorno.escons=1;
-			retorno.espun=0;
+			retorno.esarray=0;
 			return retorno;
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion desigualdad
 		case OP_DESIGUALDAD:		
 			if(aux->exp1.escons) {
 				i=aux->exp1.valint;
@@ -678,7 +725,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (i=0;i<=aux->exp1.aux;i++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -708,7 +755,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(b,aux->exp2.valstr);
 			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (j=0;j<=aux->exp2.aux;j++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -785,10 +832,11 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 			else yyerror("Error en la desigualdad: Operaciones sobre tipos diferentes \n");                                                            
 			retorno.valbool=!retorno.valbool;
 			retorno.escons=1;
-			retorno.espun=0;
+			retorno.esarray=0;
 			return retorno;
 			break;
-			
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion comparacion menor			
 		case OP_MENOR:
 			if(aux->exp1.escons) {
 				i=aux->exp1.valint;
@@ -797,7 +845,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (i=0;i<=aux->exp1.aux;i++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -884,9 +932,11 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 			else yyerror("Error en el menor: Operaciones sobre tipos diferentes\n");
 			retorno.tipo=3;
 			retorno.escons=1;
-			retorno.espun=0;
+			retorno.esarray=0;
 			return retorno;
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion comparacion mayor			
 		case OP_MAYOR:
 		
 			if(aux->exp1.escons) {
@@ -896,7 +946,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (i=0;i<=aux->exp1.aux;i++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -926,7 +976,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(b,aux->exp2.valstr);
 			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (j=0;j<=aux->exp2.aux;j++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -999,9 +1049,11 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 			
 			retorno.tipo=3;
 			retorno.escons=1;
-			retorno.espun=0;
+			retorno.esarray=0;
 			return retorno;
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion mayor o igual			
 		case OP_MAI:
 			if(aux->exp1.escons) {
 				i=aux->exp1.valint;
@@ -1010,7 +1062,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (i=0;i<=aux->exp1.aux;i++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -1040,7 +1092,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(b,aux->exp2.valstr);
 			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (j=0;j<=aux->exp2.aux;j++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -1112,9 +1164,11 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 		else yyerror("Error en el mayor o igual: Operaciones sobre tipos diferentes\n"); 
 			retorno.tipo=3;
 			retorno.escons=1;
-			retorno.espun=0;
+			retorno.esarray=0;
 			return retorno;
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion menor o igual			
 		case OP_MEI:
 		if(aux->exp1.escons) {
 			i=aux->exp1.valint;
@@ -1191,9 +1245,11 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 		else yyerror("Error en el menor o igual: Operaciones sobre tipos diferentes\n");
 			retorno.tipo=3;
 			retorno.escons=1;
-			retorno.espun=0;
+			retorno.esarray=0;
 			return retorno;
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion suma			
 		case OP_SUMA:
 			if(aux->exp1.escons) {
 				i=aux->exp1.valint;
@@ -1202,7 +1258,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (i=0;i<=aux->exp1.aux;i++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -1232,7 +1288,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(b,aux->exp2.valstr);
 			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (j=0;j<=aux->exp2.aux;j++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -1291,9 +1347,11 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 			yyerror("Error en la suma: Operaciones sobre tipos diferentes\n");
 			}
 			retorno.escons=1;
-			retorno.espun=0;
+			retorno.esarray=0;
 			return retorno;
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion restar			
 		case OP_RESTA:
 			if(aux->exp1.escons) {
 				i=aux->exp1.valint;
@@ -1302,7 +1360,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (i=0;i<=aux->exp1.aux;i++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -1332,7 +1390,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(b,aux->exp2.valstr);
 			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (j=0;j<=aux->exp2.aux;j++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -1375,9 +1433,11 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 			yyerror("Error en la resta: Operaciones sobre tipos diferentes\n");
 			}
 			retorno.escons=1;
-			retorno.espun=0;
+			retorno.esarray=0;
 			return retorno;
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion multiplicar			
 		case OP_MULT:
 			if(aux->exp1.escons) {
 				i=aux->exp1.valint;
@@ -1386,7 +1446,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (i=0;i<=aux->exp1.aux;i++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -1416,7 +1476,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(b,aux->exp2.valstr);
 			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (j=0;j<=aux->exp2.aux;j++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -1459,9 +1519,11 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				yyerror("Error en la multiplicación: Operaciones sobre tipos diferentes\n");
 				}
 			retorno.escons=1;
-			retorno.espun=0;
+			retorno.esarray=0;
 			return retorno;
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion dividir			
 		case OP_DIV:
 			if(aux->exp1.escons) {
 				i=aux->exp1.valint;
@@ -1470,7 +1532,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (i=0;i<=aux->exp1.aux;i++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -1500,7 +1562,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(b,aux->exp2.valstr);
 			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (j=0;j<=aux->exp2.aux;j++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -1552,9 +1614,11 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 			}
 			
 			retorno.escons=1;
-			retorno.espun=0;
+			retorno.esarray=0;
 			return retorno;
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion modulo			
 		case OP_MOD:	
 			if(aux->exp1.escons) {
 				i=aux->exp1.valint;
@@ -1563,7 +1627,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (i=0;i<=aux->exp1.aux;i++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -1593,7 +1657,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(b,aux->exp2.valstr);
 			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (i=0;i<=aux->exp2.aux;i++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -1624,9 +1688,11 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				yyerror("Error: Operaciones sobre tipos diferentes\n");
 			}
 			retorno.escons=1;
-			retorno.espun=0;
+			retorno.esarray=0;
 			return retorno;
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion op_cambiar signo			
 		case OP_CAM:
 			if(aux->exp1.escons) {
 				i=aux->exp1.valint;
@@ -1635,7 +1701,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (i=0;i<=aux->exp1.aux;i++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -1670,9 +1736,11 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 			yyerror("Error en el cambio de signo: Operaciones sobre tipos diferentes\n");
 			}
 			retorno.escons=1;
-			retorno.espun=0;
+			retorno.esarray=0;
 			return retorno;
 			break;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Operacion elevar a			
 		case OP_POW:
 			if(aux->exp1.escons) {
 				i=aux->exp1.valint;
@@ -1681,7 +1749,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(a,aux->exp1.valstr);
 			} else {
 				variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (i=0;i<=aux->exp1.aux;i++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -1711,7 +1779,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				strcpy(b,aux->exp2.valstr);
 			} else  {
 				variable=buscar(aux->exp2.nombre,&com,&fin,funcion);
-				if(variable->espun) {
+				if(variable->esarray) {
 					for (j=0;j<=aux->exp2.aux;j++) {
 						if(variable->array==NULL) {
 							arg1=(NODO *)malloc(sizeof (NODO));
@@ -1755,7 +1823,7 @@ NODO procesarexp(ARBOL *aux,char funcion[25]){
 				yyerror("Error en el exponencial: Operaciones sobre tipos diferentes\n");
 			}
 			retorno.escons=1;
-			retorno.espun=0;
+			retorno.esarray=0;
 			return retorno;
 			break;
 	}//switch

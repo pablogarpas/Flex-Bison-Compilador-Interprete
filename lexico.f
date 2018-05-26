@@ -27,16 +27,28 @@ char *cadaux;//variable auxiliar para eliminar las comillas de yytext
 char i;//variable auxiliar para eliminar las comillas de yytext
 int n_lineas;//contar el numero de lineas
 int num_errores;// variable para contar el nï¿½mero de errores
+
+//Abajo se describiran las reglas:
+//Los espacios se llamarán delim
+//Blancos serán de 0 a n espacios
+//un real es un entero seguido por un punto
+//un entero es un número que va de 0 a 9 y puede tener de 0 a n cifras
+//Las letras son de la a a la z en minúscula y mayúscula
+//Boleano es la cadena true o la false
+//La variable debe de empezar por una letra y ser seguida por letras o numeros
+//Una cadena debe de estar delimitada por comillas dobles
+//Un salto de línea será el salto de línea
+//Los comentarios empezarán por /* y acabarán por */
 %}
 delim [\' '\t] 
-blancos {delim}+ 
-entero [0-9]+ 
+blancos {delim}+
+entero [0-9]+
 real	{entero}+[.]{entero}([eE][-+]?{entero})? 
 letra [a-zA-Z] 
 booleano (true|false) 
 variable {letra}({letra}|[0-9]|_)* 
 cadena   \"[^\"\n]*[\"] 
-salto \n
+salto \n 
 comentario [^/*\n]*[*/] 
 %%
 {entero}       {yylval.ELEMENTO.valint = atoi(yytext);
@@ -66,7 +78,8 @@ comentario [^/*\n]*[*/]
 
 {blancos}  ;//no hace nada
 {salto}		{n_lineas++;} // Incrementa una variable con el numero de linea
-"mul"		return TK_MUL;
+
+"mul"		return TK_MUL; //Cada palabra de la siguiente lista devuelve el token correspondiente
 "div"		return TK_DIV;
 "="			return TK_ASIG;
 "=="		return TK_IGU;
@@ -109,7 +122,7 @@ comentario [^/*\n]*[*/]
 "%" return TK_MOD;
 
 {variable}       {yylval.indice = buscar_simbolo(yytext,&comi,&fina);
-                 //buscamos es la TS la variable y si no esta la aï¿½adimos
+                 //buscamos es la lista de símbolos la variable y si no esta la añadimos
                  //introducimos en trad lo que el lex encuentra y aunque variable sea un puntero
                  //la expresion del yacc (el NT) almacena el valor de traduccion
 									strcpy(yylval.ELEMENTO.trad,yytext);
@@ -117,7 +130,7 @@ comentario [^/*\n]*[*/]
 									}//devuelve una variable
 
 {cadena}  {cadaux=(char *)malloc(sizeof (char [yyleng]));
-           // Quitamos las comillas de las cadenas y aï¿½adimos el valor para la trduccion
+           // Quitamos las comillas de las cadenas y añadimos el valor para la trduccion
            //damos valor a los campos correspondientes
            strcpy(yylval.ELEMENTO.trad,yytext);
 	   for (i=1;i<yyleng-1;i++)  cadaux[i-1]=yytext[i];

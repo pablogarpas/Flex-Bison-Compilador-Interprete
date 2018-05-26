@@ -2,27 +2,20 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+int prueba(int aux1){
+printf(" %d \n",aux1);
+if (aux1 != 20) {
+aux1++;
+prueba(aux1);
+} else {
+return 1;
+}
+}
 int main() 
 {
 int aux;
+char *retorno;
 aux=0;
-while (aux < 50) {
-switch (aux){
-default:
-printf(" %s \n","Se acaba el bucle");
-aux=60;
-break;
-case 5:
-printf(" %s \n","aux es 5");
-aux=6;
-break;
-case 10:
-printf(" %s \n","aux es 10");
-aux=5;
-break;
-case 0:
-aux=10;
-break;
-}
-}
+prueba(aux);
+printf(" %s \n","Fin recursividad");
 }

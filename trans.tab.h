@@ -108,7 +108,7 @@ union YYSTYPE
 	struct elemento {
 		char nombre[255]; //amacenar el nombre
 		int escons; //nos dice si es o no constante 1->si 0->no 
-		int espun; //nos dice si es o no puntero 1->si 0->no 
+		int esarray; //nos dice si es o no puntero 1->si 0->no 
 		int tipo; //tipo de variable
 		int valbool; //tipo booleano
 		double valnum;	//valor numerico	     

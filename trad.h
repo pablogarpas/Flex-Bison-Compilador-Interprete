@@ -55,7 +55,7 @@
 typedef struct NODO {
   int tipo; //tipo asociado
 	int escons; //nos dice si es o no constante 1->si 0->no
-	int espun; //nos dice si es o no puntero 1->si 0->no
+	int esarray; //nos dice si es o no puntero 1->si 0->no
 	int esarg; //nos dice si es un argumento o no 1->si 0->no
 	char nombre[255]; //nombre de la variable o constante
 	int valbool; //valor que se toma si el tipo es booleano
@@ -138,10 +138,10 @@ char *intr_const_int(int num,char *nombre);
 char *intr_const_cad(char *cad,char *nombre);
 
 //Variables
-char *intr_variable(int tipo, char *nombre,int espun,char *indice);
+char *intr_variable(int tipo, char *nombre,int esarray,char *indice);
 
 //Variables
-char *intr_argumento(int tipo, char *nombre, int espun); 
+char *intr_argumento(int tipo, char *nombre, int esarray); 
 
 //Salida por pantalla
 void vis_salida(int tipo,char *cad, int vis);
@@ -150,7 +150,7 @@ void vis_salida(int tipo,char *cad, int vis);
 void vis_salida_sl(int tipo,char *cad, int vis);
 
 //Entrada por pantalla
-char *vis_entrada(int tipo,char *cad,int espun,char *indice);
+char *vis_entrada(int tipo,char *cad,int esarray,char *indice);
 
 //Salidas expresiones
 void vis_exp(int tipo,char *cad);
@@ -162,7 +162,7 @@ void intr_inc(char *nombre,int post);
 /*Funciones para el AST*/
 //////////////////////////////////////////////////////////////////////////
 //Pasar de elemento a nodo
-void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool,float valnum,int valint,char *nombre, int esarg,int indice);
+void copiardatos(NODO *a, int tipo,int escons,int esarray,char *valstr,int valbool,float valnum,int valint,char *nombre, int esarg,int indice);
 
 //Crear el árbol o añadir nodo
 int insertar(NODO expre1,NODO expre2, int ope, NODO *var);

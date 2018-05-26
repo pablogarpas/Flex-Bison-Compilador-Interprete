@@ -45,7 +45,7 @@ NODO *buscar_simbolo(char nombre[20],NODO **com,NODO **fin)
 		}
 	}
 }
-
+//Introducir sin buscar si existe
 NODO *introducir(NODO *var,NODO **com,NODO **fin) {
 	//variables
 	NODO *nuevo,*aux, *retorno,*nuevo1;
@@ -61,7 +61,7 @@ NODO *introducir(NODO *var,NODO **com,NODO **fin) {
   
 	nuevo=var;
 	
-	if(nuevo->espun) {
+	if(nuevo->esarray) {
 		nuevo1->tipo=nuevo->tipo;
 		nuevo->tipo=2;
 		nuevo->array=nuevo1;
@@ -82,6 +82,7 @@ NODO *introducir(NODO *var,NODO **com,NODO **fin) {
 	}
 }
 
+//Introducir los argumentos
 NODO *introducir_arg(NODO *var,NODO **com,NODO **fin) {
 	//variables
 	NODO *nuevo,*aux, *retorno;
@@ -135,6 +136,7 @@ int contar_arg(NODO **com,NODO **fin,char funcion[25]) {
 	return encontrado;
 }
 
+//Contar el numero de variables locales de una funcion
 int contar(NODO **com,NODO **fin,char funcion[25]) {
 	//variables
 	NODO *aux;
@@ -158,6 +160,7 @@ int contar(NODO **com,NODO **fin,char funcion[25]) {
 	return encontrado;
 }
 
+//Buscar si la variable existe
 NODO *buscar(char nombre[20],NODO **com,NODO **fin,char funcion[25]) {
 	//variables
 	NODO *nuevo,*aux, *retorno;
@@ -193,6 +196,7 @@ NODO *buscar(char nombre[20],NODO **com,NODO **fin,char funcion[25]) {
 	}
 }
 
+//Buscar la funcion en la tabla de simbolos para delimitar variables locales
 NODO *buscar_fun(char nombre[20],NODO **com,NODO **fin) {
 	//variables
 	NODO *aux, *retorno;
@@ -212,6 +216,7 @@ NODO *buscar_fun(char nombre[20],NODO **com,NODO **fin) {
 	}
 }
 
+//Muestra una lista de variables
 void listar(NODO **com) {
 	NODO *aux,*aux2;
 	aux=*com;//comienzo
@@ -219,7 +224,7 @@ void listar(NODO **com) {
 	printf("/////////////////////////////////////////////////////////////////////\n");
 	while(aux!=NULL) {
 		printf("%s\t%d",aux->nombre,aux->tipo);
-		if(aux->espun) {
+		if(aux->esarray) {
 			aux2=aux->array;
 			while(aux2!=NULL) {
 				printf("\t%d %d",aux2->tipo);
@@ -326,7 +331,7 @@ char *intr_const_cad(char *cad,char *nombre)
 }
 
 //Variables
-char *intr_variable(int tipo, char *nombre,int espun,char *indice)
+char *intr_variable(int tipo, char *nombre,int esarray,char *indice)
 {
 	char *aux = malloc(256);
 
@@ -334,7 +339,7 @@ char *intr_variable(int tipo, char *nombre,int espun,char *indice)
 		case 1:
 			strcpy(aux,"float ");
 			strcat(aux,nombre);
-			if(espun) {
+			if(esarray) {
 				strcat(aux,"[");
 				strcat(aux,indice);
 				strcat(aux,"]");
@@ -344,7 +349,7 @@ char *intr_variable(int tipo, char *nombre,int espun,char *indice)
 		case 3:
 			strcpy(aux,"int ");
 			strcat(aux,nombre);
-			if(espun) {
+			if(esarray) {
 				strcat(aux,"[");
 				strcat(aux,indice);
 				strcat(aux,"]");
@@ -354,7 +359,7 @@ char *intr_variable(int tipo, char *nombre,int espun,char *indice)
 		case 4:
 			strcpy(aux,"char *");
 			strcat(aux,nombre);
-			if(espun) {
+			if(esarray) {
 				strcat(aux,"[");
 				strcat(aux,indice);
 				strcat(aux,"]");
@@ -364,7 +369,7 @@ char *intr_variable(int tipo, char *nombre,int espun,char *indice)
 		case 6:
 			strcpy(aux,"int ");
 			strcat(aux,nombre);
-			if(espun) {
+			if(esarray) {
 				strcat(aux,"[");
 				strcat(aux,indice);
 				strcat(aux,"]");
@@ -377,14 +382,14 @@ char *intr_variable(int tipo, char *nombre,int espun,char *indice)
 }
 
 //Variables
-char *intr_argumento(int tipo, char *nombre,int espun)
+char *intr_argumento(int tipo, char *nombre,int esarray)
 {
 	char *aux = malloc(256);
 
 	switch(tipo) {
 		case 1:
 			strcpy(aux,"float ");
-			if(espun) 
+			if(esarray) 
 				strcat(aux,"*");
 			else
 				strcat(aux,"");
@@ -392,7 +397,7 @@ char *intr_argumento(int tipo, char *nombre,int espun)
 			break;
 		case 2:
 			strcpy(aux,"char ");
-			if(espun) 
+			if(esarray) 
 				strcat(aux,"**");
 			else
 				strcat(aux,"*");
@@ -400,7 +405,7 @@ char *intr_argumento(int tipo, char *nombre,int espun)
 			break;
 		case 3:
 			strcpy(aux,"int ");
-			if(espun)
+			if(esarray)
 				strcat(aux,"*");
 			else
 				strcat(aux,"");
@@ -408,7 +413,7 @@ char *intr_argumento(int tipo, char *nombre,int espun)
 			break;
 		case 4:
 			strcpy(aux,"char ");
-			if(espun) 
+			if(esarray) 
 				strcat(aux,"**");
 			else
 				strcat(aux,"*");
@@ -416,7 +421,7 @@ char *intr_argumento(int tipo, char *nombre,int espun)
 			break;
 		case 6:
 			strcpy(aux,"int ");
-			if(espun)
+			if(esarray)
 				strcat(aux,"*");
 			else
 				strcat(aux,"");	
@@ -462,7 +467,7 @@ void vis_salida_sl(int tipo,char *cad, int vis)
 
 
 //Entrada por teclado
-char *vis_entrada(int tipo,char *cad,int espun,char *indice)
+char *vis_entrada(int tipo,char *cad,int esarray,char *indice)
 {
 	
 	char *aux = malloc(256);
@@ -472,7 +477,7 @@ char *vis_entrada(int tipo,char *cad,int espun,char *indice)
 	switch(tipo) {
 		case 1:
 			strcat(aux,"%%f \",");
-			if(!espun) {
+			if(!esarray) {
 				strcat(aux,"&");
 				strcat(aux,cad);	
 				strcat(aux,");\n");	
@@ -488,7 +493,7 @@ char *vis_entrada(int tipo,char *cad,int espun,char *indice)
 			break;
 		case 3:
 			strcat(aux,"%%d \",");
-			if(!espun) {
+			if(!esarray) {
 				strcat(aux,"&");
 				strcat(aux,cad);	
 				strcat(aux,");\n");	
@@ -504,7 +509,7 @@ char *vis_entrada(int tipo,char *cad,int espun,char *indice)
 			break;
 		case 4:
 			strcat(aux,"%%s \",");
-			if(!espun) {
+			if(!esarray) {
 				strcat(aux,"&");
 				strcat(aux,cad);	
 				strcat(aux,");\n");	
@@ -520,7 +525,7 @@ char *vis_entrada(int tipo,char *cad,int espun,char *indice)
 			break;
 		case 6:
 			strcat(aux,"%%d \",");
-			if(!espun) {
+			if(!esarray) {
 				strcat(aux,"&");
 				strcat(aux,cad);	
 				strcat(aux,");\n");	
@@ -666,6 +671,7 @@ int insertarexp(NODO expre1,NODO expre2, int ope) {
 	
 }
 
+//Se inserta un nodo para en el arbol
 int insertar_para(NODO expre1,NODO expre2, int ope, NODO *var) { 
 	ARBOL *aux;
 	
@@ -705,10 +711,10 @@ int insertar_para(NODO expre1,NODO expre2, int ope, NODO *var) {
 }
 
 //Función para copiar los datos de un elemento a un nodo
-void copiardatos(NODO *a, int tipo,int escons,int espun,char *valstr,int valbool,float valnum,int valint,char *nombre, int esarg,int indice) {
+void copiardatos(NODO *a, int tipo,int escons,int esarray,char *valstr,int valbool,float valnum,int valint,char *nombre, int esarg,int indice) {
 	a->tipo=tipo;
 	a->escons=escons;
-	a->espun=espun;
+	a->esarray=esarray;
 	strcpy(a->valstr,valstr);
 	a->valbool=valbool;
 	a->valnum = valnum;

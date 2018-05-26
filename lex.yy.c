@@ -652,7 +652,19 @@ char *cadaux;//variable auxiliar para eliminar las comillas de yytext
 char i;//variable auxiliar para eliminar las comillas de yytext
 int n_lineas;//contar el numero de lineas
 int num_errores;// variable para contar el nï¿½mero de errores
-#line 656 "lex.yy.c"
+
+//Abajo se describiran las reglas:
+//Los espacios se llamarán delim
+//Blancos serán de 0 a n espacios
+//un real es un entero seguido por un punto
+//un entero es un número que va de 0 a 9 y puede tener de 0 a n cifras
+//Las letras son de la a a la z en minúscula y mayúscula
+//Boleano es la cadena true o la false
+//La variable debe de empezar por una letra y ser seguida por letras o numeros
+//Una cadena debe de estar delimitada por comillas dobles
+//Un salto de línea será el salto de línea
+//Los comentarios empezarán por /* y acabarán por */
+#line 668 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -870,9 +882,9 @@ YY_DECL
 		}
 
 	{
-#line 41 "lexico.f"
+#line 53 "lexico.f"
 
-#line 876 "lex.yy.c"
+#line 888 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -931,7 +943,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 42 "lexico.f"
+#line 54 "lexico.f"
 {yylval.ELEMENTO.valint = atoi(yytext);
 		 yylval.ELEMENTO.tipo=1;
 		 strcpy(yylval.ELEMENTO.trad,yytext);
@@ -940,7 +952,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 48 "lexico.f"
+#line 60 "lexico.f"
 {yylval.ELEMENTO.valnum = atof(yytext);
 	 	yylval.ELEMENTO.tipo=1;	 
 		strcpy(yylval.ELEMENTO.trad,yytext);
@@ -949,7 +961,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 54 "lexico.f"
+#line 66 "lexico.f"
 {if (strcmp(yytext,"true")==0){
 		  yylval.ELEMENTO.valbool = 1;
 		strcpy(yylval.ELEMENTO.trad,yytext);
@@ -965,225 +977,225 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 67 "lexico.f"
+#line 79 "lexico.f"
 ;//no hace nada
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 68 "lexico.f"
+#line 80 "lexico.f"
 {n_lineas++;} // Incrementa una variable con el numero de linea
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 69 "lexico.f"
-return TK_MUL;
+#line 82 "lexico.f"
+return TK_MUL; //Cada palabra de la siguiente lista devuelve el token correspondiente
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 70 "lexico.f"
+#line 83 "lexico.f"
 return TK_DIV;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 71 "lexico.f"
+#line 84 "lexico.f"
 return TK_ASIG;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 72 "lexico.f"
+#line 85 "lexico.f"
 return TK_IGU;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 73 "lexico.f"
+#line 86 "lexico.f"
 return TK_DIS;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 74 "lexico.f"
+#line 87 "lexico.f"
 return TK_POW;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 75 "lexico.f"
+#line 88 "lexico.f"
 return TK_MEI;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 76 "lexico.f"
+#line 89 "lexico.f"
 return TK_MAI;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 77 "lexico.f"
+#line 90 "lexico.f"
 return TK_INC;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 78 "lexico.f"
+#line 91 "lexico.f"
 return TK_DEC;
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 79 "lexico.f"
+#line 92 "lexico.f"
 return TK_ARRAY;
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 80 "lexico.f"
+#line 93 "lexico.f"
 return TK_DEFAULT;
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 81 "lexico.f"
+#line 94 "lexico.f"
 return TK_RETORNO;
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 82 "lexico.f"
+#line 95 "lexico.f"
 return TK_CASO;
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 83 "lexico.f"
+#line 96 "lexico.f"
 return TK_ARG;
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 84 "lexico.f"
+#line 97 "lexico.f"
 return TK_SWITCH;
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 85 "lexico.f"
+#line 98 "lexico.f"
 return TK_PROGRAM;
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 86 "lexico.f"
+#line 99 "lexico.f"
 return TK_INICIO;
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 87 "lexico.f"
+#line 100 "lexico.f"
 return TK_FUNCION;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 88 "lexico.f"
+#line 101 "lexico.f"
 return TK_FIN;
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 89 "lexico.f"
+#line 102 "lexico.f"
 return TK_SI;
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 90 "lexico.f"
+#line 103 "lexico.f"
 return TK_ELSE;
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 91 "lexico.f"
+#line 104 "lexico.f"
 return TK_CONST;
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 92 "lexico.f"
+#line 105 "lexico.f"
 return TK_VAR;
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 93 "lexico.f"
+#line 106 "lexico.f"
 return TK_HAZ;
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 94 "lexico.f"
+#line 107 "lexico.f"
 return TK_LLAMAR;
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 95 "lexico.f"
+#line 108 "lexico.f"
 return TK_ESCRIBIR;
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 96 "lexico.f"
+#line 109 "lexico.f"
 return TK_PARA;
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 97 "lexico.f"
+#line 110 "lexico.f"
 return TK_HASTA;
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 98 "lexico.f"
+#line 111 "lexico.f"
 return TK_LEER;
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 99 "lexico.f"
+#line 112 "lexico.f"
 return TK_MIENTRAS;
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 100 "lexico.f"
+#line 113 "lexico.f"
 return TK_HACER;
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 101 "lexico.f"
+#line 114 "lexico.f"
 return TK_ENTERO;
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 102 "lexico.f"
+#line 115 "lexico.f"
 return TK_BOOL;
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 103 "lexico.f"
+#line 116 "lexico.f"
 return TK_REAL;
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 104 "lexico.f"
+#line 117 "lexico.f"
 return TK_STRING;
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 105 "lexico.f"
+#line 118 "lexico.f"
 return TK_LIB;
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 106 "lexico.f"
+#line 119 "lexico.f"
 return TK_AND;
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 107 "lexico.f"
+#line 120 "lexico.f"
 return TK_OR;
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 108 "lexico.f"
+#line 121 "lexico.f"
 return TK_NOT;
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 109 "lexico.f"
+#line 122 "lexico.f"
 return TK_MOD;
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 111 "lexico.f"
+#line 124 "lexico.f"
 {yylval.indice = buscar_simbolo(yytext,&comi,&fina);
-                 //buscamos es la TS la variable y si no esta la aï¿½adimos
+                 //buscamos es la lista de símbolos la variable y si no esta la añadimos
                  //introducimos en trad lo que el lex encuentra y aunque variable sea un puntero
                  //la expresion del yacc (el NT) almacena el valor de traduccion
 									strcpy(yylval.ELEMENTO.trad,yytext);
@@ -1192,9 +1204,9 @@ YY_RULE_SETUP
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 119 "lexico.f"
+#line 132 "lexico.f"
 {cadaux=(char *)malloc(sizeof (char [yyleng]));
-           // Quitamos las comillas de las cadenas y aï¿½adimos el valor para la trduccion
+           // Quitamos las comillas de las cadenas y añadimos el valor para la trduccion
            //damos valor a los campos correspondientes
            strcpy(yylval.ELEMENTO.trad,yytext);
 	   for (i=1;i<yyleng-1;i++)  cadaux[i-1]=yytext[i];
@@ -1206,7 +1218,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 130 "lexico.f"
+#line 143 "lexico.f"
 {cadaux=(char *)malloc(sizeof (char [yyleng]));
            strcpy(yylval.ELEMENTO.trad,yytext);
 	   for (i=1;i<yyleng-1;i++)  cadaux[i-1]=yytext[i];
@@ -1217,15 +1229,15 @@ YY_RULE_SETUP
 case 50:
 /* rule 50 can match eol */
 YY_RULE_SETUP
-#line 137 "lexico.f"
+#line 150 "lexico.f"
 return yytext[0];
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 141 "lexico.f"
+#line 154 "lexico.f"
 ECHO;
 	YY_BREAK
-#line 1229 "lex.yy.c"
+#line 1241 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2226,7 +2238,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 141 "lexico.f"
+#line 154 "lexico.f"
 
 
 int yywrap(){

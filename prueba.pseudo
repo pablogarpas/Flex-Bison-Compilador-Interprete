@@ -1,26 +1,11 @@
 programa prueba2
 
 var
-	aux entero 5
-	
+	aux entero 
 	
 inicio
+	aux=5
 
-	aux[0]=2
-	aux[1]=4
-	aux[2]=8
-
-	aux[2]=llamar(qwe,aux)
-
+	escribir(aux)
 fin
 
-funcion qwe
-arg
-	auxi entero #
-devolver entero
-
-
-	escribir(auxi[2])
-	
-	devolver 5
-fin

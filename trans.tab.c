@@ -523,7 +523,7 @@ static const yytype_uint16 yyrline[] =
      827,   833,   844,   863,   902,   908,   916,   925,   930,   935,
      942,   955,   964,   972,   985,   997,  1008,  1019,  1030,  1046,
     1060,  1079,  1091,  1102,  1115,  1126,  1138,  1149,  1162,  1176,
-    1190,  1198,  1206,  1214,  1223,  1232
+    1190,  1199,  1208,  1217,  1226,  1236
 };
 #endif
 
@@ -2755,71 +2755,75 @@ yyreduce:
   case 110:
 #line 1191 "trans.y" /* yacc.c:1646  */
     {
+		(yyval.ELEMENTO).espun=0;
 		(yyval.ELEMENTO).tipo=1;
 		(yyval.ELEMENTO).escons=1;
 		(yyval.ELEMENTO).valnum =(yyvsp[0].ELEMENTO).valnum;	  
 	}
-#line 2763 "trans.tab.c" /* yacc.c:1646  */
+#line 2764 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 111:
-#line 1199 "trans.y" /* yacc.c:1646  */
+#line 1200 "trans.y" /* yacc.c:1646  */
     {
 		(yyval.ELEMENTO).tipo=6;
 		(yyval.ELEMENTO).escons=1;
+		(yyval.ELEMENTO).espun=0;
 		(yyval.ELEMENTO).valint =(yyvsp[0].ELEMENTO).valint;	
 	}
-#line 2773 "trans.tab.c" /* yacc.c:1646  */
+#line 2775 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 112:
-#line 1207 "trans.y" /* yacc.c:1646  */
+#line 1209 "trans.y" /* yacc.c:1646  */
     {
+		(yyval.ELEMENTO).espun=0;
 		(yyval.ELEMENTO).tipo=3;
 		(yyval.ELEMENTO).escons=1;
 		(yyval.ELEMENTO).valbool= (yyvsp[0].ELEMENTO).valbool;
 	}
-#line 2783 "trans.tab.c" /* yacc.c:1646  */
+#line 2786 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 113:
-#line 1215 "trans.y" /* yacc.c:1646  */
+#line 1218 "trans.y" /* yacc.c:1646  */
     {	
 		strcpy((yyval.ELEMENTO).trad,(yyvsp[0].indice)->nombre);//copio el nombre de la variable para la traduccion
 		strcpy((yyval.ELEMENTO).nombre,(yyvsp[0].indice)->nombre);//copio el nombre de la variable para la traduccion
 		(yyval.ELEMENTO).tipo=(yyvsp[0].indice)->tipo;
 		(yyval.ELEMENTO).escons=0;
 	}
-#line 2794 "trans.tab.c" /* yacc.c:1646  */
+#line 2797 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 114:
-#line 1224 "trans.y" /* yacc.c:1646  */
+#line 1227 "trans.y" /* yacc.c:1646  */
     {
+		(yyval.ELEMENTO).espun=0;
 		(yyval.ELEMENTO).tipo=(yyvsp[0].ELEMENTO).tipo;
 		strcpy((yyval.ELEMENTO).valstr,(yyvsp[0].ELEMENTO).cad);
 		strcpy((yyval.ELEMENTO).cad,(yyvsp[0].ELEMENTO).cad);
 		(yyval.ELEMENTO).escons=(yyvsp[0].ELEMENTO).escons;
 	}
-#line 2805 "trans.tab.c" /* yacc.c:1646  */
+#line 2809 "trans.tab.c" /* yacc.c:1646  */
     break;
 
   case 115:
-#line 1233 "trans.y" /* yacc.c:1646  */
+#line 1237 "trans.y" /* yacc.c:1646  */
     {
 		strcpy((yyval.ELEMENTO).trad,(yyvsp[-1].indice)->nombre);//copio el nombre de la variable para la traduccion
 		strcpy((yyval.ELEMENTO).nombre,(yyvsp[-1].indice)->nombre);//copio el nombre de la variable para la traduccion
 		strcat((yyval.ELEMENTO).trad,(yyvsp[0].ELEMENTO).trad);
 		(yyval.ELEMENTO).tipo=(yyvsp[-1].indice)->tipo;
 		(yyval.ELEMENTO).escons=0;
-		(yyval.ELEMENTO).espun=1;
+		(yyval.ELEMENTO).espun=(yyvsp[0].ELEMENTO).espun;
 		(yyval.ELEMENTO).aux=(yyvsp[0].ELEMENTO).aux;
 	}
-#line 2819 "trans.tab.c" /* yacc.c:1646  */
+#line 2823 "trans.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2823 "trans.tab.c" /* yacc.c:1646  */
+#line 2827 "trans.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -3047,7 +3051,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 1243 "trans.y" /* yacc.c:1906  */
+#line 1247 "trans.y" /* yacc.c:1906  */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //Main, dónde se genera el fichero

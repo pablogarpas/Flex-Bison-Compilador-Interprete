@@ -42,19 +42,22 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 				
 			if(aux->exp1.espun) {
 			variable=buscar(aux->exp1.nombre,&com,&fin,funcion);
+			printf("e:%d\n",variable->tipo);
 				for (i=0;i<=aux->exp1.aux;i++) {
 					if(variable->array==NULL) {
 						arg1==(NODO *)malloc(sizeof (NODO));
 						variable->array=arg1;
 					}
 					variable=variable->array;
-				}
+				}		
 				copiardatos(&aux->exp1,variable->tipo,1,variable->espun,variable->valstr,variable->valbool,variable->valnum,variable->valint,aux->exp1.nombre,0,variable->aux);
 			}
 			
 			//printf("tipo:%d\n",aux->exp1.valint);
 			
 			//printf("val1:%d\n",com->sig->array->valint);
+			
+			listar(&com);
 			
 			switch (aux->exp1.tipo){
 				case 1:

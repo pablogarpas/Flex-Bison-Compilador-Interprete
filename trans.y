@@ -1189,6 +1189,7 @@ exp:
 //esto es un número real
 	|	TK_NUM
 	{
+		$$.espun=0;
 		$$.tipo=1;
 		$$.escons=1;
 		$$.valnum =$1.valnum;	  
@@ -1199,12 +1200,14 @@ exp:
 	{
 		$$.tipo=6;
 		$$.escons=1;
+		$$.espun=0;
 		$$.valint =$1.valint;	
 	}
 /*************************************************************************************************/
 //esto es de tipo booleano aunque internamente la tratamos como un entero
 	|	TK_NBOOL
 	{
+		$$.espun=0;
 		$$.tipo=3;
 		$$.escons=1;
 		$$.valbool= $1.valbool;
@@ -1222,6 +1225,7 @@ exp:
 //Esto es una cosntante de tipo cadena
 	| TK_CADENA
 	{
+		$$.espun=0;
 		$$.tipo=$1.tipo;
 		strcpy($$.valstr,$1.cad);
 		strcpy($$.cad,$1.cad);
@@ -1236,7 +1240,7 @@ exp:
 		strcat($$.trad,$2.trad);
 		$$.tipo=$1->tipo;
 		$$.escons=0;
-		$$.espun=1;
+		$$.espun=$2.espun;
 		$$.aux=$2.aux;
 	}
 	;		

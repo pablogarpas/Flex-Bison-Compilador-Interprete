@@ -57,7 +57,7 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			
 			//printf("val1:%d\n",com->sig->array->valint);
 			
-			listar(&com);
+			//listar(&com);
 			
 			switch (aux->exp1.tipo){
 				case 1:

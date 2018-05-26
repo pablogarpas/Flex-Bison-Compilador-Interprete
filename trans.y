@@ -71,6 +71,8 @@ NODO *auxvar2;
 %token	  TK_FUNCION
 %token	  TK_CONT
 %token		TK_ARRAY
+%token		TK_MUL
+%token		TK_DIV
 %token		TK_DEFAULT
 %token		TK_HASTA
 %token		TK_ELSE
@@ -994,7 +996,7 @@ exp:
 	}
 /*************************************************************************************************/
 //Multiplicación, sólo números
-	|	exp '*' exp
+	|	exp TK_MUL exp
 	{
 		strcat($$.trad," * ");//Traducción
 		strcat($$.trad,$3.trad);
@@ -1005,7 +1007,7 @@ exp:
 	}
 /*************************************************************************************************/
 //Divisiones
-	|	exp '/' exp
+	|	exp TK_DIV exp
 	{
 		strcat($$.trad," / ");//Traducción
 		strcat($$.trad,$3.trad);

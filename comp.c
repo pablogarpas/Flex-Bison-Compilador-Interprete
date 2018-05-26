@@ -236,7 +236,7 @@ NODO *ejecutar(ARBOL *var,int parar,char funcion[25]) {
 			break;
 		case OP_FIN:
 			if(parar==nivel) {
-				exit(1);
+				return ;
 				nivel++;
 			}
 			break;

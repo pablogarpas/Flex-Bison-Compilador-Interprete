@@ -1,8 +1,24 @@
 programa prueba4
 
 const
-	resultado 5
+	resultado "Variable igual a 5"
+	resultado1 "Variable diferente de 5"
+
+var
+	aux entero
 	
 inicio
-	escribir(resultado)
+	aux=5
+
+	para aux=3 hasta 5
+		si aux==5
+			escribir(resultado)
+		sino
+			escribir(resultado1)
+		fin
+
+	fin
+
+
+	escribir(aux)
 fin

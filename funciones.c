@@ -6,6 +6,7 @@ NODO *buscar_simbolo(char nombre[20],NODO **com,NODO **fin)
 	aux=*com;//comienzo
 	int encontrado=0;
 	
+	//Buscamos el nodo
 	while ((aux!=NULL)&&(encontrado==0)&&(aux->tipo!=5))
 	{
 			
@@ -17,14 +18,19 @@ NODO *buscar_simbolo(char nombre[20],NODO **com,NODO **fin)
 		}
 	 aux=aux->sig;
 	}
+	
+	//Reservamos memoria si no encontramos el nodo
 	if (!(nuevo=(NODO *)malloc(sizeof (NODO)))&&(encontrado!=1))
 	{
 		printf("No se ha podido reservar memoria \n");
 		exit(0);
 	}
     
+    
 	strcpy(nuevo->nombre,nombre);//Nombre
-	nuevo->tipo=0;//Tipo génerico
+	nuevo->tipo=0;//inicializamos el tipo
+	
+	//Si la tabla está vacia el nodo será el primero y el último
 	if ((*com==NULL))
 	{
 		(nuevo->sig)=NULL;
@@ -35,6 +41,7 @@ NODO *buscar_simbolo(char nombre[20],NODO **com,NODO **fin)
 	}
 	else
 	{
+		//Si no está vacía comprobamos que no se haya encontrado y lo insertamos al final
 		if (encontrado==0)
 		{
 			(nuevo->sig)=NULL;			
@@ -44,8 +51,9 @@ NODO *buscar_simbolo(char nombre[20],NODO **com,NODO **fin)
 			return(retorno);
 		}
 	}
-}
-//Introducir sin buscar si existe
+}//finfunción
+
+//Introducir sin buscar
 NODO *introducir(NODO *var,NODO **com,NODO **fin) {
 	//variables
 	NODO *nuevo,*aux, *retorno,*nuevo1;
@@ -67,7 +75,7 @@ NODO *introducir(NODO *var,NODO **com,NODO **fin) {
 		nuevo->array=nuevo1;
 	}
 	
-	
+	//Se introduce el nodo
 	if (*com==NULL)
 	{
 		nuevo->sig=NULL;
@@ -80,7 +88,7 @@ NODO *introducir(NODO *var,NODO **com,NODO **fin) {
 		(*fin)->sig=nuevo;
 		*fin=nuevo;
 	}
-}
+}//fin función
 
 //Introducir los argumentos
 NODO *introducir_arg(NODO *var,NODO **com,NODO **fin) {
@@ -97,6 +105,7 @@ NODO *introducir_arg(NODO *var,NODO **com,NODO **fin) {
   
 	nuevo=var;
 	
+	//Se introduce el nodo
 	if (*com==NULL)
 	{
 		nuevo->sig=NULL;
@@ -109,7 +118,7 @@ NODO *introducir_arg(NODO *var,NODO **com,NODO **fin) {
 		*com=nuevo;
 		
 	}
-}
+}//fin función
 
 //Busca y devuelve el número de argumentos de una función
 int contar_arg(NODO **com,NODO **fin,char funcion[25]) {
@@ -126,6 +135,7 @@ int contar_arg(NODO **com,NODO **fin,char funcion[25]) {
 		aux=aux->sig;
 	}
 	
+	//Recorre la tabla contando
 	while ((aux!=NULL)&&(aux->tipo!=5)) {
 		if(aux->esarg)
 			encontrado++;
@@ -168,6 +178,7 @@ NODO *buscar(char nombre[20],NODO **com,NODO **fin,char funcion[25]) {
 	int encontrado=0;
 	char msj[255];
 	
+	//Se busca la función en la que estamos
 	while(aux!=NULL){
 		if(strcmp(aux->nombre,funcion)==0){
 			aux=aux->sig;
@@ -176,6 +187,7 @@ NODO *buscar(char nombre[20],NODO **com,NODO **fin,char funcion[25]) {
 		aux=aux->sig;
 	}
 	
+	//Se recorre la tabla
 	while ((aux!=NULL)&&(encontrado==0)&&(aux->tipo!=5)) {
 		encontrado=(strcmp(aux->nombre,nombre))==0;
 		if(encontrado) {
@@ -185,8 +197,7 @@ NODO *buscar(char nombre[20],NODO **com,NODO **fin,char funcion[25]) {
 		aux=aux->sig;
 	}
 	
-
-	
+	//Error si al buscar no existe
 	if(encontrado==0){
 		strcpy(msj,"Error en las variables, la variable ");
 		strcat(msj,nombre);
@@ -194,7 +205,7 @@ NODO *buscar(char nombre[20],NODO **com,NODO **fin,char funcion[25]) {
 
 		yyerror(msj);	
 	}
-}
+}//Fin función
 
 //Buscar la funcion en la tabla de simbolos para delimitar variables locales
 NODO *buscar_fun(char nombre[20],NODO **com,NODO **fin) {
@@ -203,8 +214,7 @@ NODO *buscar_fun(char nombre[20],NODO **com,NODO **fin) {
 	aux=*com;//comienzo
 	int encontrado=0;
 	
-
-	
+	//Se busca la función y se devuelve su posición
 	while ((aux!=NULL)&&(encontrado==0)) {
 	
 		encontrado=(strcmp(aux->nombre,nombre))==0;
@@ -216,7 +226,7 @@ NODO *buscar_fun(char nombre[20],NODO **com,NODO **fin) {
 	}
 }
 
-//Muestra una lista de variables
+//Muestra la tabla de símbolos
 void listar(NODO **com) {
 	NODO *aux,*aux2;
 	aux=*com;//comienzo
@@ -244,6 +254,7 @@ int recorrer(NODO **com,char *nombre,char *funcion) {
 	aux=*com;//comienzo
 	int encontrado=0;
 	
+	//Se busca la función en la que nos encontramos
 	while(aux!=NULL){
 		if(strcmp(aux->nombre,funcion)==0){
 			aux=aux->sig;
@@ -252,6 +263,7 @@ int recorrer(NODO **com,char *nombre,char *funcion) {
 		aux=aux->sig;
 	}
 	
+	//Se recorre toda la tabla
 	while ((aux!=NULL)&&(encontrado==0)&&(aux->tipo!=5)) {
 		encontrado=(strcmp(aux->nombre,nombre))==0;
 		if(encontrado) {
@@ -259,14 +271,14 @@ int recorrer(NODO **com,char *nombre,char *funcion) {
 		}
 		aux=aux->sig;
 	}
-	
 	return 0;
-}
+}//Fin función
+
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para pasar del pseudo a C*/
 //////////////////////////////////////////////////////////////////////////
 
-//Main del programa
+//Se devuelve la traducción del main del programa
 char *intr_cabecera()
 {
 	char *aux = malloc(255);
@@ -276,7 +288,7 @@ char *intr_cabecera()
   return aux;
 }
 
-//Librerias
+//Se devuelve la traducción de las librerias
 char *intr_lib(char *nombre)
 {
 	char *aux = malloc(255);
@@ -288,7 +300,7 @@ char *intr_lib(char *nombre)
 	return aux;
 }
 
-//Constantes
+//Se devuelve la traducción de las constantes reales
 char *intr_const_num(double num,char *nombre)
 {
 	char *aux = malloc(256);
@@ -302,7 +314,7 @@ char *intr_const_num(double num,char *nombre)
 	return aux;
 }
 
-//Constantes
+//Se devuelve la traducción de las constantes enteras
 char *intr_const_int(int num,char *nombre)
 {
 	char *aux = malloc(256);
@@ -316,7 +328,7 @@ char *intr_const_int(int num,char *nombre)
 	return aux;
 }
 
-//Cadenas
+//Se devuelve la traducción de las constantes de tipo cadena
 char *intr_const_cad(char *cad,char *nombre)
 {
 	char *aux = malloc(256);
@@ -330,11 +342,12 @@ char *intr_const_cad(char *cad,char *nombre)
 	return aux;
 }
 
-//Variables
+//Se devuelve la traducción de las variables
 char *intr_variable(int tipo, char *nombre,int esarray,char *indice)
 {
 	char *aux = malloc(256);
 
+	//Se comprueba el tipo y se devuelve en función del tipo
 	switch(tipo) {
 		case 1:
 			strcpy(aux,"float ");
@@ -381,11 +394,12 @@ char *intr_variable(int tipo, char *nombre,int esarray,char *indice)
 	return aux;
 }
 
-//Variables
+//Se devuelve la traducción de los argumentos
 char *intr_argumento(int tipo, char *nombre,int esarray)
 {
 	char *aux = malloc(256);
 
+	//Se comprueba el tipo
 	switch(tipo) {
 		case 1:
 			strcpy(aux,"float ");
@@ -432,41 +446,7 @@ char *intr_argumento(int tipo, char *nombre,int esarray)
 	return aux;
 }
 
-//Salida
-void vis_salida(int tipo,char *cad, int vis)
-{
-	switch(tipo){
-		case 1:fprintf(salida,"printf(\" %%f \",%s);\n",cad);break;
-		case 2:fprintf(salida,"printf(\" %%s \",%s);\n",cad);break;
-		case 3:fprintf(salida,"printf(\" %%d \",%s);\n",cad);break;
-		case 6:fprintf(salida,"printf(\" %%d \",%s);\n",cad);break;		
-		case 4:if (vis==3)
-					{
-					fprintf(salida,"printf(\" %%s \",%s);\n",cad);break;}
-					else
-					{fprintf(salida,"printf(%s);\n",cad);break;}
-					}
-}
-
-
-//Salida por pantalla
-void vis_salida_sl(int tipo,char *cad, int vis)
-{
-	switch(tipo){
-		case 1:fprintf(salida,"printf(\" %%f \\n\",%s);\n",cad);break;
-		case 2:fprintf(salida,"printf(\" %%s \\n\",%s);\n",cad);break;
-		case 3:fprintf(salida,"printf(\" %%d \\n\",%s);\n",cad);break;	
-		case 6:fprintf(salida,"printf(\" %%d \\n\",%s);\n",cad);break;	
-		case 4:if (vis==3)
-			fprintf(salida,"printf(\" %%s \",%s);\n",cad);
-			     else
-			fprintf(salida,"printf(%s);\n",cad);
-			fprintf(salida,"printf(\"\\n\");\n",cad);break;
-		}
-}
-
-
-//Entrada por teclado
+//Se devuelve la traducción de las entradas por teclado
 char *vis_entrada(int tipo,char *cad,int esarray,char *indice)
 {
 	
@@ -474,6 +454,7 @@ char *vis_entrada(int tipo,char *cad,int esarray,char *indice)
 	
 	strcpy(aux,"scanf(\"");	
 		
+	//Se comprueban los tipos
 	switch(tipo) {
 		case 1:
 			strcat(aux,"%%f \",");
@@ -543,32 +524,15 @@ char *vis_entrada(int tipo,char *cad,int esarray,char *indice)
 			yyerror("variable a leer no declarada");
 			break;
 		}
-	
-
 		
 	return aux;
-	
-}
-
-//Salida de expresiones
-void vis_exp(int tipo,char *cad)
-{
-	fprintf(salida,"%s",cad);
-}
-
-//Función para traducir incrementos con comprobación de post o pre incremento
-void intr_inc(char *nombre,int post)
-{
-	if(post)
-		fprintf(salida,"%s++;\n",nombre);
-	else
-		fprintf(salida,"++%s;\n",nombre);
 }
 
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para la compilación*/
 //////////////////////////////////////////////////////////////////////////
-//Insertar o crear el árbol
+
+//Insertar o crear el árbol los nodos que no sean la raiz se insertan a la derecha
 int insertar(NODO expre1,NODO expre2, int ope, NODO *var)
 {
 	ARBOL *aux,*aux2;
@@ -576,17 +540,20 @@ int insertar(NODO expre1,NODO expre2, int ope, NODO *var)
 	aux2= malloc(sizeof(ARBOL));
 	aux= malloc(sizeof(ARBOL));
 
+
 	if(aux==NULL)	{
 	 printf("Error. No hay memoria para otro ARBOL.");
 	 return 0;
 	}
 	else {
+		//Le damos valor a las variables del nodo
 		aux->exp1=expre1;		
 		aux->exp2=expre2;
 		aux->op=ope;
 		aux->var=var;
 		aux->izq=NULL;
 		
+		//Si el árbol no existe se crea
 		if(INICIO==NULL) {
 			INICIO=aux;
 			FINAL=aux;
@@ -594,6 +561,7 @@ int insertar(NODO expre1,NODO expre2, int ope, NODO *var)
 			aux->raiz=NULL;
 		}
 		else if(FINAL->op==PLACEHOLDER) {
+			//Si la operación es un placeholder se pone encima de ella
 			aux->izq=FINAL->izq;
 			aux->raiz=FINAL->raiz;
 			*FINAL=*aux;
@@ -605,6 +573,7 @@ int insertar(NODO expre1,NODO expre2, int ope, NODO *var)
 			aux2->der=NULL;
 		}
 		else {
+			//Se inserta en el hijo derecho del árbol
 			FINAL->der=aux;
 			aux->raiz=FINAL;
 			FINAL=aux;
@@ -613,7 +582,7 @@ int insertar(NODO expre1,NODO expre2, int ope, NODO *var)
 	}
 }
 
-//Insertar expresión en el arbol
+//Insertar expresión en el arbol, la expresión se inserta a la izquierda
 int insertarexp(NODO expre1,NODO expre2, int ope) {
 
 	ARBOL *aux,*aux2,*aux3;
@@ -724,7 +693,7 @@ void copiardatos(NODO *a, int tipo,int escons,int esarray,char *valstr,int valbo
 	a->aux=indice;
 }
 
-//Inserta una funcion en el árbol
+//Inserta una funcion en el árbol que se insertan a la izquierda de la raíz
 int insertar_fun(NODO *var, int ope) { 
 	ARBOL *aux,*aux2;
 	

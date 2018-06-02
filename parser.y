@@ -172,6 +172,7 @@ constante:
 		strcpy($$.trad,intr_const_cad($2.trad,$1->nombre)); //La traducción
 		strcat($$.trad,$4.trad);
 		
+		/*Se crea un nodo en el AST con los datos y su operacion, en este caso declarar*/
 		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	} 
@@ -183,6 +184,7 @@ constante:
 		strcpy($$.trad,intr_const_cad($2.trad,$1->nombre)); //La traducción
 		strcat($$.trad,$4.trad);
 		
+		/*Se crea un nodo en el AST con los datos y su operacion, en este caso declarar*/
 		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	} 
@@ -194,6 +196,7 @@ constante:
 		strcpy($$.trad,intr_const_cad($2.cad,$1->nombre));  //Traducción
 		strcat($$.trad,$4.trad);
 
+		/*Se crea un nodo en el AST con los datos y su operacion, en este caso declarar*/
 		copiardatos(&auxnodo1,$2.tipo,1,0,$2.cad,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	}
@@ -203,6 +206,7 @@ constante:
 		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_cad($2.trad,$1->nombre)); //La traducción
 		
+		/*Se crea un nodo en el AST con los datos y su operacion, en este caso declarar*/
 		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valint,$2.valint,$1->nombre,0,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	} 
@@ -212,6 +216,7 @@ constante:
 		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_num($2.valnum,$1->nombre)); //La traducción
 		
+		/*Se crea un nodo en el AST con los datos y su operacion, en este caso declarar*/
 		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	}	
@@ -221,7 +226,7 @@ constante:
 		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_cad($2.trad,$1->nombre)); //La traducción
 		
-		
+		/*Se crea un nodo en el AST con los datos y su operacion, en este caso declarar*/
 		copiardatos(&auxnodo1,$2.tipo,1,0,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	} 
@@ -231,6 +236,7 @@ constante:
 		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_const_cad($2.cad,$1->nombre)); //Traducción
 
+		/*Se crea un nodo en el AST con los datos y su operacion, en este caso declarar*/
 		copiardatos(&auxnodo1,$2.tipo,1,0,$2.cad,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	}
@@ -278,6 +284,7 @@ variable:
 		$1->tipo=$2.tipo;
 		strcpy($$.trad,intr_variable($2.tipo, $1->nombre,$3.esarray,$3.cad)); //Traducción
 	
+		/*Se crea un nodo en el AST con los datos y su operacion, en este caso declarar*/
 		copiardatos(&auxnodo1,$2.tipo,0,$3.esarray,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,$3.aux);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	}
@@ -291,6 +298,7 @@ variable:
 			
 		strcat($$.trad,$5.trad);
 			
+		/*Se crea un nodo en el AST con los datos y su operacion, en este caso declarar*/
 		copiardatos(&auxnodo1,$2.tipo,0,$3.esarray,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,0,$3.aux);
 		insertar(auxnodo1,auxnodo2,OP_DECL,auxvar);
 	};
@@ -349,6 +357,7 @@ fun_dec:
 		auxvar=$2;
 		insertar_fun(auxvar,OP_FUN);
 		
+		/*Se crea un nodo en el AST con los datos y su operacion, en este caso declarar función*/
 		copiardatos(&auxnodo1,5,0,0,"",0,0,0,$2->nombre,0,0);
 		copiardatos(&auxnodo2,5,0,0,"",0,0,0,$2->nombre,0,0);
 		insertar(auxnodo1,auxnodo2,OP_DECL_FUN,auxvar);
@@ -386,6 +395,7 @@ devolver:
 	{
 		$$.tipo=$2.tipo;
 		
+		/*Se crea un nodo en el AST con los datos y su operacion, en este caso declarar*/
 		copiardatos(&auxnodo1,$2.tipo,0,0,"",0,0,0,"devolver",0,0);
 		insertar(auxnodo1,auxnodo2,OP_RETURN,auxvar);
 	}
@@ -414,6 +424,7 @@ argumento:
 		
 		strcpy($$.trad,intr_argumento($2.tipo, $1->nombre,$3.esarray)); //Traducción
 
+		/*Se crea un nodo en el AST con los datos y su operacion, en este caso argumentos*/
 		copiardatos(&auxnodo1,$2.tipo,0,$3.esarray,$2.valstr,$2.valbool,$2.valnum,$2.valint,$1->nombre,1,$3.aux);
 		insertar(auxnodo1,auxnodo2,OP_ARG,auxvar);
 	}
@@ -426,6 +437,7 @@ argumento:
 		strcat($$.trad,", ");
 		strcat($$.trad,$5.trad);
 				
+		/*Se crea un nodo en el AST con los datos y su operacion, en este caso argumentos*/
 		copiardatos(&auxnodo1,$2.tipo,0,$3.esarray,$1->valstr,$1->valbool,$1->valnum,$1->valint,$1->nombre,1,$3.aux);
 		insertar(auxnodo1,auxnodo2,OP_ARG,auxvar);
 	};

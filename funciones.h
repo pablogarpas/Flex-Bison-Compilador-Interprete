@@ -9,6 +9,8 @@
 //5->delimitador;
 //6->entero;
 
+
+//Operaciones con un ID asignado
 #define PLACEHOLDER 0
 #define OP_ESCRIBIR 1
 #define OP_ASIGNAR 2
@@ -51,7 +53,7 @@
 #define OP_ASIG_LLAMAR 40
 #define OP_DECL_FUN 41
 
-//tipo de los simbolos
+//estructura para la tabla de símbolos
 typedef struct NODO {
   int tipo; //tipo asociado
 	int escons; //nos dice si es o no constante 1->si 0->no
@@ -73,24 +75,28 @@ FILE *salida;
 
 
 
+//Estructura para el árbol de sintaxis abstracto
 typedef struct ARBOL{
-	struct ARBOL *der;
-	struct ARBOL *cen;
-	struct ARBOL *izq;
-	struct ARBOL *raiz;
+	struct ARBOL *der;//Hoja derecho
+	struct ARBOL *cen;//Hoja central
+	struct ARBOL *izq;//Hoja izquierda
+	struct ARBOL *raiz;//Raiz del nodo
 	
-	NODO exp1;
-	NODO exp2;
-	int op;
+	NODO exp1;//primera expresión
+	NODO exp2;//segunda expresión
+	int op;//Operación a realizar
 	
+	//Variables asociadas
 	NODO *var;
 	NODO *var2;
 }ARBOL;
 
 
+//Punteros al árbol
 ARBOL *INICIO;
 ARBOL *FINAL;
 
+//Punteros a la tabla de símbolos
 NODO *com;
 NODO *fin;
 
@@ -98,26 +104,37 @@ NODO *fin;
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para la busqueda en la tabla de símbolos*/
 //////////////////////////////////////////////////////////////////////////
+
 //Buscar y devolver un nodo a esa variable
 NODO *buscar(char nombre[20],NODO **com,NODO **fin,char funcion[25]);
+
 //Buscar y devolver un nodo a esa funcion
 NODO *buscar_fun(char nombre[20],NODO **com,NODO **fin);
+
 //Ver la tabla de símbolos
 void listar(NODO **com);
+
 //Revisar la tabla de símbolos para buscar fallos
 void revisar(NODO **com);
+
 //Recorrer la tabla de símbolos buscando variables repetidas
 int recorrer(NODO **com,char *nombre,char *funcion);
+
 //Función para eliminar las variables que sobran de la lista
 void limpiar(NODO **com);
+
 //Introducir en la tabla de símbolos
 NODO *introducir(NODO *var,NODO **com,NODO **fin);
+
 //Busca y devuelve el número de argumentos de una función
 int contar_arg(NODO **com,NODO **fin,char funcion[25]);
+
 //Busca y devuelve el número de elementos de una función
 int contar(NODO **com,NODO **fin,char funcion[25]);
+
 //Función para introducir en orden los argumentos
 NODO *introducir_arg(NODO *var,NODO **com,NODO **fin);
+
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para pasar del pseudo a C*/
 //////////////////////////////////////////////////////////////////////////
@@ -161,6 +178,7 @@ void intr_inc(char *nombre,int post);
 //////////////////////////////////////////////////////////////////////////
 /*Funciones para el AST*/
 //////////////////////////////////////////////////////////////////////////
+
 //Pasar de elemento a nodo
 void copiardatos(NODO *a, int tipo,int escons,int esarray,char *valstr,int valbool,float valnum,int valint,char *nombre, int esarg,int indice);
 
